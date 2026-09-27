@@ -22,6 +22,7 @@
       --gold: #ffd700;
       --silver: #c0c0c0;
       --bronze: #cd7f32;
+      --particle-color: rgba(255, 255, 255, 0.15);
     }
 
     body.theme-lava { --bg: #120909; --card-bg: #201313; --card-border: #381f1f; --accent: #ff4757; }
@@ -30,11 +31,28 @@
     body.theme-cyber { --bg: #0d0b14; --card-bg: #181424; --card-border: #2a223d; --accent: #eccc68; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; transition: background 0.3s; position: relative; min-height: 100vh; overflow-x: hidden; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; transition: background 0.3s; position: relative; min-height: 100vh; overflow-x: hidden; animation: fadeIn 0.4s ease-in-out; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #maintenance-banner {
+      background: #ff4757;
+      color: #fff;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      padding: 5px;
+      display: none;
+      z-index: 1000;
+      position: relative;
+    }
 
     .gd-particle {
       position: absolute;
-      background: rgba(255, 255, 255, 0.15);
+      background: var(--particle-color);
       width: 6px;
       height: 6px;
       pointer-events: none;
@@ -171,6 +189,7 @@
       justify-content: center;
       gap: 6px;
       margin-bottom: 12px;
+      flex-wrap: wrap;
     }
     .diff-btn {
       background: var(--card-bg);
@@ -188,41 +207,29 @@
       background: var(--card-border);
     }
 
-    .nav-tabs-main { display: flex; justify-content: center; gap: 8px; margin: 15px 0 6px 0; }
-    .nav-tabs-sub { display: flex; justify-content: center; margin-bottom: 15px; gap: 8px; align-items: center; }
+    .nav-tabs-main { display: flex; justify-content: center; gap: 8px; margin: 15px 0 6px 0; flex-wrap: wrap; }
+    .nav-tabs-sub { display: flex; justify-content: center; margin-bottom: 15px; gap: 6px; align-items: center; flex-wrap: wrap; }
 
-    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--card-border); padding: 9px 16px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; cursor: pointer; flex: 1; max-width: 180px; text-align: center; }
+    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--card-border); padding: 9px 14px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer; flex: 1; max-width: 150px; text-align: center; }
     .tab-btn.active { background: var(--card-border); color: #fff; border-color: var(--accent); }
     
     .tab-btn-sub {
       background: rgba(255,255,255,0.04);
       color: var(--text-dim);
       border: 1px solid var(--card-border);
-      padding: 5px 12px;
+      padding: 5px 10px;
       border-radius: 15px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       cursor: pointer;
       font-weight: bold;
     }
     .tab-btn-sub.active { background: var(--card-border); color: var(--gold); border-color: var(--gold); }
 
-    .fav-filter-toggle {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-dim);
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 0.72rem;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .fav-filter-toggle.active { background: rgba(255, 215, 0, 0.2); color: var(--gold); border-color: var(--gold); }
-
     .container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
     .section { display: none; }
     .section.active { display: block; }
 
-    .card { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; border: 1px solid var(--card-border); cursor: pointer; position: relative; }
+    .card { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; border: 1px solid var(--card-border); cursor: pointer; position: relative; animation: fadeIn 0.3s ease; }
     .card.top-gold { border: 2px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
 
     .rank { font-size: 1.3rem; font-weight: bold; min-width: 45px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -241,7 +248,6 @@
     .info .meta-small b { color: #d1d5db; }
 
     .gold-badge { font-size: 0.7rem; color: var(--gold); font-weight: bold; display: block; margin-top: 2px; }
-
     .new-badge { background: var(--gold); color: #000; font-size: 0.6rem; font-weight: bold; padding: 1px 5px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
 
     .fav-star { position: absolute; top: 10px; right: 12px; background: transparent; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-dim); }
@@ -276,6 +282,7 @@
     .victor-tag.standard { background: rgba(255, 255, 255, 0.08); color: var(--text-dim); }
 
     .comment-box { background: #0d0f12; border: 1px solid var(--card-border); padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: flex-start; }
+    .comment-box.pinned { border-color: var(--gold); background: rgba(255, 215, 0, 0.05); }
     .like-btn { background: transparent; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; gap: 3px; }
     .like-btn.liked { color: #ff2a6d; font-weight: bold; }
 
@@ -314,7 +321,9 @@
 </head>
 <body>
 
+  <div id="maintenance-banner">⚠️ MODO MANTENIMIENTO ACTIVO ⚠️</div>
   <div id="particles-container"></div>
+  
   <div id="toast-notification">
     <span class="toast-title">🏆 ¡Logro Desbloqueado!</span>
     <span class="toast-desc" id="toast-desc-text"></span>
@@ -334,8 +343,8 @@
     <div class="header-title" ondblclick="triggerSecretDiscord()">LA ABSOLUTE LIST</div>
 
     <div class="stats-bar">
-      <div class="stat-item"><div class="stat-val" id="stat-total-levels">0</div><div class="stat-lbl">Absolute Levels</div></div>
-      <div class="stat-item"><div class="stat-val" id="stat-total-real">0</div><div class="stat-lbl">Top Rateados</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-total-levels">0</div><div class="stat-lbl">Niveles</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-total-real">0</div><div class="stat-lbl">Rateados</div></div>
       <div class="stat-item"><div class="stat-val" id="stat-total-players">0</div><div class="stat-lbl">Jugadores</div></div>
     </div>
   </header>
@@ -347,13 +356,15 @@
   </div>
 
   <div class="nav-tabs-main">
-    <button class="tab-btn active" id="tab-levels-btn" onclick="playClickSound(); switchTab('levels')">Absolute Levels</button>
-    <button class="tab-btn" id="tab-players-btn" onclick="playClickSound(); switchTab('players')">👑 Top Jugadores</button>
+    <button class="tab-btn active" id="tab-levels-btn" onclick="playClickSound(); switchTab('levels')">Absolute</button>
+    <button class="tab-btn" id="tab-real-btn" onclick="playClickSound(); switchTab('real')">Rateados</button>
+    <button class="tab-btn" id="tab-players-btn" onclick="playClickSound(); switchTab('players')">👑 Jugadores</button>
+    <button class="tab-btn" id="tab-creators-btn" onclick="playClickSound(); switchTab('creators')">🛠️ Creadores</button>
   </div>
   
   <div class="nav-tabs-sub">
-    <button class="tab-btn-sub" id="tab-real-btn" onclick="playClickSound(); switchTab('real')">🔥 Top Rateados</button>
     <button class="tab-btn-sub fav-filter-toggle" id="fav-toggle-btn" onclick="playClickSound(); toggleFavFilter()">⭐ Favoritos</button>
+    <button class="tab-btn-sub fav-filter-toggle" id="uncompleted-toggle-btn" onclick="playClickSound(); toggleUncompletedFilter()">⏳ Sin Completar</button>
   </div>
 
   <div class="container">
@@ -370,6 +381,7 @@
     </div>
 
     <div id="players-section" class="section"><div id="players-list"></div></div>
+    <div id="creators-section" class="section"><div id="creators-list"></div></div>
   </div>
 
   <button class="fab" onclick="playClickSound(); startAddProcess()">+</button>
@@ -380,11 +392,13 @@
       <h2>Opciones de la Lista</h2>
       <div style="display:flex; flex-direction:column; gap:10px;">
         <button class="btn btn-cancel" onclick="playClickSound(); handleDiscordClick()">👾 Ir al Discord</button>
-        <button class="btn btn-cancel" onclick="playClickSound(); openCustomThemeModal()">🎨 Crear Tema Personalizado</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); reportExpiredDiscord()">⚠️ Reportar Link Vencido</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); openCustomThemeModal()">🎨 Personalizar Tema & Partículas</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openPointsCalculator()">🧮 Calculadora de Puntos</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showAchievementsModal()">🏆 Logros (100)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showActivityFeed()">📊 Activity Feed</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showLevelsFeed()">📜 Levels Feed</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); showCreditsModal()">👥 Créditos del Proyecto</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openModal('modal-roulette')">🎰 Modos Ruleta</button>
         <button class="btn btn-cancel" onclick="playClickSound(); toggleMaintenanceMode()">🔒 Modo Mantenimiento</button>
         <button class="btn btn-cancel" onclick="playClickSound(); exportData()">💾 Exportar Backup</button>
@@ -394,17 +408,44 @@
     </div>
   </div>
 
-  <!-- Modal Crear Tema Personalizado -->
+  <!-- Modal Personalizar Tema y Partículas -->
   <div id="modal-custom-theme" class="modal">
     <div class="modal-content">
-      <h2>🎨 Crear Tema</h2>
+      <h2>🎨 Personalizar Tema & Partículas</h2>
       <div class="form-group"><label>Fondo:</label><input type="color" id="theme-bg-input" value="#0d0f12" style="height:40px;"></div>
       <div class="form-group"><label>Tarjetas:</label><input type="color" id="theme-card-input" value="#161920" style="height:40px;"></div>
       <div class="form-group"><label>Acento:</label><input type="color" id="theme-accent-input" value="#00d2ff" style="height:40px;"></div>
+      <div class="form-group"><label>Color de Partículas:</label><input type="color" id="particle-color-input" value="#ffffff" style="height:40px;"></div>
       <div class="modal-actions">
         <button class="btn btn-cancel" onclick="resetCustomTheme()">Restaurar</button>
         <button class="btn btn-submit" onclick="applyCustomTheme()">Aplicar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Créditos Editables -->
+  <div id="modal-credits" class="modal">
+    <div class="modal-content">
+      <h2>👥 Créditos del Proyecto</h2>
+      <div id="credits-view" style="font-size:0.85rem; line-height:1.5; color:var(--text-dim); margin-bottom:15px;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeModal('modal-credits')">Cerrar</button>
+        <button class="btn btn-submit" onclick="requestEditCredits()">Editar Créditos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar Créditos Admin -->
+  <div id="modal-edit-credits" class="modal">
+    <div class="modal-content">
+      <h2>Editar Créditos</h2>
+      <form onsubmit="saveCredits(event)">
+        <div class="form-group"><label>Texto de Créditos:</label><textarea id="credits-textarea" rows="4" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; border:1px solid var(--card-border);"></textarea></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeModal('modal-edit-credits')">Cancelar</button>
+          <button type="submit" class="btn btn-submit">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -484,7 +525,18 @@
     <div class="modal-content">
       <h2>Filtros Avanzados</h2>
       <div class="form-group"><label>Creador:</label><input type="text" id="filter-author" placeholder="Ej: IcEDcave" oninput="render()"></div>
-      <div class="form-group"><label>Song ID:</label><input type="text" id="filter-song-id" placeholder="Ej: 467339" oninput="render()"></div>
+      <div class="form-group"><label>Estilo de Juego:</label>
+        <select id="filter-playstyle" class="form-group" style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px;" onchange="render()">
+          <option value="all">Todos</option>
+          <option value="wave">Wave</option>
+          <option value="ship">Ship</option>
+          <option value="ball">Ball</option>
+          <option value="ufo">UFO</option>
+          <option value="spider">Spider</option>
+          <option value="robot">Robot</option>
+          <option value="cube">Cube</option>
+        </select>
+      </div>
       <div class="modal-actions">
         <button class="btn btn-cancel" onclick="clearAdvFilters()">Limpiar</button>
         <button class="btn btn-submit" onclick="closeModal('modal-filter-adv')">Aplicar</button>
@@ -548,6 +600,17 @@
         <div class="form-group"><label>Autor / Creador</label><input type="text" id="level-author" required></div>
         <div class="form-group"><label>Victores (Separados por comas)</label><input type="text" id="level-verifier" required></div>
         <div class="form-group"><label>Progreso (%)</label><input type="number" id="level-progress" min="1" max="100" value="100"></div>
+        <div class="form-group"><label>Estilo Destacado (Modo de Juego)</label>
+          <select id="level-playstyle" class="form-group" style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px;">
+            <option value="wave">Wave</option>
+            <option value="ship">Ship</option>
+            <option value="ball">Ball</option>
+            <option value="ufo">UFO</option>
+            <option value="spider">Spider</option>
+            <option value="robot">Robot</option>
+            <option value="cube">Cube</option>
+          </select>
+        </div>
         <div class="form-group"><label>Link Video YouTube</label><input type="url" id="level-video-url"></div>
         <div class="form-group"><label>Imagen URL</label><input type="text" id="level-img-url"><input type="file" id="level-file" accept="image/*" style="margin-top:5px;"></div>
         <div class="form-group"><label>Nombre Canción</label><input type="text" id="level-song-name"></div>
@@ -634,6 +697,7 @@
     let currentTab = 'levels';
     let currentDiffFilter = 'all';
     let showOnlyFavorites = false;
+    let showOnlyUncompleted = false;
     let editTargetType = '';
     let editTargetIndex = -1;
     let selectedDetailLevelId = null;
@@ -656,6 +720,7 @@
 
     function initParticles() {
       const container = document.getElementById('particles-container');
+      container.innerHTML = '';
       for(let i=0; i<25; i++) {
         const p = document.createElement('div');
         p.className = 'gd-particle';
@@ -713,7 +778,9 @@
     }
 
     function checkMaintenanceMode() {
-      document.body.style.filter = localStorage.getItem('gd_absolute_maintenance') === 'true' ? 'grayscale(0.4)' : 'none';
+      const isMaint = localStorage.getItem('gd_absolute_maintenance') === 'true';
+      document.body.style.filter = isMaint ? 'grayscale(0.4)' : 'none';
+      document.getElementById('maintenance-banner').style.display = isMaint ? 'block' : 'none';
     }
 
     function toggleMaintenanceMode() {
@@ -741,8 +808,10 @@
         document.documentElement.style.setProperty('--bg', custom.bg);
         document.documentElement.style.setProperty('--card-bg', custom.card);
         document.documentElement.style.setProperty('--accent', custom.accent);
+        document.documentElement.style.setProperty('--particle-color', custom.particleColor || 'rgba(255,255,255,0.15)');
       }
       checkMaintenanceMode();
+      initParticles();
     }
 
     function openCustomThemeModal() {
@@ -754,13 +823,17 @@
       const bg = document.getElementById('theme-bg-input').value;
       const card = document.getElementById('theme-card-input').value;
       const accent = document.getElementById('theme-accent-input').value;
+      const particleColor = document.getElementById('particle-color-input').value;
       
       document.documentElement.style.setProperty('--bg', bg);
       document.documentElement.style.setProperty('--card-bg', card);
       document.documentElement.style.setProperty('--accent', accent);
-      localStorage.setItem('gd_absolute_custom_theme', JSON.stringify({ bg, card, accent }));
+      document.documentElement.style.setProperty('--particle-color', particleColor);
+      
+      localStorage.setItem('gd_absolute_custom_theme', JSON.stringify({ bg, card, accent, particleColor }));
       closeModal('modal-custom-theme');
-      alert("¡Tema aplicado!");
+      initParticles();
+      alert("¡Tema y partículas aplicados!");
     }
 
     function resetCustomTheme() {
@@ -770,10 +843,11 @@
 
     function switchTab(tab) {
       currentTab = tab;
-      document.querySelectorAll('.tab-btn, .tab-btn-sub').forEach(b => { if(!b.id.includes('fav')) b.classList.remove('active'); });
+      document.querySelectorAll('.tab-btn, .tab-btn-sub').forEach(b => { if(!b.id.includes('fav') && !b.id.includes('uncompleted')) b.classList.remove('active'); });
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(`tab-${tab}-btn`).classList.add('active');
       document.getElementById(`${tab}-section`).classList.add('active');
+      render();
     }
 
     function setDiffFilter(diff, btn) {
@@ -791,6 +865,14 @@
       render();
     }
 
+    function toggleUncompletedFilter() {
+      showOnlyUncompleted = !showOnlyUncompleted;
+      const btn = document.getElementById('uncompleted-toggle-btn');
+      if(showOnlyUncompleted) btn.classList.add('active');
+      else btn.classList.remove('active');
+      render();
+    }
+
     function toggleFavorite(event, levelId) {
       event.stopPropagation();
       let favs = JSON.parse(localStorage.getItem('gd_absolute_favorites')) || [];
@@ -802,7 +884,7 @@
 
     function clearAdvFilters() {
       document.getElementById('filter-author').value = '';
-      document.getElementById('filter-song-id').value = '';
+      document.getElementById('filter-playstyle').value = 'all';
       render();
       closeModal('modal-filter-adv');
     }
@@ -827,7 +909,8 @@
         closeModal('modal-auth');
         if(currentTab === 'levels') openModal('modal-add');
         else if(currentTab === 'real') openModal('modal-add-real');
-        else openModal('modal-add-player');
+        else if(currentTab === 'players') openModal('modal-add-player');
+        else alert("Selecciona la pestaña de Absolute, Rateados o Jugadores para añadir elementos.");
       } else alert("Clave incorrecta");
     }
 
@@ -847,6 +930,7 @@
         else if (editTargetType === 'real') openRealEditor(editTargetIndex);
         else if (editTargetType === 'player') openPlayerEditor(editTargetIndex);
         else if (editTargetType === 'discord') openModal('modal-discord-config');
+        else if (editTargetType === 'credits') openModal('modal-edit-credits');
       } else alert("Clave incorrecta");
     }
 
@@ -859,6 +943,7 @@
       document.getElementById('level-author').value = lvl.author;
       document.getElementById('level-verifier').value = lvl.verifier;
       document.getElementById('level-progress').value = lvl.progress || 100;
+      document.getElementById('level-playstyle').value = lvl.playstyle || 'wave';
       document.getElementById('level-video-url').value = lvl.videoUrl || "";
       document.getElementById('level-img-url').value = lvl.img || "";
       document.getElementById('level-song-name').value = lvl.songName || "";
@@ -908,6 +993,35 @@
       localStorage.setItem('gd_absolute_discord', document.getElementById('discord-url-input').value);
       closeModal('modal-discord-config');
       alert("¡Guardado!");
+    }
+
+    function reportExpiredDiscord() {
+      logActivityFeed("⚠️ Alerta: Un usuario reportó que el link de invitación de Discord ha expirado.");
+      alert("¡Gracias! Se ha enviado un aviso al registro de actividad del administrador para actualizar el enlace.");
+      closeModal('modal-menu');
+    }
+
+    function showCreditsModal() {
+      closeModal('modal-menu');
+      const text = localStorage.getItem('gd_absolute_credits_text') || "<b>La Absolute List</b><br>Creado por Samuel y colaboradores de la comunidad de Geometry Dash.";
+      document.getElementById('credits-view').innerHTML = text;
+      openModal('modal-credits');
+    }
+
+    function requestEditCredits() {
+      closeModal('modal-credits');
+      editTargetType = 'credits';
+      document.getElementById('edit-pass-input').value = '';
+      document.getElementById('credits-textarea').value = localStorage.getItem('gd_absolute_credits_text') || "";
+      openModal('modal-edit-pass');
+    }
+
+    function saveCredits(e) {
+      e.preventDefault();
+      const txt = document.getElementById('credits-textarea').value;
+      localStorage.setItem('gd_absolute_credits_text', txt);
+      closeModal('modal-edit-credits');
+      alert("¡Créditos actualizados!");
     }
 
     function openPointsCalculator() {
@@ -1059,6 +1173,7 @@
         author: document.getElementById('level-author').value,
         verifier: document.getElementById('level-verifier').value,
         progress: parseInt(document.getElementById('level-progress').value) || 100,
+        playstyle: document.getElementById('level-playstyle').value || 'wave',
         img: finalImg,
         createdAt: Date.now(),
         songName: document.getElementById('level-song-name').value || "Desconocida",
@@ -1147,6 +1262,7 @@
 
         document.getElementById('detail-info-list').innerHTML = `
           <div class="detail-row"><span>Creador:</span> <b>${lvl.author}</b></div>
+          <div class="detail-row"><span>Estilo:</span> <b>${(lvl.playstyle || 'wave').toUpperCase()}</b></div>
           <div class="detail-row"><span>Canción:</span> <b>${lvl.songName} (${lvl.songId})</b></div>
           <div class="detail-row"><span>ID GD:</span> <b style="cursor:pointer; color:var(--accent);" onclick="copyToClipboard('${lvl.gdId}')">${lvl.gdId} 📋</b></div>
           ${victorsHTML}
@@ -1171,15 +1287,19 @@
     function renderComments() {
       const container = document.getElementById('comments-container');
       const allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
-      const lvlComments = allComments[selectedDetailLevelId] || [];
+      let lvlComments = allComments[selectedDetailLevelId] || [];
       const likedComments = JSON.parse(localStorage.getItem('gd_absolute_likes')) || [];
+
+      // Ordenar comentarios poniendo el más votado (pinned) arriba
+      lvlComments.sort((a, b) => (b.likes || 0) - (a.likes || 0));
 
       container.innerHTML = lvlComments.length === 0 ? '<div style="font-size:0.75rem; color:var(--text-dim);">Sin comentarios.</div>' : '';
       lvlComments.forEach((c, idx) => {
         const isLiked = likedComments.includes(`${selectedDetailLevelId}-${idx}`);
+        const isPinned = idx === 0 && (c.likes || 0) > 0;
         container.innerHTML += `
-          <div class="comment-box">
-            <div><b>${c.author}:</b> ${c.text}</div>
+          <div class="comment-box ${isPinned ? 'pinned' : ''}">
+            <div>${isPinned ? '📌 <b>[Destacado]</b> ' : ''}<b>${c.author}:</b> ${c.text}</div>
             <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${selectedDetailLevelId}, ${idx})">
               ❤️ <span>${c.likes || 0}</span>
             </button>
@@ -1255,6 +1375,7 @@
       const favs = JSON.parse(localStorage.getItem('gd_absolute_favorites')) || [];
 
       const qName = document.getElementById('search-bar').value.toLowerCase().trim();
+      const playstyleFilter = document.getElementById('filter-playstyle') ? document.getElementById('filter-playstyle').value : 'all';
       const now = Date.now();
       const fortyEightHours = 48 * 60 * 60 * 1000;
 
@@ -1267,7 +1388,9 @@
       levels.filter(l => {
         const matchesQuery = l.name.toLowerCase().includes(qName);
         const matchesFav = !showOnlyFavorites || favs.includes(l.id);
-        return matchesQuery && matchesFav;
+        const matchesPlaystyle = playstyleFilter === 'all' || l.playstyle === playstyleFilter;
+        const matchesUncompleted = !showOnlyUncompleted || !(l.verifier || "").toLowerCase().includes("tú");
+        return matchesQuery && matchesFav && matchesPlaystyle && matchesUncompleted;
       }).forEach(lvl => {
         const idx = levels.indexOf(lvl);
         const isNew = lvl.createdAt && (now - lvl.createdAt < fortyEightHours);
@@ -1285,7 +1408,7 @@
                 <h3>${lvl.name}</h3>
                 ${isNew ? '<span class="new-badge">NEW</span>' : ''}
               </div>
-              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+              <div class="meta-small">Creador: <b>${lvl.author}</b> | Estilo: <b>${(lvl.playstyle || 'wave').toUpperCase()}</b></div>
               <div class="meta-small">Victores: <b>${lvl.verifier} (${lvl.progress||100}%)</b></div>
             </div>
             <div class="actions-right">
@@ -1302,7 +1425,8 @@
         const matchesQuery = l.name.toLowerCase().includes(qName);
         const matchesDiff = currentDiffFilter === 'all' || l.difficulty === currentDiffFilter;
         const matchesFav = !showOnlyFavorites || favs.includes(l.id);
-        return matchesQuery && matchesDiff && matchesFav;
+        const matchesUncompleted = !showOnlyUncompleted || l.goldPlayer.toLowerCase() !== "tú";
+        return matchesQuery && matchesDiff && matchesFav && matchesUncompleted;
       }).forEach(lvl => {
         const idx = realLevels.indexOf(lvl);
         const demonImg = DEMON_ICONS[lvl.difficulty || 'extreme'];
@@ -1349,7 +1473,13 @@
       document.getElementById('stat-total-players').innerText = playerList.length;
 
       playerList.filter(p => p.name.toLowerCase().includes(qName)).forEach((p, i) => {
-        const customIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === p.name.toLowerCase());
+        let customIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === p.name.toLowerCase());
+        if (customIdx === -1) {
+          customPlayers.push({ id: Date.now() + i, name: p.name, img: "https://via.placeholder.com/150", info: "" });
+          localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
+          customIdx = customPlayers.length - 1;
+        }
+
         playersDiv.innerHTML += `
           <div class="card" onclick="showPlayerProfile('${p.name}')">
             <div class="rank">#${i+1}</div>
@@ -1358,11 +1488,40 @@
               <div class="meta-small">Puntos: <b>${p.pts} pts</b></div>
               <div class="meta-small">Absolute: <b>${p.countNormal}</b> | Rateados: <b>${p.countReal}</b></div>
             </div>
-            ${customIdx !== -1 ? `
-              <div class="actions-right">
-                <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('player', ${customIdx});">✏️ Editar</button>
-              </div>
-            ` : ''}
+            <div class="actions-right">
+              <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('player', ${customIdx});">✏️ Editar</button>
+            </div>
+          </div>
+        `;
+      });
+
+      // Pestaña Creadores Render
+      const creatorsDiv = document.getElementById('creators-list');
+      creatorsDiv.innerHTML = '';
+
+      let creatorMap = {};
+      levels.forEach((l, idx) => {
+        const cName = l.author.trim();
+        if(!creatorMap[cName]) creatorMap[cName] = { count: 0, highestRank: idx + 1 };
+        creatorMap[cName].count++;
+        if((idx + 1) < creatorMap[cName].highestRank) creatorMap[cName].highestRank = idx + 1;
+      });
+
+      const creatorList = Object.keys(creatorMap).map(name => ({
+        name,
+        count: creatorMap[name].count,
+        highestRank: creatorMap[name].highestRank
+      })).sort((a, b) => a.highestRank - b.highestRank);
+
+      creatorList.filter(c => c.name.toLowerCase().includes(qName)).forEach((c, i) => {
+        creatorsDiv.innerHTML += `
+          <div class="card">
+            <div class="rank" style="color:var(--accent);">#${i+1}</div>
+            <div class="info">
+              <h3>${c.name}</h3>
+              <div class="meta-small">Creaciones en la lista: <b>${c.count} niveles</b></div>
+              <div class="meta-small">Nivel más alto: <b>Top #${c.highestRank}</b></div>
+            </div>
           </div>
         `;
       });
