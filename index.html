@@ -72,6 +72,8 @@
       letter-spacing: 2px;
       color: #ffffff;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      user-select: none;
     }
 
     .top-menu-btn {
@@ -231,8 +233,11 @@
     .victor-tag.third { background: rgba(205, 127, 50, 0.2); color: var(--bronze); border: 1px solid var(--bronze); }
     .victor-tag.standard { background: rgba(255, 255, 255, 0.08); color: var(--text-dim); }
 
-    .comment-box { background: #0d0f12; border: 1px solid var(--card-border); padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 0.78rem; }
+    .comment-box { background: #0d0f12; border: 1px solid var(--card-border); padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
+    .comment-content { flex: 1; }
     .comment-box b { color: var(--accent); }
+    .like-btn { background: transparent; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
+    .like-btn:hover { color: #ff4757; }
 
     .detail-img { width: 100%; height: 170px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; background: #000; }
     .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 0.82rem; }
@@ -241,11 +246,41 @@
 
     .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; background: #000; }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+    /* Notificación Toast (Logros) */
+    #achievement-toast {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--card-bg);
+      border: 2px solid var(--gold);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      font-size: 0.82rem;
+    }
+    #achievement-toast.show { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 
   <div id="particles-container"></div>
+
+  <!-- Notificación Toast -->
+  <div id="achievement-toast">
+    <span style="font-size:1.4rem;">🏆</span>
+    <div>
+      <div style="font-weight:bold; color:var(--gold);" id="toast-title">¡Logro Desbloqueado!</div>
+      <div style="font-size:0.72rem; color:var(--text-dim);" id="toast-desc">Descripción rápida del logro</div>
+    </div>
+  </div>
 
   <header>
     <select id="theme-selector-element" class="theme-selector" onchange="playClickSound(); changeTheme(this.value)">
@@ -254,11 +289,12 @@
       <option value="doki">Doki Soft</option>
       <option value="geode">Geode GD</option>
       <option value="cyber">Cyberpunk</option>
+      <option value="custom">🎨 Tema Personalizado</option>
     </select>
 
     <button class="top-menu-btn" onclick="playClickSound(); openModal('modal-menu')">•••</button>
 
-    <div class="header-title">LA ABSOLUTE LIST</div>
+    <div class="header-title" onclick="handleTitleTripleClick()">LA ABSOLUTE LIST</div>
 
     <div class="stats-bar">
       <div class="stat-item"><div class="stat-val" id="stat-total-levels">0</div><div class="stat-lbl">Absolute Levels</div></div>
@@ -305,7 +341,8 @@
       <h2>Opciones de la Lista</h2>
       <div style="display:flex; flex-direction:column; gap:10px;">
         <button class="btn btn-cancel" onclick="playClickSound(); handleDiscordClick()">👾 Ir al Discord</button>
-        <button class="btn btn-cancel" onclick="playClickSound(); openDiscordConfigModal()">⚙️ Configurar Discord</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); openCustomThemeModal()">🎨 Creador de Temas</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); openRoadmapModal()">🗺️ Rutas para Mejorar (Saltos)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openPointsCalculator()">🧮 Calculadora de Puntos</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showAchievementsModal()">🏆 Logros (100)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showActivityFeed()">📊 Activity Feed</button>
@@ -316,6 +353,38 @@
         <button class="btn btn-cancel" onclick="playClickSound(); importData()">📥 Importar Backup</button>
       </div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="playClickSound(); closeModal('modal-menu')">Cerrar</button></div>
+    </div>
+  </div>
+
+  <!-- Modal Creador de Temas Personalizados -->
+  <div id="modal-custom-theme" class="modal">
+    <div class="modal-content">
+      <h2>Creador de Temas</h2>
+      <div class="form-group"><label>Color de Fondo (Background):</label><input type="color" id="custom-bg" value="#0d0f12"></div>
+      <div class="form-group"><label>Color de Tarjetas:</label><input type="color" id="custom-card" value="#161920"></div>
+      <div class="form-group"><label>Color de Bordes:</label><input type="color" id="custom-border" value="#232733"></div>
+      <div class="form-group"><label>Color Acento Neón:</label><input type="color" id="custom-accent" value="#00d2ff"></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeModal('modal-custom-theme')">Cancelar</button>
+        <button class="btn btn-submit" onclick="saveCustomTheme()">Aplicar Tema</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Rutas / Saltos de Dificultad -->
+  <div id="modal-roadmap" class="modal">
+    <div class="modal-content">
+      <h2>🗺️ Rutas para Mejorar</h2>
+      <div class="form-group">
+        <label>Elige tu nivel actual para ver tu ruta:</label>
+        <select id="roadmap-select" class="form-group" style="background:#0d0f12; color:#fff; padding:8px; width:100%; border-radius:6px;" onchange="updateRoadmap()">
+          <option value="hard">Iniciando en Hard Demons</option>
+          <option value="insane">Iniciando en Insane Demons</option>
+          <option value="extreme">Iniciando en Extreme Demons</option>
+        </select>
+      </div>
+      <div id="roadmap-results" style="margin-top:10px; font-size:0.82rem; line-height:1.4;"></div>
+      <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="closeModal('modal-roadmap')">Cerrar</button></div>
     </div>
   </div>
 
@@ -333,10 +402,10 @@
     </div>
   </div>
 
-  <!-- Modal Configurar Discord -->
+  <!-- Modal Configurar Discord (Oculto) -->
   <div id="modal-discord-config" class="modal">
     <div class="modal-content">
-      <h2>Configurar Discord</h2>
+      <h2>Configurar Discord (Oculto)</h2>
       <form onsubmit="saveDiscordLink(event)">
         <div class="form-group"><label>Link de Invitación:</label><input type="url" id="discord-url-input" required placeholder="https://discord.gg/ejemplo"></div>
         <div class="modal-actions">
@@ -353,7 +422,7 @@
       <h2>🧮 Calculadora de Puntos</h2>
       <div class="form-group">
         <label>Simular Puntos por Porcentaje (%):</label>
-        <select id="calc-diff" class="form-group" style="background:#0d0f12; color:#fff; padding:8px; width:100%; border-radius:6px;">
+        <select id="calc-diff" class="form-group" style="background:#0d0f12; color:#fff; padding:8px; width:100%; border-radius:6px;" onchange="calculateSimulatedPoints()">
           <option value="top1">Absolute Top 1 (Base 400 pts)</option>
           <option value="top5">Absolute Top 2-5 (Base 300 pts)</option>
           <option value="top10">Absolute Top 6-10 (Base 200 pts)</option>
@@ -374,7 +443,7 @@
   <!-- Modal Logros -->
   <div id="modal-achievements" class="modal">
     <div class="modal-content">
-      <h2>🏆 Logros Desbloqueados (100)</h2>
+      <h2>🏆 Logros (100)</h2>
       <div id="achievements-list" style="max-height: 250px; overflow-y: auto;"></div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="closeModal('modal-achievements')">Cerrar</button></div>
     </div>
@@ -528,13 +597,13 @@
       <img id="detail-img" class="detail-img" src="">
       <div id="detail-info-list"></div>
       
-      <!-- Comentarios de la comunidad -->
+      <!-- Comentarios con Likes -->
       <div style="margin-top:15px;">
         <label style="font-size:0.8rem; color:var(--text-dim); display:block; margin-bottom:5px;">💬 Comentarios de la Comunidad:</label>
         <div id="comments-container" style="max-height:120px; overflow-y:auto; margin-bottom:8px;"></div>
         <div style="display:flex; gap:6px;">
           <input type="text" id="comment-author-input" placeholder="Tu nombre" style="width:30%; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
-          <input type="text" id="comment-text-input" placeholder="Escribe un tip o comentario..." style="flex:1; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
+          <input type="text" id="comment-text-input" placeholder="Escribe un tip..." style="flex:1; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
           <button class="btn btn-submit" style="padding:6px 12px; font-size:0.75rem;" onclick="postComment()">Enviar</button>
         </div>
       </div>
@@ -551,6 +620,7 @@
     let editTargetType = '';
     let editTargetIndex = -1;
     let selectedDetailLevelId = null;
+    let titleClickCount = 0;
 
     let levels = [];
     let realLevels = [];
@@ -562,7 +632,6 @@
       extreme: 'https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png'
     };
 
-    // Generar Partículas Visuales
     function initParticles() {
       const container = document.getElementById('particles-container');
       for(let i=0; i<25; i++) {
@@ -576,7 +645,6 @@
       }
     }
 
-    // Efecto de Sonido Web Sutil
     function playClickSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -586,577 +654,82 @@
         osc.frequency.setValueAtTime(440, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.05);
         gain.gain.setValueAtTime(0.05, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.05);
-      } catch(e) {}
+        gain.gain.exponentialR¡Entendido a la perfección! Vamos a corregir cada uno de los fallos, pulir los accesos y añadir todas las nuevas funciones que pediste con precisión quirúrgica:
+
+1. **Corrección Total de Edición en Top Jugadores:** Se solucionó el bloqueo para que ya puedas editar sin problemas los avatares y nombres de los jugadores personalizados.
+2. **Iconos Demon en Top Rateados Reparados:** Se corrigieron y aseguraron las rutas de las caritas de demonio para que carguen de manera correcta y limpia a la par de cada nivel rateado.
+3. **Creador de Temas Personalizados:** Añadido en el menú **•••**. Te permite elegir mediante selectores de color exactamente qué tono quieres para el fondo, las tarjetas, los bordes y el color de acento neón de tu página.
+4. **Sistema de "Me gusta" en Comentarios:** Cada comentario en los detalles de los niveles ahora incluye un botón de ❤️ con un contador que se guarda de forma persistente en el almacenamiento local.
+5. **Generador de Rutas de Progresión (Fáciles para empezar):** Añadido en los tres puntos (**•••**). Una sección dividida por categorías (*Extremes Fáciles para Iniciar*, *Insanes Fáciles*, *Hard Demons Fáciles*) que te recomienda niveles puente ideales para subir de nivel y progresar.
+6. **Discord Oculto (Secreto):** El botón visible de configuración de Discord se eliminó de la vista general. Ahora es un **Easter Egg secreto**: para configurarlo, solo debes hacer **doble clic rápido** sobre el título principal *"LA ABSOLUTE LIST"* arriba del todo, y se abrirá la ventana para ingresar la contraseña de admin y cambiar el enlace.
+7. **Sistema de 100 Logros Únicos y Notificaciones "Toast":** 
+   * Se reescribieron los **100 logros** para que cada uno tenga un nombre y una condición completamente única.
+   * Todos arrancan bloqueados por defecto.
+   * Al cumplirlos, aparece una **notificación flotante rápida de 1 segundo** en la parte inferior con un diseño muy limpio tipo videojuego.
+   * Al hacer clic en cualquier logro en el menú, puedes ver su descripción detallada.
+
+---
+
+### Código Completo Actualizado (`index.html`)
+
+Reemplaza todo el contenido de tu archivo en GitHub con el siguiente código:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Absolute List</title>
+
+  <!-- Icono de Acceso Directo (App Icon) -->
+  <link rel="icon" type="image/png" href="[https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png](https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png)">
+  <link rel="apple-touch-icon" href="[https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png](https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png)">
+
+  <style>
+    @import url('[https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&display=swap](https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&display=swap)');
+
+    :root {
+      --bg: #0d0f12;
+      --card-bg: #161920;
+      --card-border: #232733;
+      --accent: #00d2ff;
+      --text: #ffffff;
+      --text-dim: #9aa0a6;
+      --gold: #ffd700;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
     }
 
-    // Backup automático cada 3 días
-    function checkAutoBackup() {
-      const lastBackup = localStorage.getItem('gd_absolute_last_backup');
-      const now = Date.now();
-      const threeDays = 3 * 24 * 60 * 60 * 1000;
-      if (!lastBackup || (now - parseInt(lastBackup)) > threeDays) {
-        localStorage.setItem('gd_absolute_backup_auto', JSON.stringify({ levels, realLevels, customPlayers }));
-        localStorage.setItem('gd_absolute_last_backup', now.toString());
-      }
+    body.theme-lava { --bg: #120909; --card-bg: #201313; --card-border: #381f1f; --accent: #ff4757; }
+    body.theme-doki { --bg: #140d12; --card-bg: #20161d; --card-border: #382333; --accent: #ff75a0; }
+    body.theme-geode { --bg: #09120d; --card-bg: #132017; --card-border: #1f3825; --accent: #2ed573; }
+    body.theme-cyber { --bg: #0d0b14; --card-bg: #181424; --card-border: #2a223d; --accent: #eccc68; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; transition: background 0.3s; position: relative; min-height: 100vh; overflow-x: hidden; }
+
+    .gd-particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.15);
+      width: 6px;
+      height: 6px;
+      pointer-events: none;
+      animation: floatUp linear infinite;
+      z-index: 0;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.3; }
+      80% { opacity: 0.3; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+    
+    header, .search-wrapper, .nav-tabs-main, .nav-tabs-sub, .container, .fab, .modal {
+      position: relative;
+      z-index: 2;
     }
 
-    function checkMaintenanceMode() {
-      if (localStorage.getItem('gd_absolute_maintenance') === 'true') {
-        document.body.style.filter = 'grayscale(0.4)';
-      } else {
-        document.body.style.filter = 'none';
-      }
-    }
-
-    function toggleMaintenanceMode() {
-      const current = localStorage.getItem('gd_absolute_maintenance') === 'true';
-      const pass = prompt("Clave admin para cambiar Modo Mantenimiento:");
-      if (pass === ADMIN_PASSWORD) {
-        localStorage.setItem('gd_absolute_maintenance', (!current).toString());
-        checkMaintenanceMode();
-        alert("¡Modo Mantenimiento " + (!current ? "Activado" : "Desactivado") + "!");
-      } else if(pass !== null) alert("Clave incorrecta");
-    }
-
-    function changeTheme(theme) {
-      document.body.className = theme === 'default' ? '' : `theme-${theme}`;
-      localStorage.setItem('gd_absolute_theme', theme);
-    }
-
-    function loadSavedTheme() {
-      const savedTheme = localStorage.getItem('gd_absolute_theme') || 'default';
-      document.getElementById('theme-selector-element').value = savedTheme;
-      changeTheme(savedTheme);
-      checkMaintenanceMode();
-    }
-
-    function switchTab(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.tab-btn, .tab-btn-sub').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById(`tab-${tab}-btn`).classList.add('active');
-      document.getElementById(`${tab}-section`).classList.add('active');
-    }
-
-    function setDiffFilter(diff, btn) {
-      currentDiffFilter = diff;
-      document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      render();
-    }
-
-    function clearAdvFilters() {
-      document.getElementById('filter-author').value = '';
-      document.getElementById('filter-song-id').value = '';
-      render();
-      closeModal('modal-filter-adv');
-    }
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; if(id==='modal-detail') document.getElementById('detail-video').src=''; }
-
-    function startAddProcess() { 
-      if (localStorage.getItem('gd_absolute_maintenance') === 'true') {
-        if(prompt("Modo mantenimiento activo. Clave admin para añadir:") !== ADMIN_PASSWORD) {
-          alert("Acceso denegado por mantenimiento.");
-          return;
-        }
-      }
-      document.getElementById('edit-level-id').value = '';
-      document.getElementById('edit-real-id').value = '';
-      document.getElementById('edit-player-id').value = '';
-      document.getElementById('pre-admin-pass').value = ''; 
-      openModal('modal-auth'); 
-    }
-
-    function verifyAdminAccess(e) {
-      e.preventDefault();
-      if(document.getElementById('pre-admin-pass').value === ADMIN_PASSWORD) {
-        closeModal('modal-auth');
-        if(currentTab === 'levels') openModal('modal-add');
-        else if(currentTab === 'real') openModal('modal-add-real');
-        else openModal('modal-add-player');
-      } else alert("Clave incorrecta");
-    }
-
-    function requestEdit(type, idx) {
-      editTargetType = type;
-      editTargetIndex = idx;
-      document.getElementById('edit-pass-input').value = '';
-      openModal('modal-edit-pass');
-    }
-
-    function confirmEditAccess(e) {
-      e.preventDefault();
-      const pass = document.getElementById('edit-pass-input').value;
-      if (pass === ADMIN_PASSWORD) {
-        closeModal('modal-edit-pass');
-        if (editTargetType === 'level') openLevelEditor(editTargetIndex);
-        else if (editTargetType === 'real') openRealEditor(editTargetIndex);
-        else if (editTargetType === 'player') openPlayerEditor(editTargetIndex);
-        else if (editTargetType === 'discord') openModal('modal-discord-config');
-      } else alert("Clave incorrecta");
-    }
-
-    function openLevelEditor(idx) {
-      const lvl = levels[idx];
-      document.getElementById('modal-add-title').innerText = "Editar Nivel Personalizado";
-      document.getElementById('edit-level-id').value = lvl.id;
-      document.getElementById('level-position').value = idx + 1;
-      document.getElementById('level-name').value = lvl.name;
-      document.getElementById('level-author').value = lvl.author;
-      document.getElementById('level-verifier').value = lvl.verifier;
-      document.getElementById('level-progress').value = lvl.progress || 100;
-      document.getElementById('level-video-url').value = lvl.videoUrl || "";
-      document.getElementById('level-img-url').value = lvl.img || "";
-      document.getElementById('level-song-name').value = lvl.songName || "";
-      document.getElementById('level-song-id').value = lvl.songId || "";
-      document.getElementById('level-gd-id').value = lvl.gdId || "";
-      openModal('modal-add');
-    }
-
-    function openRealEditor(idx) {
-      const lvl = realLevels[idx];
-      document.getElementById('modal-real-title').innerText = "Editar Top Rateado";
-      document.getElementById('edit-real-id').value = lvl.id;
-      document.getElementById('real-position').value = idx + 1;
-      document.getElementById('real-name').value = lvl.name;
-      document.getElementById('real-author').value = lvl.author;
-      document.getElementById('real-difficulty').value = lvl.difficulty || 'extreme';
-      document.getElementById('real-gold-player').value = lvl.goldPlayer;
-      document.getElementById('real-gold-percent').value = lvl.goldPercent || 100;
-      document.getElementById('real-video-url').value = lvl.videoUrl || "";
-      document.getElementById('real-gd-id').value = lvl.gdId || "";
-      openModal('modal-add-real');
-    }
-
-    function openPlayerEditor(idx) {
-      const p = customPlayers[idx];
-      document.getElementById('modal-player-title').innerText = "Editar Jugador";
-      document.getElementById('edit-player-id').value = p.id;
-      document.getElementById('player-name').value = p.name;
-      document.getElementById('player-img-url').value = p.img || "";
-      document.getElementById('player-info').value = p.info || "";
-      openModal('modal-add-player');
-    }
-
-    function handleDiscordClick() {
-      const savedUrl = localStorage.getItem('gd_absolute_discord');
-      if (savedUrl) window.open(savedUrl, '_blank');
-      else alert("No hay enlace de Discord configurado. Usa 'Configurar Discord'.");
-    }
-
-    function openDiscordConfigModal() {
-      closeModal('modal-menu');
-      requestEdit('discord', -1);
-    }
-
-    function saveDiscordLink(e) {
-      e.preventDefault();
-      localStorage.setItem('gd_absolute_discord', document.getElementById('discord-url-input').value);
-      closeModal('modal-discord-config');
-      alert("¡Enlace guardado exitosamente!");
-    }
-
-    function openPointsCalculator() {
-      closeModal('modal-menu');
-      openModal('modal-calc');
-      calculateSimulatedPoints();
-    }
-
-    function calculateSimulatedPoints() {
-      const diff = document.getElementById('calc-diff').value;
-      const pct = parseFloat(document.getElementById('calc-pct').value) || 100;
-      let base = 100;
-      if(diff === 'top1') base = 400;
-      else if(diff === 'top5') base = 300;
-      else if(diff === 'top10') base = 200;
-      else if(diff === 'top100') base = 100;
-      else if(diff === 'extreme') base = 500;
-      else if(diff === 'insane') base = 300;
-
-      const res = Math.round((base * (pct / 100)) * 10) / 10;
-      document.getElementById('calc-result').innerText = `Resultado: ${res} pts (${pct}%)`;
-    }
-
-    function showAchievementsModal() {
-      closeModal('modal-menu');
-      const list = document.getElementById('achievements-list');
-      list.innerHTML = '';
-      for(let i=1; i<=100; i++) {
-        const unlocked = i <= (levels.length * 5 + realLevels.length * 3 + customPlayers.length * 2);
-        list.innerHTML += `
-          <div class="feed-item" style="display:flex; justify-content:space-between; align-items:center;">
-            <span>🏆 Logro #${i}: ${i <= 10 ? 'Completista Pro' : i <= 50 ? 'Experto en Demon' : 'Leyenda Absoluta'}</span>
-            <b style="color:${unlocked ? 'var(--accent)' : 'var(--text-dim)'};">${unlocked ? 'Desbloqueado' : 'Bloqueado'}</b>
-          </div>
-        `;
-      }
-      openModal('modal-achievements');
-    }
-
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => alert(`¡Copiado al portapapeles: ${text}!`));
-    }
-
-    function showPlayerProfile(playerName) {
-      const p = customPlayers.find(cp => cp.name.toLowerCase() === playerName.toLowerCase());
-      document.getElementById('profile-avatar').src = p ? p.img : 'https://via.placeholder.com/150';
-      document.getElementById('profile-name').innerText = playerName;
-      document.getElementById('profile-info').innerText = p ? p.info : 'Jugador de la Comunidad';
-
-      let countN = 0, countR = 0;
-      levels.forEach(l => { if((l.verifier||"").includes(playerName)) countN++; });
-      realLevels.forEach(l => { if(l.goldPlayer === playerName) countR++; });
-
-      document.getElementById('profile-details-list').innerHTML = `
-        <div class="detail-row"><span>Absolute Levels Pasados:</span> <b>${countN}</b></div>
-        <div class="detail-row"><span>Récords Rateados:</span> <b>${countR}</b></div>
-        <div class="detail-row"><span>Estado:</span> <b style="color:var(--gold);">Activo ⚡</b></div>
-      `;
-      openModal('modal-player-profile');
-    }
-
-    function logActivityFeed(msg) {
-      let feed = JSON.parse(localStorage.getItem('gd_absolute_activity_feed')) || [];
-      feed.unshift({ msg, date: new Date().toLocaleDateString() });
-      localStorage.setItem('gd_absolute_activity_feed', JSON.stringify(feed.slice(0, 25)));
-    }
-
-    function logLevelsFeed(msg) {
-      let feed = JSON.parse(localStorage.getItem('gd_absolute_levels_feed')) || [];
-      feed.unshift({ msg, date: new Date().toLocaleDateString() });
-      localStorage.setItem('gd_absolute_levels_feed', JSON.stringify(feed.slice(0, 25)));
-    }
-
-    function showActivityFeed() {
-      const feed = JSON.parse(localStorage.getItem('gd_absolute_activity_feed')) || [];
-      const list = document.getElementById('activity-feed-list');
-      list.innerHTML = feed.length === 0 ? '<p>No hay registros.</p>' : '';
-      feed.forEach(item => list.innerHTML += `<div class="feed-item"><b>[${item.date}]</b> ${item.msg}</div>`);
-      openModal('modal-activity');
-    }
-
-    function showLevelsFeed() {
-      const feed = JSON.parse(localStorage.getItem('gd_absolute_levels_feed')) || [];
-      const list = document.getElementById('levels-feed-list');
-      list.innerHTML = feed.length === 0 ? '<p>No hay niveles.</p>' : '';
-      feed.forEach(item => list.innerHTML += `<div class="feed-item"><b>[${item.date}]</b> ${item.msg}</div>`);
-      openModal('modal-levels-feed');
-    }
-
-    function getYouTubeId(url) {
-      if(!url) return null;
-      let match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-      return (match && match[2].length === 11) ? match[2] : null;
-    }
-
-    function getYouTubeEmbedUrl(url) { const id = getYouTubeId(url); return id ? `https://www.youtube.com/embed/${id}` : null; }
-    function getYouTubeThumbnail(url) { const id = getYouTubeId(url); return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null; }
-
-    function calculatePlayerPoints(playerLevels, playerRealLevels) {
-      let total = 0;
-      playerLevels.forEach(l => {
-        const rank = levels.indexOf(l) + 1;
-        let basePoints = 50;
-        if(rank === 1) basePoints = 400;
-        else if(rank <= 5) basePoints = 300;
-        else if(rank <= 10) basePoints = 200;
-        else if(rank <= 100) basePoints = 100;
-        const pct = (l.progress !== undefined ? l.progress : 100) / 100;
-        total += basePoints * pct;
-      });
-      playerRealLevels.forEach(rl => {
-        const diff = rl.difficulty || 'extreme';
-        let basePoints = 150;
-        if(diff === 'extreme') basePoints = 500;
-        else if(diff === 'insane') basePoints = 300;
-        const pct = (rl.goldPercent !== undefined ? rl.goldPercent : 100) / 100;
-        total += basePoints * pct;
-      });
-      return Math.round(total * 10) / 10;
-    }
-
-    function spinRoulette(type) {
-      let pool = type === 'mine' ? levels : realLevels;
-      if(pool.length === 0) return alert("No hay niveles.");
-      const picked = pool[Math.floor(Math.random() * pool.length)];
-      const rank = pool.indexOf(picked) + 1;
-      document.getElementById('roulette-result').innerHTML = `🎯 <b>#${rank} - ${picked.name}</b> (${picked.author})`;
-    }
-
-    function exportData() {
-      if(prompt("Clave admin:") === ADMIN_PASSWORD) {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ levels, realLevels, customPlayers }));
-        const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "absolute_list_backup.json"); dl.click(); dl.remove();
-      } else alert("Clave incorrecta");
-    }
-
-    function importData() {
-      if(prompt("Clave admin:") === ADMIN_PASSWORD) {
-        try {
-          const parsed = JSON.parse(prompt("Pega el JSON del backup:"));
-          if(parsed.levels) localStorage.setItem('gd_absolute_list', JSON.stringify(parsed.levels));
-          if(parsed.realLevels) localStorage.setItem('gd_absolute_real', JSON.stringify(parsed.realLevels));
-          if(parsed.customPlayers) localStorage.setItem('gd_absolute_players', JSON.stringify(parsed.customPlayers));
-          window.location.reload();
-        } catch(e) { alert("JSON no válido."); }
-      } else alert("Clave incorrecta");
-    }
-
-    async function saveLevel(e) {
-      e.preventDefault();
-      const editId = document.getElementById('edit-level-id').value;
-      const videoUrl = document.getElementById('level-video-url').value;
-      const fileInput = document.getElementById('level-file');
-      const urlInput = document.getElementById('level-img-url').value;
-      let finalImg = getYouTubeThumbnail(videoUrl) || (fileInput.files.length > 0 ? await readFileAsBase64(fileInput.files[0]) : urlInput) || "https://via.placeholder.com/400x200?text=GD";
-
-      const targetPos = parseInt(document.getElementById('level-position').value);
-      const name = document.getElementById('level-name').value;
-      const verifier = document.getElementById('level-verifier').value;
-      const progress = parseInt(document.getElementById('level-progress').value) || 100;
-
-      const newLevel = {
-        id: editId ? parseInt(editId) : Date.now(),
-        name,
-        author: document.getElementById('level-author').value,
-        verifier,
-        progress,
-        img: finalImg,
-        songName: document.getElementById('level-song-name').value || "Desconocida",
-        songId: document.getElementById('level-song-id').value || "N/A",
-        videoUrl: videoUrl || "",
-        gdId: document.getElementById('level-gd-id').value || "N/A"
-      };
-
-      let local = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
-      if(editId) local = local.filter(l => l.id !== parseInt(editId));
-      local.splice(Math.min(Math.max(targetPos - 1, 0), local.length), 0, newLevel);
-      localStorage.setItem('gd_absolute_list', JSON.stringify(local));
-
-      if(editId) logActivityFeed(`Récord actualizado en <b>${name}</b>`);
-      else logLevelsFeed(`Nuevo Absolute Level: <b>#${targetPos} - ${name}</b>`);
-
-      window.location.reload();
-    }
-
-    async function saveRealLevel(e) {
-      e.preventDefault();
-      const editId = document.getElementById('edit-real-id').value;
-      const videoUrl = document.getElementById('real-video-url').value;
-      let finalImg = getYouTubeThumbnail(videoUrl) || "https://via.placeholder.com/400x200?text=Top+Real";
-
-      const targetPos = parseInt(document.getElementById('real-position').value);
-      const name = document.getElementById('real-name').value;
-      const goldPlayer = document.getElementById('real-gold-player').value;
-      const goldPercent = parseInt(document.getElementById('real-gold-percent').value) || 100;
-
-      const newReal = {
-        id: editId ? parseInt(editId) : Date.now(),
-        name,
-        author: document.getElementById('real-author').value,
-        difficulty: document.getElementById('real-difficulty').value,
-        goldPlayer,
-        goldPercent,
-        img: finalImg,
-        videoUrl: videoUrl || "",
-        gdId: document.getElementById('real-gd-id').value || "N/A"
-      };
-
-      let localReal = JSON.parse(localStorage.getItem('gd_absolute_real')) || [];
-      if(editId) localReal = localReal.filter(l => l.id !== parseInt(editId));
-      localReal.splice(Math.min(Math.max(targetPos - 1, 0), localReal.length), 0, newReal);
-      localStorage.setItem('gd_absolute_real', JSON.stringify(localReal));
-
-      window.location.reload();
-    }
-
-    function readFileAsBase64(f) {
-      return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = e => rej(e); r.readAsDataURL(f); });
-    }
-
-    async function savePlayer(e) {
-      e.preventDefault();
-      const editId = document.getElementById('edit-player-id').value;
-      const fileInput = document.getElementById('player-file');
-      let finalImg = document.getElementById('player-img-url').value || (fileInput.files.length > 0 ? await readFileAsBase64(fileInput.files[0]) : "https://via.placeholder.com/150");
-      
-      let local = JSON.parse(localStorage.getItem('gd_absolute_players')) || [];
-      if(editId) {
-        local = local.map(p => p.id === parseInt(editId) ? { ...p, name: document.getElementById('player-name').value, img: finalImg, info: document.getElementById('player-info').value || "Jugador" } : p);
-      } else {
-        local.push({ id: Date.now(), name: document.getElementById('player-name').value, img: finalImg, info: document.getElementById('player-info').value || "Jugador" });
-      }
-      localStorage.setItem('gd_absolute_players', JSON.stringify(local));
-      window.location.reload();
-    }
-
-    function showDetails(index, type='normal') {
-      const lvl = type === 'normal' ? levels[index] : realLevels[index];
-      selectedDetailLevelId = lvl.id;
-      document.getElementById('detail-title').innerText = `#${index + 1} - ${lvl.name}`;
-      document.getElementById('detail-img').src = lvl.img;
-
-      if(type === 'normal') {
-        const victorsList = (lvl.verifier || "").split(',').map(v => v.trim()).filter(v => v.length > 0);
-        let victorsHTML = '<div style="margin-top:10px;"><label style="font-size:0.8rem; color:var(--text-dim); display:block; margin-bottom:5px;">Lista de Victores:</label>';
-        victorsList.forEach((vName, idx) => {
-          let badgeClass = idx === 0 ? 'first' : idx === 1 ? 'second' : idx === 2 ? 'third' : 'standard';
-          let label = idx === 0 ? '🥇 First Victor' : idx === 1 ? '🥈 Second Victor' : idx === 2 ? '🥉 Third Victor' : 'Victor';
-          victorsHTML += `<div class="victor-row"><span><b>${vName}</b></span><span class="victor-tag ${badgeClass}">${label}</span></div>`;
-        });
-        victorsHTML += '</div>';
-
-        document.getElementById('detail-info-list').innerHTML = `
-          <div class="detail-row"><span>Creador:</span> <b>${lvl.author}</b></div>
-          <div class="detail-row"><span>Canción:</span> <b>${lvl.songName} (${lvl.songId})</b></div>
-          <div class="detail-row"><span>ID GD:</span> <b style="cursor:pointer; color:var(--accent);" onclick="copyToClipboard('${lvl.gdId}')">${lvl.gdId} 📋</b></div>
-          ${victorsHTML}
-        `;
-      } else {
-        const demonImg = DEMON_ICONS[lvl.difficulty || 'extreme'];
-        document.getElementById('detail-info-list').innerHTML = `
-          <div class="detail-row"><span>Creador Oficial:</span> <b>${lvl.author}</b></div>
-          <div class="detail-row"><span>Dificultad:</span> <img src="${demonImg}" class="demon-icon"></div>
-          <div class="detail-row"><span>🏆 Récord:</span> <b style="color:var(--gold);">${lvl.goldPlayer} (${lvl.goldPercent}%)</b></div>
-          <div class="detail-row"><span>ID GD:</span> <b style="cursor:pointer; color:var(--accent);" onclick="copyToClipboard('${lvl.gdId}')">${lvl.gdId} 📋</b></div>
-        `;
-      }
-
-      renderComments();
-      const embed = getYouTubeEmbedUrl(lvl.videoUrl);
-      document.getElementById('video-box').style.display = embed ? 'block' : 'none';
-      if(embed) document.getElementById('detail-video').src = embed;
-      openModal('modal-detail');
-    }
-
-    function renderComments() {
-      const container = document.getElementById('comments-container');
-      const allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
-      const lvlComments = allComments[selectedDetailLevelId] || [];
-      container.innerHTML = lvlComments.length === 0 ? '<div style="font-size:0.75rem; color:var(--text-dim);">No hay comentarios aún. ¡Sé el primero!</div>' : '';
-      lvlComments.forEach(c => {
-        container.innerHTML += `<div class="comment-box"><b>${c.author}:</b> ${c.text}</div>`;
-      });
-    }
-
-    function postComment() {
-      const author = document.getElementById('comment-author-input').value.trim();
-      const text = document.getElementById('comment-text-input').value.trim();
-      if(!author || !text) return alert("Escribe tu nombre y comentario.");
-      
-      let allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
-      if(!allComments[selectedDetailLevelId]) allComments[selectedDetailLevelId] = [];
-      allComments[selectedDetailLevelId].push({ author, text });
-      localStorage.setItem('gd_absolute_comments', JSON.stringify(allComments));
-      
-      document.getElementById('comment-text-input').value = '';
-      renderComments();
-    }
-
-    function render() {
-      levels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
-      realLevels = JSON.parse(localStorage.getItem('gd_absolute_real')) || [];
-      customPlayers = JSON.parse(localStorage.getItem('gd_absolute_players')) || [];
-
-      const qName = document.getElementById('search-bar').value.toLowerCase().trim();
-      const qAuthor = (document.getElementById('filter-author') ? document.getElementById('filter-author').value : "").toLowerCase().trim();
-      const qSongId = (document.getElementById('filter-song-id') ? document.getElementById('filter-song-id').value : "").trim();
-
-      document.getElementById('stat-total-levels').innerText = levels.length;
-      document.getElementById('stat-total-real').innerText = realLevels.length;
-
-      const levelsDiv = document.getElementById('levels-list');
-      levelsDiv.innerHTML = '';
-      levels.filter(l => l.name.toLowerCase().includes(qName)).forEach(lvl => {
-        const idx = levels.indexOf(lvl);
-        levelsDiv.innerHTML += `
-          <div class="card" onclick="showDetails(${idx}, 'normal')">
-            <div class="rank">#${idx+1}</div>
-            <img class="thumb" src="${lvl.img}">
-            <div class="info">
-              <h3>${lvl.name}</h3>
-              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
-              <div class="meta-small">Victores: <b>${lvl.verifier} (${lvl.progress||100}%)</b></div>
-            </div>
-            <div class="actions-right">
-              <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('level', ${idx});">✏️ Editar</button>
-            </div>
-          </div>
-        `;
-      });
-
-      const realDiv = document.getElementById('real-list');
-      realDiv.innerHTML = '';
-      realLevels.filter(l => l.name.toLowerCase().includes(qName) && (currentDiffFilter === 'all' || l.difficulty === currentDiffFilter)).forEach(lvl => {
-        const idx = realLevels.indexOf(lvl);
-        const demonImg = DEMON_ICONS[lvl.difficulty || 'extreme'];
-        realDiv.innerHTML += `
-          <div class="card top-gold" onclick="showDetails(${idx}, 'real')">
-            <div class="rank" style="color:var(--gold);">#${idx+1}</div>
-            <img class="thumb" src="${lvl.img}">
-            <div class="info">
-              <div class="info-header">
-                <h3>${lvl.name}</h3>
-                <img src="${demonImg}" class="demon-icon">
-              </div>
-              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
-              <span class="gold-badge">🏆 ${lvl.goldPlayer} (${lvl.goldPercent}%)</span>
-            </div>
-            <div class="actions-right">
-              <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('real', ${idx});">✏️ Editar</button>
-            </div>
-          </div>
-        `;
-      });
-
-      const playersDiv = document.getElementById('players-list');
-      playersDiv.innerHTML = '';
-      
-      let pMapNormal = {}, pMapReal = {};
-      levels.forEach(l => { (l.verifier||"").split(',').forEach(v => { const name = v.trim(); if(name) { if(!pMapNormal[name]) pMapNormal[name]=[]; pMapNormal[name].push(l); } }); });
-      realLevels.forEach(l => { if(!pMapReal[l.goldPlayer]) pMapReal[l.goldPlayer]=[]; pMapReal[l.goldPlayer].push(l); });
-
-      const allPlayerNames = Array.from(new Set([...Object.keys(pMapNormal), ...Object.keys(pMapReal), ...customPlayers.map(p => p.name)]));
-      const playerList = allPlayerNames.map(name => ({
-        name,
-        pts: calculatePlayerPoints(pMapNormal[name] || [], pMapReal[name] || []),
-        countNormal: (pMapNormal[name] || []).length,
-        countReal: (pMapReal[name] || []).length
-      })).sort((a,b) => b.pts - a.pts);
-
-      document.getElementById('stat-total-players').innerText = playerList.length;
-
-      playerList.filter(p => p.name.toLowerCase().includes(qName)).forEach((p, i) => {
-        const customIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === p.name.toLowerCase());
-        playersDiv.innerHTML += `
-          <div class="card" onclick="showPlayerProfile('${p.name}')">
-            <div class="rank">#${i+1}</div>
-            <div class="info">
-              <h3>${p.name}</h3>
-              <div class="meta-small">Puntos Totales: <b>${p.pts} pts</b></div>
-              <div class="meta-small">Absolute: <b>${p.countNormal}</b> | Rateados: <b>${p.countReal}</b></div>
-            </div>
-            ${customIdx !== -1 ? `
-              <div class="actions-right">
-                <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('player', ${customIdx});">✏️ Editar</button>
-              </div>
-            ` : ''}
-          </div>
-        `;
-      });
-    }
-
-    initParticles();
-    loadSavedTheme();
-    checkAutoBackup();
-    render();
-  </script>
-</body>
-</html>
+    header { 
+      background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, var(--bg) 100%); 
+      padding: 20px 15px 10px 15
