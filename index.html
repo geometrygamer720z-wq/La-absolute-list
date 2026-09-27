@@ -158,7 +158,7 @@
     <div class="header-title">LA ABSOLUTE LIST</div>
 
     <div class="stats-bar">
-      <div class="stat-item"><div class="stat-val" id="stat-total-levels">0</div><div class="stat-lbl">Niveles Míos</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-total-levels">0</div><div class="stat-lbl">Absolute Levels</div></div>
       <div class="stat-item"><div class="stat-val" id="stat-total-real">0</div><div class="stat-lbl">Top Rateados</div></div>
       <div class="stat-item"><div class="stat-val" id="stat-total-players">0</div><div class="stat-lbl">Jugadores</div></div>
     </div>
@@ -169,7 +169,7 @@
   </div>
 
   <div class="nav-tabs">
-    <button class="tab-btn active" id="tab-levels-btn" onclick="switchTab('levels')">Niveles Míos</button>
+    <button class="tab-btn active" id="tab-levels-btn" onclick="switchTab('levels')">Absolute Levels</button>
     <button class="tab-btn" id="tab-real-btn" onclick="switchTab('real')">🔥 Top Rateados</button>
     <button class="tab-btn" id="tab-players-btn" onclick="switchTab('players')">👑 Top Jugadores</button>
   </div>
@@ -199,12 +199,12 @@
     </div>
   </div>
 
-  <!-- Modal Ruleta (En los 3 Puntos) -->
+  <!-- Modal Ruleta -->
   <div id="modal-roulette" class="modal">
     <div class="modal-content">
       <h2>🎰 Ruleta de Niveles</h2>
       <div style="display:flex; flex-direction:column; gap:10px;">
-        <button class="btn btn-cancel" onclick="spinRoulette('mine')">Girar en "Niveles Míos"</button>
+        <button class="btn btn-cancel" onclick="spinRoulette('mine')">Girar en "Absolute Levels"</button>
         <button class="btn btn-cancel" onclick="spinRoulette('real')">Girar en "Top Rateados"</button>
       </div>
       <div id="roulette-result" style="margin-top:15px; font-weight:bold; text-align:center; color:var(--accent);">Presiona una opción para elegir un nivel al azar</div>
@@ -265,7 +265,7 @@
             <option value="extreme" selected>Extreme Demon</option>
           </select>
         </div>
-        <div class="form-group"><label>Jugador con Gold Record</label><input type="text" id="real-gold-player" required placeholder="Nombre de tu jugador"></div>
+        <div class="form-group"><label>Jugador con Récord</label><input type="text" id="real-gold-player" required placeholder="Nombre del jugador"></div>
         <div class="form-group"><label>Récord Alcanzado (%)</label><input type="number" id="real-gold-percent" min="1" max="100" value="100" required></div>
         <div class="form-group"><label>Link Video YouTube</label><input type="url" id="real-video-url"></div>
         <div class="form-group"><label>ID GD Oficial</label><input type="text" id="real-gd-id"></div>
@@ -402,7 +402,7 @@
       } else alert("Clave incorrecta");
     }
 
-    function showChangelog() { alert("📜 Historial de Cambios:\n- Navegación simplificada en 3 pestañas principales\n- Ruleta movida al menú '•••'\n- Modo Cine activable tocando cualquier foto de nivel"); }
+    function showChangelog() { alert("📜 Historial de Cambios:\n- Pestaña 'Absolute Levels' renombrada\n- Etiqueta de récords cambiada a 'Récord'\n- Almacenamiento local persistente sin borrar datos"); }
 
     async function saveLevel(e) {
       e.preventDefault();
@@ -486,7 +486,7 @@
         document.getElementById('detail-info-list').innerHTML = `
           <div class="detail-row"><span>Creador Oficial:</span> <b>${lvl.author}</b></div>
           <div class="detail-row"><span>Dificultad:</span> <img src="${demonImg}" class="demon-icon"></div>
-          <div class="detail-row"><span>🏆 Gold Record:</span> <b style="color:var(--gold);">${lvl.goldPlayer} (${lvl.goldPercent}%)</b></div>
+          <div class="detail-row"><span>🏆 Récord:</span> <b style="color:var(--gold);">${lvl.goldPlayer} (${lvl.goldPercent}%)</b></div>
           <div class="detail-row"><span>ID GD:</span> <b>${lvl.gdId}</b></div>
         `;
       }
@@ -506,7 +506,7 @@
       document.getElementById('stat-total-levels').innerText = levels.length;
       document.getElementById('stat-total-real').innerText = realLevels.length;
 
-      // Render Niveles Normales
+      // Render Absolute Levels
       const levelsDiv = document.getElementById('levels-list');
       levelsDiv.innerHTML = '';
       levels.filter(l => l.name.toLowerCase().includes(q) || l.verifier.toLowerCase().includes(q)).forEach(lvl => {
@@ -540,7 +540,7 @@
                 <img src="${demonImg}" class="demon-icon" alt="Demon">
               </div>
               <div class="meta-small">Creador: <b>${lvl.author}</b></div>
-              <span class="gold-badge">🏆 Gold Record: ${lvl.goldPlayer} (${lvl.goldPercent}%)</span>
+              <span class="gold-badge">🏆 Récord: ${lvl.goldPlayer} (${lvl.goldPercent}%)</span>
             </div>
           </div>
         `;
@@ -571,7 +571,7 @@
             <div class="info">
               <h3>${p.name}</h3>
               <div class="meta-small">Puntos Totales: <b>${p.pts} pts</b></div>
-              <div class="meta-small">Niveles Lista: <b>${p.countNormal}</b> | Rateados Gold: <b>${p.countReal}</b></div>
+              <div class="meta-small">Absolute Levels: <b>${p.countNormal}</b> | Rateados Récord: <b>${p.countReal}</b></div>
             </div>
           </div>
         `;
