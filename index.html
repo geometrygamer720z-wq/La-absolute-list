@@ -5,30 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Absolute List</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&display=swap');
+
     :root {
-      --bg: #0b0d14;
-      --card-bg: #161926;
-      --accent: #ff4757;
+      --bg: #0d0f12;
+      --card-bg: #161920;
+      --card-border: #232733;
+      --accent: #00d2ff;
       --text: #ffffff;
-      --text-dim: #8e94a6;
+      --text-dim: #9aa0a6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; }
     
-    header { background: #11131f; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--accent); }
-    .header-title { color: var(--accent); font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    header { 
+      background: linear-gradient(180deg, #13161c 0%, #0d0f12 100%); 
+      padding: 25px 20px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+    }
+    
+    /* Título estilizado */
+    .header-title { 
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: 1.8rem; 
+      text-transform: uppercase; 
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.5),
+        0 0 20px rgba(255, 255, 255, 0.2),
+        2px 2px 4px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
     
     .nav-tabs { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
-    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid #2e334d; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-    .tab-btn.active { background: var(--accent); border-color: var(--accent); }
+    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--card-border); padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .tab-btn.active { background: #232733; border-color: #3b4254; color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.05); }
 
     .container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
     .section { display: none; }
     .section.active { display: block; }
 
-    .card { background: var(--card-bg); border-radius: 12px; padding: 12px 15px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; border: 1px solid #24293e; cursor: pointer; transition: transform 0.2s; }
+    /* Tarjeta de Nivel */
+    .card { 
+      background: var(--card-bg); 
+      border-radius: 12px; 
+      padding: 12px 15px; 
+      margin-bottom: 12px; 
+      display: flex; 
+      gap: 12px; 
+      align-items: center; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5); 
+      position: relative; 
+      border: 1px solid var(--card-border); 
+      cursor: pointer; 
+      transition: transform 0.2s, border-color 0.3s; 
+    }
     .card:active { transform: scale(0.98); }
-    .rank { font-size: 1.4rem; font-weight: bold; color: var(--accent); min-width: 55px; text-align: center; }
+    .rank { font-size: 1.4rem; font-weight: bold; color: var(--card-accent, #ffffff); min-width: 55px; text-align: center; }
     .thumb { width: 95px; height: 60px; border-radius: 8px; object-fit: cover; background: #000; flex-shrink: 0; }
     
     .info { flex-grow: 1; overflow: hidden; }
@@ -36,36 +75,38 @@
     .info .meta-small { font-size: 0.75rem; color: var(--text-dim); line-height: 1.3; }
     .info .meta-small b { color: #d1d5db; font-weight: 600; }
 
-    .delete-btn { position: absolute; right: 10px; top: 10px; background: rgba(255, 71, 87, 0.2); border: none; color: #ff6b6b; cursor: pointer; font-size: 1rem; padding: 4px 8px; border-radius: 6px; z-index: 5; }
+    .delete-btn { position: absolute; right: 10px; top: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #8e94a6; cursor: pointer; font-size: 0.9rem; padding: 3px 7px; border-radius: 6px; z-index: 5; transition: 0.2s; }
+    .delete-btn:hover { background: rgba(255, 71, 87, 0.2); color: #ff6b6b; }
 
     /* Botón flotante "+" */
-    .fab { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: var(--accent); color: white; border-radius: 50%; border: none; font-size: 2rem; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 90; }
+    .fab { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #232733; color: white; border-radius: 50%; border: 1px solid #3b4254; font-size: 1.8rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 90; transition: transform 0.2s; }
+    .fab:active { transform: scale(0.9); }
 
     /* Ventanas emergentes (Modales) */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
-    .modal-content { background: var(--card-bg); width: 100%; max-width: 450px; padding: 20px; border-radius: 12px; border: 1px solid #2e334d; max-height: 90vh; overflow-y: auto; }
-    .modal-content h2 { margin-bottom: 15px; color: var(--accent); font-size: 1.3rem; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
+    .modal-content { background: var(--card-bg); width: 100%; max-width: 450px; padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); max-height: 90vh; overflow-y: auto; }
+    .modal-content h2 { margin-bottom: 15px; color: #fff; font-size: 1.3rem; }
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: var(--text-dim); }
-    .form-group input, .form-group textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #2e334d; background: #0b0d14; color: white; outline: none; font-size: 0.9rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--card-border); background: #0d0f12; color: white; outline: none; font-size: 0.9rem; }
     .form-group textarea { resize: vertical; height: 70px; }
     
-    .btn-search { background: #2e334d; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; margin-top: 5px; width: 100%; text-align: center; }
+    .btn-search { background: #232733; color: #fff; border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; margin-top: 5px; width: 100%; text-align: center; }
 
     .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn { flex: 1; padding: 11px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    .btn-submit { background: var(--accent); color: white; }
-    .btn-cancel { background: #2e334d; color: white; }
+    .btn-submit { background: #2e3545; color: white; border: 1px solid #434c63; }
+    .btn-cancel { background: #161920; color: var(--text-dim); border: 1px solid var(--card-border); }
     
-    /* Estilos para Detalles Grandes del Nivel */
+    /* Detalles del Nivel */
     .detail-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; background: #000; }
-    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #24293e; font-size: 0.85rem; }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--card-border); font-size: 0.85rem; }
     .detail-row span { color: var(--text-dim); }
     .detail-row b { color: #fff; }
     .song-box { text-align: right; }
     .song-id-small { font-size: 0.7rem; color: var(--text-dim); display: block; }
     
-    .detail-desc { background: #0b0d14; padding: 10px; border-radius: 6px; margin-top: 5px; font-size: 0.85rem; color: #d1d5db; line-height: 1.4; }
+    .detail-desc { background: #0d0f12; padding: 10px; border-radius: 6px; margin-top: 5px; font-size: 0.85rem; color: #d1d5db; line-height: 1.4; border: 1px solid var(--card-border); }
     
     .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 15px; background: #000; }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
@@ -76,7 +117,7 @@
 <body>
 
   <header>
-    <div class="header-title">La Absolute List</div>
+    <div class="header-title">LA ABSOLUTE LIST</div>
   </header>
 
   <div class="nav-tabs">
@@ -97,17 +138,30 @@
   </div>
 
   <!-- Botón Añadir "+" -->
-  <button class="fab" onclick="openModal('modal-add')">+</button>
+  <button class="fab" onclick="startAddProcess()">+</button>
+
+  <!-- Modal Verificación Admin Previa -->
+  <div id="modal-auth" class="modal">
+    <div class="modal-content">
+      <h2>Acceso Requerido</h2>
+      <form onsubmit="verifyAdminAccess(event)">
+        <div class="form-group">
+          <label>Ingresa la clave de administrador para continuar:</label>
+          <input type="password" id="pre-admin-pass" required placeholder="Clave admin">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeModal('modal-auth')">Cancelar</button>
+          <button type="submit" class="btn btn-submit">Verificar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Modal Añadir Nivel -->
   <div id="modal-add" class="modal">
     <div class="modal-content">
       <h2>Añadir Nuevo Nivel</h2>
       <form id="level-form" onsubmit="saveLevel(event)">
-        <div class="form-group">
-          <label>Contraseña Admin</label>
-          <input type="password" id="admin-pass" required placeholder="Introduce clave admin">
-        </div>
         <div class="form-group">
           <label>Posición / Top (1 a 2000)</label>
           <input type="number" id="level-position" min="1" max="2000" required placeholder="Ej: 1">
@@ -125,15 +179,15 @@
           <input type="text" id="level-verifier" required placeholder="Ej: Doggie">
         </div>
 
-        <!-- Video de YouTube (Para el video y la miniatura automática) -->
+        <!-- Video de YouTube (Para video y miniatura) -->
         <div class="form-group">
-          <label>Link de Video de YouTube (Se usará como miniatura del nivel)</label>
+          <label>Link de Video de YouTube (Se usa para la miniatura y color)</label>
           <input type="url" id="level-video-url" placeholder="https://www.youtube.com/watch?v=...">
         </div>
 
-        <!-- Opción manual si no hay YouTube -->
+        <!-- Imagen personalizada opcional -->
         <div class="form-group">
-          <label>O imagen personalizada (Opcional si usas link de YouTube)</label>
+          <label>O imagen personalizada (Opcional)</label>
           <input type="text" id="level-img-url" placeholder="Pegar URL de la imagen aquí">
           <button type="button" class="btn-search" onclick="searchGoogleImage()">🔍 Buscar imagen en Google</button>
           <label style="margin-top: 8px;">O sube una imagen desde tu celular:</label>
@@ -208,7 +262,7 @@
   </div>
 
   <script>
-    const ADMIN_PASSWORD = "6767XDXD"; // CONTRASEÑA DE ADMINISTRADOR
+    const ADMIN_PASSWORD = "6767XDXD";
 
     let levels = [];
 
@@ -229,8 +283,23 @@
     function closeModal(id) { 
       document.getElementById(id).style.display = 'none'; 
       if(id === 'modal-detail') {
-        // Pausar video al cerrar
         document.getElementById('detail-video').src = '';
+      }
+    }
+
+    function startAddProcess() {
+      document.getElementById('pre-admin-pass').value = '';
+      openModal('modal-auth');
+    }
+
+    function verifyAdminAccess(e) {
+      e.preventDefault();
+      const pass = document.getElementById('pre-admin-pass').value;
+      if(pass === ADMIN_PASSWORD) {
+        closeModal('modal-auth');
+        openModal('modal-add');
+      } else {
+        alert("Contraseña incorrecta");
       }
     }
 
@@ -270,13 +339,48 @@
       return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
     }
 
+    /* Extrae el color dominante de una imagen */
+    function extractColorFromImage(imageUrl) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = imageUrl;
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 50;
+            canvas.height = 50;
+            ctx.drawImage(img, 0, 0, 50, 50);
+            const data = ctx.getImageData(0, 0, 50, 50).data;
+            
+            let r = 0, g = 0, b = 0, count = 0;
+            for (let i = 0; i < data.length; i += 16) {
+              r += data[i];
+              g += data[i+1];
+              b += data[i+2];
+              count++;
+            }
+            r = Math.floor(r / count);
+            g = Math.floor(g / count);
+            b = Math.floor(b / count);
+
+            // Asegura un mínimo de brillo para destacar en fondo oscuro
+            if (r < 60 && g < 60 && b < 60) {
+              r += 80; g += 80; b += 80;
+            }
+
+            resolve(`rgb(${r}, ${g}, ${b})`);
+          } catch(e) {
+            resolve('#3b4254');
+          }
+        };
+        img.onerror = () => resolve('#3b4254');
+      });
+    }
+
     async function saveLevel(e) {
       e.preventDefault();
-      const pass = document.getElementById('admin-pass').value;
-      if(pass !== ADMIN_PASSWORD) {
-        alert("Contraseña de administración incorrecta");
-        return;
-      }
 
       const submitBtn = document.getElementById('submit-btn');
       submitBtn.innerText = "Guardando...";
@@ -289,7 +393,6 @@
         
         let finalImg = "";
 
-        // 1. Obtener la miniatura del video de YouTube si está disponible
         const ytThumb = getYouTubeThumbnail(videoUrl);
         if (ytThumb) {
           finalImg = ytThumb;
@@ -301,6 +404,9 @@
           finalImg = "https://via.placeholder.com/400x200?text=Sin+Imagen";
         }
 
+        // Obtener color extraído de la miniatura
+        const accentColor = await extractColorFromImage(finalImg);
+
         const targetPos = parseInt(document.getElementById('level-position').value);
 
         const newLevel = {
@@ -309,6 +415,7 @@
           author: document.getElementById('level-author').value,
           verifier: document.getElementById('level-verifier').value,
           img: finalImg,
+          themeColor: accentColor,
           songName: document.getElementById('level-song-name').value || "Desconocida",
           songId: document.getElementById('level-song-id').value || "N/A",
           videoUrl: videoUrl || "",
@@ -366,7 +473,6 @@
         <div class="detail-row"><span>ID del Nivel:</span> <b>${lvl.gdId}</b></div>
       `;
 
-      // Manejo de Descripción Opcional
       const descBox = document.getElementById('desc-box');
       if(lvl.desc.trim() !== "") {
         document.getElementById('detail-desc').innerText = lvl.desc;
@@ -375,7 +481,6 @@
         descBox.style.display = 'none';
       }
 
-      // Manejo de Video Opcional
       const videoBox = document.getElementById('video-box');
       const embedUrl = getYouTubeEmbedUrl(lvl.videoUrl);
       if(embedUrl) {
@@ -391,13 +496,13 @@
     function render() {
       levels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
 
-      // Render Niveles
       const levelsDiv = document.getElementById('levels-list');
       levelsDiv.innerHTML = levels.length === 0 ? '<p class="loading-text">No hay niveles añadidos aún en La Absolute List.<br>Toca + para agregar uno.</p>' : '';
       
       levels.forEach((lvl, index) => {
+        const color = lvl.themeColor || '#3b4254';
         levelsDiv.innerHTML += `
-          <div class="card" onclick="showDetails(${index})">
+          <div class="card" style="border-left: 4px solid ${color}; --card-accent: ${color};" onclick="showDetails(${index})">
             <div class="rank">#${index + 1}</div>
             <img class="thumb" src="${lvl.img}" onerror="this.src='https://via.placeholder.com/95x60?text=GD'">
             <div class="info">
@@ -410,7 +515,6 @@
         `;
       });
 
-      // Render Top Jugadores
       const playersDiv = document.getElementById('players-list');
       const playerCounts = {};
       
