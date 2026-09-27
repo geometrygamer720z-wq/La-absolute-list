@@ -124,10 +124,16 @@
           <label>Verificador / Pasado por</label>
           <input type="text" id="level-verifier" required placeholder="Ej: Doggie">
         </div>
-        
-        <!-- Sección de Imagen -->
+
+        <!-- Video de YouTube (Para el video y la miniatura automática) -->
         <div class="form-group">
-          <label>Imagen del Nivel (URL o subir archivo)</label>
+          <label>Link de Video de YouTube (Se usará como miniatura del nivel)</label>
+          <input type="url" id="level-video-url" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+
+        <!-- Opción manual si no hay YouTube -->
+        <div class="form-group">
+          <label>O imagen personalizada (Opcional si usas link de YouTube)</label>
           <input type="text" id="level-img-url" placeholder="Pegar URL de la imagen aquí">
           <button type="button" class="btn-search" onclick="searchGoogleImage()">🔍 Buscar imagen en Google</button>
           <label style="margin-top: 8px;">O sube una imagen desde tu celular:</label>
@@ -142,12 +148,6 @@
         <div class="form-group">
           <label>ID de la Canción (Song ID)</label>
           <input type="text" id="level-song-id" placeholder="Ej: 467339">
-        </div>
-
-        <!-- Video Opcional -->
-        <div class="form-group">
-          <label>Link de Video de YouTube (Opcional)</label>
-          <input type="url" id="level-video-url" placeholder="https://www.youtube.com/watch?v=...">
         </div>
 
         <!-- Descripción Opcional -->
@@ -253,11 +253,21 @@
       });
     }
 
-    function getYouTubeEmbedUrl(url) {
+    function getYouTubeId(url) {
       if(!url) return null;
       let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       let match = url.match(regExp);
-      return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    function getYouTubeEmbedUrl(url) {
+      const id = getYouTubeId(url);
+      return id ? `https://www.youtube.com/embed/${id}` : null;
+    }
+
+    function getYouTubeThumbnail(url) {
+      const id = getYouTubeId(url);
+      return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
     }
 
     async function saveLevel(e) {
@@ -273,15 +283,21 @@
       submitBtn.disabled = true;
 
       try {
+        const videoUrl = document.getElementById('level-video-url').value;
         const fileInput = document.getElementById('level-file');
         const urlInput = document.getElementById('level-img-url').value;
-        let finalImg = urlInput;
+        
+        let finalImg = "";
 
-        if(fileInput.files.length > 0) {
+        // 1. Obtener la miniatura del video de YouTube si está disponible
+        const ytThumb = getYouTubeThumbnail(videoUrl);
+        if (ytThumb) {
+          finalImg = ytThumb;
+        } else if (fileInput.files.length > 0) {
           finalImg = await readFileAsBase64(fileInput.files[0]);
-        }
-
-        if(!finalImg) {
+        } else if (urlInput) {
+          finalImg = urlInput;
+        } else {
           finalImg = "https://via.placeholder.com/400x200?text=Sin+Imagen";
         }
 
@@ -295,7 +311,7 @@
           img: finalImg,
           songName: document.getElementById('level-song-name').value || "Desconocida",
           songId: document.getElementById('level-song-id').value || "N/A",
-          videoUrl: document.getElementById('level-video-url').value || "",
+          videoUrl: videoUrl || "",
           desc: document.getElementById('level-desc').value || "",
           launch: document.getElementById('level-launch').value || "No registrada",
           verifiedDate: document.getElementById('level-verified-date').value || "No registrada",
