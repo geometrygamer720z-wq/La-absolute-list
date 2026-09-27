@@ -1690,21 +1690,22 @@
             <div class="rank" style="color:var(--accent);">#${i+1}</div>
             <div class="info">
               <h3>${c.name}</h3>
-              <div class="meta-small">Creaciones en la lista: <b>${c.count} niveles</b></div>
-              <div class="meta-small">Nivel más alto: <b>Top #${c.highestRank}</b></div>
+              <div class="meta-small">Niveles en Absolute: <b>${c.count}</b></div>
+              <div class="meta-small">Mejor Posición: <b>#${c.highestRank}</b></div>
             </div>
           </div>
         `;
       });
 
       checkAchievementsProgress();
+      checkAutoBackup();
     }
 
-    initActiveUsersCounter();
-    initParticles();
-    loadSavedTheme();
-    checkAutoBackup();
-    render();
+    window.onload = () => {
+      loadSavedTheme();
+      initActiveUsersCounter();
+      render();
+    };
   </script>
 </body>
 </html>
