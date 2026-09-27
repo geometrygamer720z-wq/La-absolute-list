@@ -188,6 +188,7 @@
     .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; background: #000; }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
+    /* Selector Estilo WhatsApp para Países */
     .country-selector-box {
       border: 1px solid var(--card-border); background: #0d0f12; border-radius: 6px; max-height: 160px; overflow-y: auto; padding: 5px;
     }
@@ -198,6 +199,34 @@
       padding: 6px 10px; font-size: 0.8rem; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 8px;
     }
     .country-option:hover, .country-option.selected { background: var(--card-border); color: #fff; }
+
+    /* Estilos Ruleta Fullscreen */
+    .roulette-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(0, 0, 0, 0.92); z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .roulette-close-btn {
+      position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: white; font-size: 36px; cursor: pointer; z-index: 10000;
+    }
+    .roulette-result-card {
+      background: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 24px; text-align: center; max-width: 500px; width: 90%; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .roulette-thumbnail { width: 100%; height: 200px; border-radius: 8px; margin-bottom: 16px; object-fit: cover; background: #000; }
+    .roulette-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+    .btn-surrender { background-color: #e74c3c; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .percent-input-container { display: flex; gap: 8px; }
+    .percent-input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #2a2a2a; color: white; }
+    .btn-submit-percent { background-color: #3498db; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+    /* Menú Discord */
+    .discord-menu-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;
+    }
+    .discord-menu-card { background: #2f3136; padding: 24px; border-radius: 10px; display: flex; flex-direction: column; gap: 12px; width: 320px; }
+    .btn-discord-action { background-color: #5865F2; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block; }
+    .btn-report-action { background-color: #ed4245; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; }
 
     #toast-notification {
       position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(120px);
@@ -657,6 +686,7 @@
         </div>
         <div class="form-group"><label>Récord (%)</label><input type="number" id="real-gold-percent" min="1" max="100" value="100" required></div>
         
+        <!-- Sección de Récords de los Demás (Sin Límite) -->
         <div class="form-group" style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px dashed var(--card-border);">
           <label style="color: var(--accent); font-weight: bold; margin-bottom: 8px;">🏆 Récords de los demás:</label>
           <div id="other-records-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;"></div>
@@ -801,7 +831,8 @@
         if(e.data === 'JOIN') {
           activeCount++;
           localStorage.setItem('gd_absolute_live_count', activeCount);
-          document.getElementById('active-users-count').innerText = activeCount;
+          const el = document.getElementById('active-users-count');
+          if(el) el.innerText = activeCount;
         }
       };
 
@@ -810,11 +841,13 @@
         localStorage.setItem('gd_absolute_live_count', activeCount);
       });
 
-      document.getElementById('active-users-count').innerText = activeCount;
+      const el = document.getElementById('active-users-count');
+      if(el) el.innerText = activeCount;
     }
 
     function initParticles() {
       const container = document.getElementById('particles-container');
+      if(!container) return;
       container.innerHTML = '';
       for(let i=0; i<25; i++) {
         const p = document.createElement('div');
@@ -829,7 +862,9 @@
 
     function showToast(desc) {
       const toast = document.getElementById('toast-notification');
-      document.getElementById('toast-desc-text').innerText = desc;
+      const descText = document.getElementById('toast-desc-text');
+      if(!toast || !descText) return;
+      descText.innerText = desc;
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
@@ -849,20 +884,1329 @@
     function checkAutoBackup() {
       const lastBackup = localStorage.getItem('gd_absolute_last_backup');
       const now = Date.now();
-      // Verificación automática de respaldo (cada 24 horas o si nunca se ha hecho)
-      if (!lastBackup || (now - parseInt(lastBackup)) > 86400000) {
+      if (!lastBackup || (now - parseInt(lastBackup)) > (3 * 24 * 60 * 60 * 1000)) {
+        localStorage.setItem('gd_absolute_backup_auto', JSON.stringify({ levels, impossibleLevels, realLevels, customPlayers }));
         localStorage.setItem('gd_absolute_last_backup', now.toString());
       }
     }
 
-    function init() {
-      initActiveUsersCounter();
+    function checkMaintenanceMode() {
+      const isMaint = localStorage.getItem('gd_absolute_maintenance') === 'true';
+      document.body.style.filter = isMaint ? 'grayscale(0.4)' : 'none';
+      const banner = document.getElementById('maintenance-banner');
+      if(banner) banner.style.display = isMaint ? 'block' : 'none';
+    }
+
+    function toggleMaintenanceMode() {
+      closeModal('modal-menu');
+      pendingActionData = { type: 'maintenance', action: 'toggle' };
+      document.getElementById('modal-auth-title').innerText = "Modo Mantenimiento (Admin)";
+      document.getElementById('edit-pass-input').value = '';
+      openModal('modal-edit-pass');
+    }
+
+    function changeTheme(theme) {
+      document.body.className = (isAdminModeActive ? 'admin-mode ' : '') + (theme === 'default' ? '' : `theme-${theme}`);
+      localStorage.setItem('gd_absolute_theme', theme);
+    }
+
+    function loadSavedTheme() {
+      const savedTheme = localStorage.getItem('gd_absolute_theme') || 'default';
+      const selector = document.getElementById('theme-selector-element');
+      if(selector) selector.value = savedTheme;
+      changeTheme(savedTheme);
+      
+      const custom = JSON.parse(localStorage.getItem('gd_absolute_custom_theme'));
+      if(custom) {
+        document.documentElement.style.setProperty('--bg', custom.bg);
+        document.documentElement.style.setProperty('--card-bg', custom.card);
+        document.documentElement.style.setProperty('--accent', custom.accent);
+        document.documentElement.style.setProperty('--particle-color', custom.particleColor || 'rgba(255,255,255,0.15)');
+      }
+      checkMaintenanceMode();
       initParticles();
-      checkAutoBackup();
+    }
+
+    function openThemeSelectorModal() { closeModal('modal-menu'); openModal('modal-theme-select'); }
+    function openCustomThemeModal() { closeModal('modal-menu'); openModal('modal-custom-theme'); }
+
+    function applyCustomTheme() {
+      const bg = document.getElementById('theme-bg-input').value;
+      const card = document.getElementById('theme-card-input').value;
+      const accent = document.getElementById('theme-accent-input').value;
+      const particleColor = document.getElementById('particle-color-input').value;
+      
+      document.documentElement.style.setProperty('--bg', bg);
+      document.documentElement.style.setProperty('--card-bg', card);
+      document.documentElement.style.setProperty('--accent', accent);
+      document.documentElement.style.setProperty('--particle-color', particleColor);
+      
+      localStorage.setItem('gd_absolute_custom_theme', JSON.stringify({ bg, card, accent, particleColor }));
+      closeModal('modal-custom-theme');
+      initParticles();
+      alert("¡Tema y partículas aplicados!");
+    }
+
+    function resetCustomTheme() {
+      localStorage.removeItem('gd_absolute_custom_theme');
+      window.location.reload();
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn, .tab-btn-sub').forEach(b => { if(!b.id.includes('fav') && !b.id.includes('uncompleted')) b.classList.remove('active'); });
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      const btn = document.getElementById(`tab-${tab}-btn`);
+      const sec = document.getElementById(`${tab}-section`);
+      if(btn) btn.classList.add('active');
+      if(sec) sec.classList.add('active');
       render();
     }
 
-    window.onload = init;
+    function setDiffFilter(diff, btn) {
+      currentDiffFilter = diff;
+      document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      render();
+    }
+
+    function toggleFavFilter() {
+      showOnlyFavorites = !showOnlyFavorites;
+      const btn = document.getElementById('fav-toggle-btn');
+      if(btn) {
+        if(showOnlyFavorites) btn.classList.add('active');
+        else btn.classList.remove('active');
+      }
+      render();
+    }
+
+    function toggleUncompletedFilter() {
+      showOnlyUncompleted = !showOnlyUncompleted;
+      const btn = document.getElementById('uncompleted-toggle-btn');
+      if(btn) {
+        if(showOnlyUncompleted) btn.classList.add('active');
+        else btn.classList.remove('active');
+      }
+      render();
+    }
+
+    function toggleFavorite(event, levelId) {
+      event.stopPropagation();
+      let favs = JSON.parse(localStorage.getItem('gd_absolute_favorites')) || [];
+      if(favs.includes(levelId)) favs = favs.filter(id => id !== levelId);
+      else favs.push(levelId);
+      localStorage.setItem('gd_absolute_favorites', JSON.stringify(favs));
+      render();
+    }
+
+    function clearAdvFilters() {
+      const authorInput = document.getElementById('filter-author');
+      const playstyleSelect = document.getElementById('filter-playstyle');
+      if(authorInput) authorInput.value = '';
+      if(playstyleSelect) playstyleSelect.value = 'all';
+      render();
+      closeModal('modal-filter-adv');
+    }
+
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if(m) m.style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if(m) m.style.display = 'none';
+      if(id === 'modal-detail') {
+        const v = document.getElementById('detail-video');
+        if(v) v.src = '';
+      }
+    }
+
+    function startAddProcess() { 
+      if (localStorage.getItem('gd_absolute_maintenance') === 'true') {
+        pendingActionData = { type: 'add_check', action: 'verify' };
+        document.getElementById('modal-auth-title').innerText = "Mantenimiento Activo (Clave Admin)";
+        document.getElementById('edit-pass-input').value = '';
+        openModal('modal-edit-pass');
+        return;
+      }
+      openAddModalForCurrentTab();
+    }
+
+    function openAddModalForCurrentTab() {
+      if(currentTab === 'levels') {
+        document.getElementById('modal-add-title').innerText = "Añadir Nivel Absolute";
+        document.getElementById('edit-level-id').value = '';
+        const f = document.getElementById('level-form');
+        if(f) f.reset();
+        openModal('modal-add');
+      }
+      else if(currentTab === 'impossible') {
+        document.getElementById('modal-impossible-title').innerText = "Añadir Impossible";
+        document.getElementById('edit-impossible-id').value = '';
+        openModal('modal-add-impossible');
+      }
+      else if(currentTab === 'real') {
+        document.getElementById('modal-real-title').innerText = "Añadir Rateado";
+        document.getElementById('edit-real-id').value = '';
+        const c = document.getElementById('other-records-container');
+        if(c) c.innerHTML = '';
+        openModal('modal-add-real');
+      }
+      else if(currentTab === 'players') {
+        document.getElementById('modal-player-title').innerText = "Añadir Jugador";
+        document.getElementById('edit-player-id').value = '';
+        const f = document.getElementById('player-form');
+        if(f) f.reset();
+        renderCountryList('');
+        openModal('modal-add-player');
+      }
+      else alert("Selecciona una pestaña válida para añadir elementos.");
+    }
+
+    function requestAdminMode() {
+      closeModal('modal-menu');
+      if (isAdminModeActive) {
+        isAdminModeActive = false;
+        document.body.classList.remove('admin-mode');
+        const tBtn = document.getElementById('admin-mode-toggle-btn');
+        const iBtn = document.getElementById('admin-ideas-btn');
+        if(tBtn) tBtn.innerText = "🔓 Modo Admin";
+        if(iBtn) iBtn.style.display = 'none';
+        alert("Modo Admin desactivado.");
+        render();
+        return;
+      }
+      pendingActionData = { type: 'admin_mode_auth', action: 'verify' };
+      document.getElementById('modal-auth-title').innerText = "Contraseña de Admin";
+      document.getElementById('edit-pass-input').value = '';
+      openModal('modal-edit-pass');
+    }
+
+    function requestEdit(type, idx) {
+      pendingActionData = { type, action: 'edit', index: idx };
+      document.getElementById('modal-auth-title').innerText = "Contraseña de Admin (Editar)";
+      document.getElementById('edit-pass-input').value = '';
+      openModal('modal-edit-pass');
+    }
+
+    function requestDelete(type, idx) {
+      pendingActionData = { type, action: 'delete', index: idx };
+      document.getElementById('modal-auth-title').innerText = "Contraseña de Admin (Borrar)";
+      document.getElementById('edit-pass-input').value = '';
+      openModal('modal-edit-pass');
+    }
+
+    function confirmUniversalPassword(e) {
+      e.preventDefault();
+      const pass = document.getElementById('edit-pass-input').value;
+      if (pass !== ADMIN_PASSWORD) {
+        alert("Clave incorrecta");
+        return;
+      }
+
+      closeModal('modal-edit-pass');
+      
+      if(pendingActionData.type === 'admin_mode_auth') {
+        isAdminModeActive = true;
+        document.body.classList.add('admin-mode');
+        const tBtn = document.getElementById('admin-mode-toggle-btn');
+        const iBtn = document.getElementById('admin-ideas-btn');
+        if(tBtn) tBtn.innerText = "🔒 Bloquear Modo Admin";
+        if(iBtn) iBtn.style.display = 'block';
+        updateIdeasCountBadge();
+        alert("¡Modo Admin activado correctamente!");
+        render();
+        return;
+      }
+
+      if(pendingActionData.type === 'maintenance') {
+        const current = localStorage.getItem('gd_absolute_maintenance') === 'true';
+        localStorage.setItem('gd_absolute_maintenance', (!current).toString());
+        checkMaintenanceMode();
+        alert("Modo mantenimiento " + (!current ? "Activado" : "Desactivado"));
+        return;
+      }
+
+      if(pendingActionData.type === 'add_check') {
+        openAddModalForCurrentTab();
+        return;
+      }
+
+      const { type, action, index } = pendingActionData;
+
+      if(action === 'delete') {
+        if(confirm("¿Estás seguro de eliminar este elemento?")) {
+          if(type === 'level') levels.splice(index, 1), localStorage.setItem('gd_absolute_levels', JSON.stringify(levels));
+          else if(type === 'impossible') impossibleLevels.splice(index, 1), localStorage.setItem('gd_absolute_impossible', JSON.stringify(impossibleLevels));
+          else if(type === 'real') realLevels.splice(index, 1), localStorage.setItem('gd_absolute_real', JSON.stringify(realLevels));
+          else if(type === 'player') customPlayers.splice(index, 1), localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
+          render();
+          alert("¡Elemento eliminado correctamente!");
+        }
+      } else if(action === 'edit') {
+        if(type === 'level') openLevelEditor(index);
+        else if(type === 'impossible') openImpossibleEditor(index);
+        else if(type === 'real') openRealEditor(index);
+        else if(type === 'player') openPlayerEditor(index);
+        else if(type === 'credits') openModal('modal-edit-credits');
+      }
+    }
+
+    function openLevelEditor(idx) {
+      const lvl = levels[idx];
+      document.getElementById('modal-add-title').innerText = "Editar Nivel Absolute";
+      document.getElementById('edit-level-id').value = lvl.id;
+      document.getElementById('level-position').value = idx + 1;
+      document.getElementById('level-name').value = lvl.name;
+      document.getElementById('level-author').value = lvl.author;
+      document.getElementById('level-verifier').value = lvl.verifier;
+      document.getElementById('level-platform').value = lvl.platform || 'PC';
+      document.getElementById('level-main-portal').value = lvl.mainPortal || 'Wave';
+      document.getElementById('level-progress').value = lvl.progress || 100;
+      document.getElementById('level-playstyle').value = lvl.playstyle || 'wave';
+      document.getElementById('level-video-url').value = lvl.videoUrl || "";
+      document.getElementById('level-img-url').value = lvl.img || "";
+      document.getElementById('level-song-name').value = lvl.songName || "";
+      document.getElementById('level-song-id').value = lvl.songId || "";
+      document.getElementById('level-gd-id').value = lvl.gdId || "";
+      openModal('modal-add');
+    }
+
+    function openImpossibleEditor(idx) {
+      const lvl = impossibleLevels[idx];
+      document.getElementById('modal-impossible-title').innerText = "Editar Impossible";
+      document.getElementById('edit-impossible-id').value = lvl.id;
+      document.getElementById('impossible-position').value = idx + 1;
+      document.getElementById('impossible-name').value = lvl.name;
+      document.getElementById('impossible-author').value = lvl.author;
+      document.getElementById('impossible-verifier').value = lvl.verifier;
+      document.getElementById('impossible-platform').value = lvl.platform || 'PC';
+      document.getElementById('impossible-main-portal').value = lvl.mainPortal || 'Wave';
+      document.getElementById('impossible-video-url').value = lvl.videoUrl || "";
+      document.getElementById('impossible-img-url').value = lvl.img || "";
+      document.getElementById('impossible-gd-id').value = lvl.gdId || "";
+      openModal('modal-add-impossible');
+    }
+
+    function openRealEditor(idx) {
+      const lvl = realLevels[idx];
+      document.getElementById('modal-real-title').innerText = "Editar Rateado";
+      document.getElementById('edit-real-id').value = lvl.id;
+      document.getElementById('real-position').value = idx + 1;
+      document.getElementById('real-name').value = lvl.name;
+      document.getElementById('real-author').value = lvl.author;
+      document.getElementById('real-difficulty').value = lvl.difficulty || 'extreme';
+      document.getElementById('real-gold-player').value = lvl.goldPlayer;
+      document.getElementById('real-platform').value = lvl.platform || 'PC';
+      document.getElementById('real-main-portal').value = lvl.mainPortal || 'Wave';
+      document.getElementById('real-gold-percent').value = lvl.goldPercent || 100;
+      document.getElementById('real-video-url').value = lvl.videoUrl || "";
+      document.getElementById('real-gd-id').value = lvl.gdId || "";
+
+      const container = document.getElementById('other-records-container');
+      if(container) {
+        container.innerHTML = '';
+        if(lvl.otherRecords && Array.isArray(lvl.otherRecords)) {
+          lvl.otherRecords.forEach(rec => addOtherRecordInput(rec.player, rec.percent, rec.platform || 'PC'));
+        }
+      }
+
+      openModal('modal-add-real');
+    }
+
+    function addOtherRecordInput(playerName = '', percentVal = '', platformVal = 'PC') {
+      const container = document.getElementById('other-records-container');
+      if(!container) return;
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.gap = '6px';
+      row.innerHTML = `
+        <input type="text" placeholder="Nombre jugador" class="other-rec-player" value="${playerName}" style="flex:2; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
+        <input type="number" placeholder="%" class="other-rec-percent" min="1" max="100" value="${percentVal}" style="flex:1; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
+        <select class="other-rec-platform" style="padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
+          <option value="PC" ${platformVal==='PC'?'selected':''}>PC</option>
+          <option value="Android" ${platformVal==='Android'?'selected':''}>Android</option>
+          <option value="Ambos" ${platformVal==='Ambos'?'selected':''}>Ambos</option>
+        </select>
+        <button type="button" class="btn btn-cancel" style="padding:4px 8px; font-size:0.7rem; background:#ed4245; color:#fff;" onclick="this.parentElement.remove()">X</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function openPlayerEditor(idx) {
+      const p = customPlayers[idx];
+      document.getElementById('modal-player-title').innerText = "Editar Jugador";
+      document.getElementById('edit-player-id').value = p.id;
+      document.getElementById('player-name').value = p.name;
+      document.getElementById('player-img-url').value = p.img || "";
+      document.getElementById('player-info').value = p.info || "";
+      document.getElementById('player-best-portal').value = p.bestPortal || 'Wave';
+      document.getElementById('player-country').value = p.country || "Costa Rica";
+      renderCountryList('');
+      openModal('modal-add-player');
+    }
+
+    function handlePlayerImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgUrlInput = document.getElementById('player-img-url');
+          if(imgUrlInput) imgUrlInput.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function renderCountryList(filterText = '') {
+      const listContainer = document.getElementById('country-options-list');
+      if(!listContainer) return;
+      listContainer.innerHTML = '';
+      const countryInput = document.getElementById('player-country');
+      const currentSelected = countryInput ? countryInput.value : 'Costa Rica';
+      const q = filterText.toLowerCase();
+
+      const filtered = COUNTRIES_LIST.filter(c => c.toLowerCase().includes(q));
+
+      if(filtered.length === 0) {
+        listContainer.innerHTML = '<div style="padding:6px; font-size:0.75rem; color:var(--text-dim); text-align:center;">Sin resultados</div>';
+        return;
+      }
+
+      filtered.forEach(c => {
+        const isSel = c === currentSelected;
+        const opt = document.createElement('div');
+        opt.className = `country-option ${isSel ? 'selected' : ''}`;
+        opt.innerHTML = `<span>🌐</span> <span>${c}</span>`;
+        opt.onclick = () => {
+          if(countryInput) countryInput.value = c;
+          renderCountryList(filterText);
+        };
+        listContainer.appendChild(opt);
+      });
+    }
+
+    function filterCountryList(val) { renderCountryList(val); }
+
+    function updateCountryFilterDropdown() {
+      const select = document.getElementById('country-filter-select');
+      if(!select) return;
+      const currentVal = select.value;
+      let countriesFound = new Set();
+      customPlayers.forEach(p => { if(p.country) countriesFound.add(p.country); });
+
+      select.innerHTML = '<option value="all">🌍 Todos los países</option>';
+      countriesFound.forEach(c => {
+        select.innerHTML += `<option value="${c}" ${c === currentVal ? 'selected' : ''}>${c}</option>`;
+      });
+    }
+
+    function openCommunityIdeaModal() {
+      closeModal('modal-menu');
+      openModal('modal-community-idea');
+    }
+
+    function submitCommunityIdea(e) {
+      e.preventDefault();
+      const author = document.getElementById('idea-author').value.trim();
+      const category = document.getElementById('idea-category').value;
+      const comment = document.getElementById('idea-comment').value.trim();
+
+      communityIdeas.push({ author, category, comment, date: new Date().toLocaleDateString() });
+      localStorage.setItem('gd_absolute_ideas', JSON.stringify(communityIdeas));
+      
+      closeModal('modal-community-idea');
+      alert("¡Idea enviada con éxito a los administradores!");
+    }
+
+    function updateIdeasCountBadge() {
+      const badge = document.getElementById('ideas-count-badge');
+      if(badge) badge.innerText = communityIdeas.length;
+    }
+
+    function openAdminIdeasModal() {
+      closeModal('modal-menu');
+      const list = document.getElementById('admin-ideas-list');
+      if(!list) return;
+      list.innerHTML = '';
+      if(communityIdeas.length === 0) {
+        list.innerHTML = '<p style="text-align:center; color:var(--text-dim);">No hay ideas pendientes.</p>';
+      } else {
+        communityIdeas.forEach((item, i) => {
+          list.innerHTML += `
+            <div class="feed-item">
+              <div style="display:flex; justify-content:space-between;">
+                <b>[${item.category}] por ${item.author}</b>
+                <span style="color:var(--text-dim); font-size:0.7rem;">${item.date}</span>
+              </div>
+              <p style="margin-top:4px; color:#fff;">${item.comment}</p>
+            </div>
+          `;
+        });
+      }
+      openModal('modal-admin-ideas');
+    }
+
+    function clearAllIdeas() {
+      if(confirm("¿Seguro que deseas borrar todas las ideas?")) {
+        communityIdeas = [];
+        localStorage.removeItem('gd_absolute_ideas');
+        updateIdeasCountBadge();
+        closeModal('modal-admin-ideas');
+        alert("¡Ideas borradas!");
+      }
+    }
+
+    function triggerSecretDiscord() {
+      const pass = prompt("Clave admin para Discord oculto:");
+      if (pass === ADMIN_PASSWORD) openModal('modal-discord-config');
+    }
+
+    function openDiscordMenu() {
+      closeModal('modal-menu');
+      const menuOverlay = document.createElement('div');
+      menuOverlay.className = 'discord-menu-overlay';
+      menuOverlay.id = 'discordMenuUI';
+
+      const savedDiscordUrl = localStorage.getItem('gd_absolute_discord') || 'https://discord.gg/ejemplo';
+
+      menuOverlay.innerHTML = `
+        <div class="discord-menu-card">
+          <h3 style="color: white; text-align: center; margin-top: 0;">Opciones de Discord</h3>
+          <a href="${savedDiscordUrl}" target="_blank" class="btn-discord-action">Dirigirse al Discord</a>
+          <button class="btn-report-action" onclick="reportBrokenLink()">Reportar link vencido</button>
+          <button style="background: transparent; border: none; color: #b9bbbe; cursor: pointer; margin-top: 8px;" onclick="closeDiscordMenu()">Cancelar</button>
+        </div>
+      `;
+      document.body.appendChild(menuOverlay);
+    }
+
+    function closeDiscordMenu() {
+      const menu = document.getElementById('discordMenuUI');
+      if (menu) menu.remove();
+    }
+
+    function reportBrokenLink() {
+      alert("¡Gracias! El reporte del link vencido ha sido enviado al registro de actividad.");
+      logActivityFeed("⚠️ Alerta: Un usuario reportó que el enlace de Discord está vencido.");
+      closeDiscordMenu();
+    }
+
+    function saveDiscordLink(e) {
+      e.preventDefault();
+      const input = document.getElementById('discord-url-input');
+      if(input) localStorage.setItem('gd_absolute_discord', input.value);
+      closeModal('modal-discord-config');
+      alert("¡Enlace de Discord guardado!");
+    }
+
+    function showCreditsModal() {
+      closeModal('modal-menu');
+      const text = localStorage.getItem('gd_absolute_credits_text') || "<b>La Absolute List</b><br>Creado por Samuel y colaboradores de la comunidad de Geometry Dash.";
+      const view = document.getElementById('credits-view');
+      if(view) view.innerHTML = text;
+      openModal('modal-credits');
+    }
+
+    function requestEditCredits() {
+      closeModal('modal-credits');
+      pendingActionData = { type: 'credits', action: 'edit' };
+      document.getElementById('modal-auth-title').innerText = "Contraseña de Admin (Créditos)";
+      document.getElementById('edit-pass-input').value = '';
+      const ta = document.getElementById('credits-textarea');
+      if(ta) ta.value = localStorage.getItem('gd_absolute_credits_text') || "";
+      openModal('modal-edit-pass');
+    }
+
+    function saveCredits(e) {
+      e.preventDefault();
+      const txt = document.getElementById('credits-textarea').value;
+      localStorage.setItem('gd_absolute_credits_text', txt);
+      closeModal('modal-edit-credits');
+      alert("¡Créditos actualizados!");
+    }
+
+    function openPointsCalculator() {
+      closeModal('modal-menu');
+      openModal('modal-calc');
+      calculateSimulatedPoints();
+    }
+
+    function calculateSimulatedPoints() {
+      const diffElem = document.getElementById('calc-diff');
+      const pctElem = document.getElementById('calc-pct');
+      const resElem = document.getElementById('calc-result');
+      if(!diffElem || !pctElem || !resElem) return;
+
+      const diff = diffElem.value;
+      const pct = parseFloat(pctElem.value) || 100;
+      let base = diff === 'top1' ? 400 : diff === 'top5' ? 300 : diff === 'top10' ? 200 : diff === 'top100' ? 100 : diff === 'extreme' ? 500 : 300;
+      const res = Math.round((base * (pct / 100)) * 10) / 10;
+      resElem.innerText = `Resultado: ${res} pts (${pct}%)`;
+    }
+
+    function showAchievementsModal() {
+      closeModal('modal-menu');
+      const unlocked = JSON.parse(localStorage.getItem('gd_absolute_unlocked_achievements')) || [];
+      const list = document.getElementById('achievements-list');
+      if(!list) return;
+      list.innerHTML = '';
+      ACHIEVEMENTS_LIST.forEach(ach => {
+        const isUnlocked = unlocked.includes(ach.id);
+        list.innerHTML += `
+          <div class="feed-item" onclick="alert('${ach.title}: ${ach.desc}')" style="cursor:pointer;">
+            <div style="display:flex; justify-content:space-between;">
+              <b>${ach.title}</b>
+              <span style="color:${isUnlocked ? 'var(--accent)' : 'var(--text-dim)'};">${isUnlocked ? '✔️' : '🔒'}</span>
+            </div>
+            <p style="font-size:0.72rem; color:var(--text-dim); margin-top:2px;">${ach.desc}</p>
+          </div>
+        `;
+      });
+      openModal('modal-achievements');
+    }
+
+    function showPlayerProfile(playerName) {
+      const p = customPlayers.find(cp => cp.name.toLowerCase() === playerName.toLowerCase());
+      const avatar = document.getElementById('profile-avatar');
+      const nameElem = document.getElementById('profile-name');
+      const countryElem = document.getElementById('profile-country');
+      const portalElem = document.getElementById('profile-best-portal');
+      const infoElem = document.getElementById('profile-info');
+
+      if(avatar) avatar.src = p ? p.img : 'https://via.placeholder.com/150';
+      if(nameElem) nameElem.innerText = playerName;
+      if(countryElem) countryElem.innerText = p && p.country ? `🌐 ${p.country}` : '🌐 Costa Rica';
+      if(portalElem) portalElem.innerText = p && p.bestPortal ? `⭐ Mejor en: ${p.bestPortal}` : '⭐ Mejor en: Wave';
+      if(infoElem) infoElem.innerText = p && p.info ? `💬 "${p.info}"` : 'Jugador de la comunidad';
+
+      let countN = 0, countI = 0, countR = 0;
+      levels.forEach(l => { if((l.verifier||"").includes(playerName)) countN++; });
+      impossibleLevels.forEach(l => { if((l.verifier||"").includes(playerName)) countI++; });
+      realLevels.forEach(l => { 
+        if(l.goldPlayer === playerName) countR++; 
+        if(l.otherRecords && l.otherRecords.some(r => r.player.toLowerCase() === playerName.toLowerCase())) countR++;
+      });
+
+      const detailsList = document.getElementById('profile-details-list');
+      if(detailsList) {
+        detailsList.innerHTML = `
+          <div class="detail-row"><span>Absolute Levels:</span> <b>${countN}</b></div>
+          <div class="detail-row"><span>Absolute Impossible:</span> <b>${countI}</b></div>
+          <div class="detail-row"><span>Rateados Récord:</span> <b>${countR}</b></div>
+        `;
+      }
+      openModal('modal-player-profile');
+    }
+
+    function logActivityFeed(msg) {
+      let feed = JSON.parse(localStorage.getItem('gd_absolute_activity_feed')) || [];
+      feed.unshift({ msg, date: new Date().toLocaleDateString() });
+      localStorage.setItem('gd_absolute_activity_feed', JSON.stringify(feed.slice(0, 25)));
+    }
+
+    function showActivityFeed() {
+      const feed = JSON.parse(localStorage.getItem('gd_absolute_activity_feed')) || [];
+      const list = document.getElementById('activity-feed-list');
+      if(!list) return;
+      list.innerHTML = feed.length === 0 ? '<p>No hay registros.</p>' : '';
+      feed.forEach(item => list.innerHTML += `<div class="feed-item"><b>[${item.date}]</b> ${item.msg}</div>`);
+      openModal('modal-activity');
+    }
+
+    function showLevelsFeed() {
+      const feed = JSON.parse(localStorage.getItem('gd_absolute_levels_feed')) || [];
+      const list = document.getElementById('levels-feed-list');
+      if(!list) return;
+      list.innerHTML = feed.length === 0 ? '<p>No hay niveles.</p>' : '';
+      feed.forEach(item => list.innerHTML += `<div class="feed-item"><b>[${item.date}]</b> ${item.msg}</div>`);
+      openModal('modal-levels-feed');
+    }
+
+    function getYouTubeId(url) {
+      if(!url) return null;
+      let match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    function getYouTubeEmbedUrl(url) { const id = getYouTubeId(url); return id ? `https://www.youtube.com/embed/${id}` : null; }
+    function getYouTubeThumbnail(url) { const id = getYouTubeId(url); return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null; }
+
+    function calculatePlayerPoints(playerLevels, playerImpossible, playerRealLevels) {
+      let total = 0;
+      playerLevels.forEach(l => {
+        const rank = levels.indexOf(l) + 1;
+        let basePoints = rank === 1 ? 400 : rank <= 5 ? 300 : rank <= 10 ? 200 : 100;
+        total += basePoints * ((l.progress !== undefined ? l.progress : 100) / 100);
+      });
+      playerImpossible.forEach(l => { total += 600; });
+      playerRealLevels.forEach(rl => {
+        let basePoints = rl.difficulty === 'extreme' ? 500 : 300;
+        total += basePoints * ((rl.goldPercent !== undefined ? rl.goldPercent : 100) / 100);
+      });
+      return Math.round(total * 10) / 10;
+    }
+
+    function spinRoulette(type) {
+      closeModal('modal-roulette');
+      let targetList = type === 'mine' ? levels : type === 'impossible' ? impossibleLevels : realLevels;
+      if(targetList.length === 0) return alert("No hay niveles en esta lista.");
+      
+      let picked = targetList[Math.floor(Math.random() * targetList.length)];
+      let optionName = type === 'mine' ? 'Absolute' : type === 'impossible' ? 'Impossible' : 'Rateados';
+      
+      let levelData = {
+        name: picked.name,
+        author: picked.author,
+        thumbnail: picked.img || getYouTubeThumbnail(picked.videoUrl) || 'https://via.placeholder.com/320x180'
+      };
+
+      openRouletteUI(optionName, levelData);
+    }
+
+    function openRouletteUI(selectedOption, levelData) {
+      const overlay = document.createElement('div');
+      overlay.className = 'roulette-overlay';
+      overlay.id = 'rouletteUI';
+
+      overlay.innerHTML = `
+        <button class="roulette-close-btn" onclick="closeRouletteUI()">&times;</button>
+        <div class="roulette-result-card">
+          <h2>Opción: ${selectedOption}</h2>
+          <img src="${levelData.thumbnail}" alt="${levelData.name}" class="roulette-thumbnail" onerror="this.src='https://via.placeholder.com/320x180'">
+          <h3>${levelData.name}</h3>
+          <p>Creador: <strong>${levelData.author}</strong></p>
+          
+          <div class="roulette-actions">
+            <div class="percent-input-container">
+              <input type="number" id="deathPercentInput" class="percent-input" placeholder="Ingresa tu % (ej. 3)" min="0" max="100">
+              <button class="btn-submit-percent" onclick="submitPercent()">Enviar</button>
+            </div>
+            <button class="btn-surrender" onclick="surrenderRoulette()">Rendirse</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+    }
+
+    function closeRouletteUI() {
+      const overlay = document.getElementById('rouletteUI');
+      if (overlay) overlay.remove();
+    }
+
+    function submitPercent() {
+      const input = document.getElementById('deathPercentInput');
+      if(!input) return;
+      const val = parseInt(input.value);
+
+      if (isNaN(val) || val < 0) {
+        alert("Por favor ingresa un porcentaje válido.");
+        return;
+      }
+
+      currentPenaltyPercent = val + 1;
+      alert(`Registrado. En el siguiente nivel randomizado deberás superar el requisito de ${currentPenaltyPercent}%.`);
+      closeRouletteUI();
+    }
+
+    function surrenderRoulette() {
+      if (confirm("¿Estás seguro de que deseas rendirte?")) {
+        currentPenaltyPercent = 0;
+        closeRouletteUI();
+      }
+    }
+
+    function renderPlayers() {
+      const listContainer = document.getElementById('players-list');
+      if(!listContainer) return;
+      listContainer.innerHTML = '';
+      const countrySelect = document.getElementById('country-filter-select');
+      const selectedCountryFilter = countrySelect ? countrySelect.value : 'all';
+
+      let playerMap = {};
+      customPlayers.forEach(cp => {
+        playerMap[cp.name] = { name: cp.name, img: cp.img || 'https://via.placeholder.com/150', info: cp.info || '', country: cp.country || 'Costa Rica', bestPortal: cp.bestPortal || 'Wave', levels: [], impossible: [], real: [] };
+      });
+
+      levels.forEach(l => {
+        if(l.verifier) {
+          l.verifier.split(',').forEach(v => {
+            let name = v.trim();
+            if(!name) return;
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
+            playerMap[name].levels.push(l);
+          });
+        }
+      });
+
+      impossibleLevels.forEach(l => {
+        if(l.verifier) {
+          l.verifier.split(',').forEach(v => {
+            let name = v.trim();
+            if(!name) return;
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
+            playerMap[name].impossible.push(l);
+          });
+        }
+      });
+
+      realLevels.forEach(rl => {
+        if(rl.goldPlayer) {
+          let name = rl.goldPlayer.trim();
+          if(name) {
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
+            playerMap[name].real.push(rl);
+          }
+        }
+        if(rl.otherRecords) {
+          rl.otherRecords.forEach(rec => {
+            let name = rec.player.trim();
+            if(name) {
+              if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
+              playerMap[name].real.push({ ...rl, goldPercent: rec.percent });
+            }
+          });
+        }
+      });
+
+      let playersArray = Object.values(playerMap).map(p => ({
+        ...p,
+        points: calculatePlayerPoints(p.levels, p.impossible, p.real)
+      }));
+
+      playersArray.sort((a, b) => b.points - a.points);
+
+      if(selectedCountryFilter !== 'all') {
+        playersArray = playersArray.filter(p => p.country === selectedCountryFilter);
+      }
+
+      const totalPlayersElem = document.getElementById('stat-total-players');
+      if(totalPlayersElem) totalPlayersElem.innerText = playersArray.length;
+
+      if(playersArray.length === 0) {
+        listContainer.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:20px;">No hay jugadores registrados con este filtro.</p>';
+        return;
+      }
+
+      playersArray.forEach((p, idx) => {
+        let rankBadge = idx === 0 ? '👑' : `#${idx + 1}`;
+        let originalIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === p.name.toLowerCase());
+
+        listContainer.innerHTML += `
+          <div class="card ${idx === 0 ? 'top-gold' : ''}" onclick="showPlayerProfile('${p.name}')">
+            <div class="rank">${rankBadge}</div>
+            <img class="thumb" src="${p.img}" style="border-radius:50%; width:50px; height:50px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/150'">
+            <div class="info">
+              <h3>${p.name} ${idx === 0 ? '<span class="new-badge">#1 RANK</span>' : ''}</h3>
+              <div class="meta-small">Puntos: <b>${p.points} pts</b> | País: <b>${p.country}</b> | ⭐ <b>${p.bestPortal}</b></div>
+            </div>
+            <div class="actions-right" onclick="event.stopPropagation()">
+              ${originalIdx !== -1 ? `<button class="btn-edit" onclick="requestEdit('player', ${originalIdx})">✏️</button>` : ''}
+              ${originalIdx !== -1 ? `<button class="btn-delete-card" onclick="requestDelete('player', ${originalIdx})">🗑️</button>` : ''}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderCreators() {
+      const listContainer = document.getElementById('creators-list');
+      if(!listContainer) return;
+      listContainer.innerHTML = '';
+
+      let creatorMap = {};
+      levels.forEach(l => {
+        if(l.author) {
+          l.author.split(',').forEach(a => {
+            let name = a.trim();
+            if(!name) return;
+            if(!creatorMap[name]) creatorMap[name] = [];
+            creatorMap[name].push(l);
+          });
+        }
+      });
+
+      let creatorsArray = Object.keys(creatorMap).map(name => ({ name, levels: creatorMap[name] }));
+      creatorsArray.sort((a, b) => b.levels.length - a.levels.length);
+
+      if(creatorsArray.length === 0) {
+        listContainer.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:20px;">No hay creadores registrados.</p>';
+        return;
+      }
+
+      creatorsArray.forEach((c, idx) => {
+        listContainer.innerHTML += `
+          <div class="card">
+            <div class="rank">#${idx + 1}</div>
+            <div class="info">
+              <h3>${c.name}</h3>
+              <div class="meta-small">Niveles en Absolute: <b>${c.levels.length}</b></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function render() {
+      const searchBar = document.getElementById('search-bar');
+      const authorFilterElem = document.getElementById('filter-author');
+      const styleFilterElem = document.getElementById('filter-playstyle');
+
+      const query = searchBar ? searchBar.value.toLowerCase() : "";
+      const authFilter = authorFilterElem ? authorFilterElem.value.toLowerCase() : "";
+      const styleFilter = styleFilterElem ? styleFilterElem.value : "all";
+      const favs = JSON.parse(localStorage.getItem('gd_absolute_favorites')) || [];
+
+      updateCountryFilterDropdown();
+
+      // --- RENDER ABSOLUTE ---
+      const levelsContainer = document.getElementById('levels-list');
+      if(levelsContainer) {
+        levelsContainer.innerHTML = '';
+        let filteredLevels = levels.filter((lvl) => {
+          let matchesQuery = lvl.name.toLowerCase().includes(query) || lvl.author.toLowerCase().includes(query);
+          let matchesAuth = !authFilter || lvl.author.toLowerCase().includes(authFilter);
+          let matchesStyle = styleFilter === 'all' || lvl.playstyle === styleFilter;
+          let matchesFav = !showOnlyFavorites || favs.includes(lvl.id);
+          let matchesUncompleted = !showOnlyUncompleted || (lvl.progress !== undefined && lvl.progress < 100);
+          return matchesQuery && matchesAuth && matchesStyle && matchesFav && matchesUncompleted;
+        });
+
+        const totalLevelsElem = document.getElementById('stat-total-levels');
+        if(totalLevelsElem) totalLevelsElem.innerText = levels.length;
+
+        filteredLevels.forEach((lvl) => {
+          let originalIdx = levels.indexOf(lvl);
+          let rank = originalIdx + 1;
+          let img = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
+          let isFav = favs.includes(lvl.id);
+          let platformBadge = lvl.platform ? `<span class="platform-badge">${lvl.platform}</span>` : '';
+          let portalBadge = lvl.mainPortal ? `<span class="meta-small" style="color:var(--gold);">[${lvl.mainPortal}]</span>` : '';
+
+          levelsContainer.innerHTML += `
+            <div class="card ${rank === 1 ? 'top-gold' : ''}" onclick="openDetailModal('level', ${originalIdx})">
+              <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${lvl.id}')">★</button>
+              <div class="rank">#${rank}</div>
+              <img class="thumb" src="${img}" onerror="this.src='https://via.placeholder.com/320x180'">
+              <div class="info">
+                <div class="info-header">
+                  <h3>${lvl.name}</h3>
+                  ${rank === 1 ? '<span class="new-badge">TOP 1</span>' : ''}
+                  ${platformBadge}
+                </div>
+                <div class="meta-small">Creador: <b>${lvl.author}</b> ${portalBadge}</div>
+              </div>
+              <div class="actions-right" onclick="event.stopPropagation()">
+                <button class="btn-edit" onclick="requestEdit('level', ${originalIdx})">✏️</button>
+                <button class="btn-delete-card" onclick="requestDelete('level', ${originalIdx})">🗑️</button>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // --- RENDER IMPOSSIBLE ---
+      const impContainer = document.getElementById('impossible-list');
+      if(impContainer) {
+        impContainer.innerHTML = '';
+        let filteredImp = impossibleLevels.filter((lvl) => {
+          let matchesQuery = lvl.name.toLowerCase().includes(query) || lvl.author.toLowerCase().includes(query);
+          let matchesFav = !showOnlyFavorites || favs.includes(lvl.id);
+          return matchesQuery && matchesFav;
+        });
+
+        const totalImpElem = document.getElementById('stat-total-impossible');
+        if(totalImpElem) totalImpElem.innerText = impossibleLevels.length;
+
+        filteredImp.forEach((lvl) => {
+          let originalIdx = impossibleLevels.indexOf(lvl);
+          let rank = originalIdx + 1;
+          let img = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
+          let isFav = favs.includes(lvl.id);
+          let platformBadge = lvl.platform ? `<span class="platform-badge">${lvl.platform}</span>` : '';
+          let portalBadge = lvl.mainPortal ? `<span class="meta-small" style="color:var(--gold);">[${lvl.mainPortal}]</span>` : '';
+
+          impContainer.innerHTML += `
+            <div class="card ${rank === 1 ? 'top-gold' : ''}" onclick="openDetailModal('impossible', ${originalIdx})">
+              <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${lvl.id}')">★</button>
+              <div class="rank">#${rank}</div>
+              <img class="thumb" src="${img}" onerror="this.src='https://via.placeholder.com/320x180'">
+              <div class="info">
+                <div class="info-header">
+                  <h3>${lvl.name}</h3>
+                  ${platformBadge}
+                </div>
+                <div class="meta-small">Creador: <b>${lvl.author}</b> ${portalBadge}</div>
+              </div>
+              <div class="actions-right" onclick="event.stopPropagation()">
+                <button class="btn-edit" onclick="requestEdit('impossible', ${originalIdx})">✏️</button>
+                <button class="btn-delete-card" onclick="requestDelete('impossible', ${originalIdx})">🗑️</button>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // --- RENDER REAL / RATEADOS ---
+      const realContainer = document.getElementById('real-list');
+      if(realContainer) {
+        realContainer.innerHTML = '';
+        let filteredReal = realLevels.filter((lvl) => {
+          let matchesQuery = lvl.name.toLowerCase().includes(query) || lvl.author.toLowerCase().includes(query);
+          let matchesDiff = currentDiffFilter === 'all' || lvl.difficulty === currentDiffFilter;
+          let matchesFav = !showOnlyFavorites || favs.includes(lvl.id);
+          return matchesQuery && matchesDiff && matchesFav;
+        });
+
+        const totalRealElem = document.getElementById('stat-total-real');
+        if(totalRealElem) totalRealElem.innerText = realLevels.length;
+
+        filteredReal.forEach((lvl) => {
+          let originalIdx = realLevels.indexOf(lvl);
+          let rank = originalIdx + 1;
+          let img = getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
+          let diffIcon = DEMON_ICONS[lvl.difficulty || 'extreme'];
+          let isFav = favs.includes(lvl.id);
+          let platformBadge = lvl.platform ? `<span class="platform-badge">${lvl.platform}</span>` : '';
+          let portalBadge = lvl.mainPortal ? `<span class="meta-small" style="color:var(--gold);">[${lvl.mainPortal}]</span>` : '';
+
+          realContainer.innerHTML += `
+            <div class="card" onclick="openDetailModal('real', ${originalIdx})">
+              <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${lvl.id}')">★</button>
+              <div class="rank">#${rank}</div>
+              <img class="thumb" src="${img}" onerror="this.src='https://via.placeholder.com/320x180'">
+              <div class="info">
+                <div class="info-header">
+                  <h3>${lvl.name}</h3>
+                  <img class="demon-icon" src="${diffIcon}">
+                  ${platformBadge}
+                </div>
+                <div class="meta-small">Creador: <b>${lvl.author}</b> ${portalBadge}</div>
+                <div class="meta-small">Récord principal: <b>${lvl.goldPlayer}</b> (${lvl.goldPercent || 100}%)</div>
+              </div>
+              <div class="actions-right" onclick="event.stopPropagation()">
+                <button class="btn-edit" onclick="requestEdit('real', ${originalIdx})">✏️</button>
+                <button class="btn-delete-card" onclick="requestDelete('real', ${originalIdx})">🗑️</button>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      renderPlayers();
+      renderCreators();
+      checkAchievementsProgress();
+    }
+
+    function handleSearchInput(val) {
+      const dropdown = document.getElementById('autocomplete-list');
+      if(!dropdown) return;
+      if(!val || val.length < 2) { dropdown.style.display = 'none'; render(); return; }
+
+      let matches = [];
+      levels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
+      impossibleLevels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
+      realLevels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
+
+      if(matches.length === 0) { dropdown.style.display = 'none'; render(); return; }
+
+      dropdown.innerHTML = '';
+      matches.slice(0, 5).forEach(m => {
+        dropdown.innerHTML += `<div class="autocomplete-item" onclick="selectAutocomplete('${m}')">${m}</div>`;
+      });
+      dropdown.style.display = 'block';
+      render();
+    }
+
+    function selectAutocomplete(name) {
+      const searchBar = document.getElementById('search-bar');
+      const dropdown = document.getElementById('autocomplete-list');
+      if(searchBar) searchBar.value = name;
+      if(dropdown) dropdown.style.display = 'none';
+      render();
+    }
+
+    function openDetailModal(type, idx) {
+      let lvl = type === 'level' ? levels[idx] : type === 'impossible' ? impossibleLevels[idx] : realLevels[idx];
+      selectedDetailLevelId = lvl.id;
+      
+      const titleElem = document.getElementById('detail-title');
+      const imgElem = document.getElementById('detail-img');
+      const infoListElem = document.getElementById('detail-info-list');
+
+      if(titleElem) titleElem.innerText = `#${idx + 1} - ${lvl.name}`;
+      if(imgElem) imgElem.src = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
+      
+      let infoHTML = `<div class="detail-row"><span>Creador:</span> <b>${lvl.author}</b></div>`;
+      if(lvl.platform) infoHTML += `<div class="detail-row"><span>Plataforma:</span> <b>${lvl.platform}</b></div>`;
+      if(lvl.mainPortal) infoHTML += `<div class="detail-row"><span>Mecánica principal:</span> <b>${lvl.mainPortal}</b></div>`;
+
+      if(type === 'level' || type === 'impossible') {
+        infoHTML += `<div class="detail-row"><span>Verificador(es):</span> <b>${lvl.verifier}</b></div>`;
+      } else {
+        infoHTML += `
+          <div class="detail-row"><span>Dificultad:</span> <b style="text-transform:uppercase;">${lvl.difficulty} Demon</b></div>
+          <div class="detail-row"><span>🏆 Récord Principal:</span> <b>${lvl.goldPlayer} (${lvl.goldPercent || 100}%)</b></div>
+        `;
+        if(lvl.otherRecords && lvl.otherRecords.length > 0) {
+          infoHTML += `<div style="margin-top:8px; font-size:0.78rem; color:var(--text-dim);"><b>Otros récords:</b></div>`;
+          lvl.otherRecords.forEach(r => {
+            infoHTML += `<div class="detail-row" style="padding-left:10px;"><span>${r.player} (${r.platform || 'PC'})</span> <b>${r.percent}%</b></div>`;
+          });
+        }
+      }
+      if(infoListElem) infoListElem.innerHTML = infoHTML;
+
+      let embedUrl = getYouTubeEmbedUrl(lvl.videoUrl);
+      const videoBox = document.getElementById('video-box');
+      const detailVideo = document.getElementById('detail-video');
+      if(embedUrl && detailVideo && videoBox) {
+        detailVideo.src = embedUrl;
+        videoBox.style.display = 'block';
+      } else if(videoBox) {
+        videoBox.style.display = 'none';
+      }
+
+      renderComments();
+      openModal('modal-detail');
+    }
+
+    function renderComments() {
+      let allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
+      let comments = allComments[selectedDetailLevelId] || [];
+      let container = document.getElementById('comments-container');
+      const countDisplay = document.getElementById('comment-count-display');
+      
+      if(countDisplay) countDisplay.innerText = comments.length;
+      if(!container) return;
+
+      container.innerHTML = '';
+      if(comments.length === 0) {
+        container.innerHTML = '<p style="font-size:0.75rem; color:var(--text-dim); text-align:center;">No hay comentarios todavía.</p>';
+        return;
+      }
+
+      comments.forEach((c) => {
+        container.innerHTML += `
+          <div class="comment-box">
+            <div><b style="color:var(--accent);">${c.author}</b><p style="margin-top:2px; color:#fff;">${c.text}</p></div>
+          </div>
+        `;
+      });
+    }
+
+    function postComment() {
+      const authorInput = document.getElementById('comment-author-input');
+      const textInput = document.getElementById('comment-text-input');
+      if(!authorInput || !textInput) return;
+
+      const author = authorInput.value.trim();
+      const text = textInput.value.trim();
+      if(!author || !text) return alert("Completa tu nombre y el comentario.");
+
+      let allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
+      if(!allComments[selectedDetailLevelId]) allComments[selectedDetailLevelId] = [];
+
+      allComments[selectedDetailLevelId].push({ author, text });
+      localStorage.setItem('gd_absolute_comments', JSON.stringify(allComments));
+
+      textInput.value = '';
+      renderComments();
+    }
+
+    function saveRealLevel(e) {
+      e.preventDefault();
+      const editId = document.getElementById('edit-real-id').value;
+      const pos = parseInt(document.getElementById('real-position').value) - 1;
+      const name = document.getElementById('real-name').value;
+      const author = document.getElementById('real-author').value;
+      const difficulty = document.getElementById('real-difficulty').value;
+      const goldPlayer = document.getElementById('real-gold-player').value;
+      const platform = document.getElementById('real-platform').value;
+      const mainPortal = document.getElementById('real-main-portal').value;
+      const goldPercent = parseInt(document.getElementById('real-gold-percent').value) || 100;
+      const videoUrl = document.getElementById('real-video-url').value;
+      const gdId = document.getElementById('real-gd-id').value;
+
+      let otherRecords = [];
+      const rows = document.querySelectorAll('#other-records-container > div');
+      rows.forEach(row => {
+        const player = row.querySelector('.other-rec-player').value.trim();
+        const percent = parseInt(row.querySelector('.other-rec-percent').value);
+        const recPlatform = row.querySelector('.other-rec-platform').value;
+        if(player && !isNaN(percent)) {
+          otherRecords.push({ player, percent, platform: recPlatform });
+        }
+      });
+
+      if(editId) {
+        let idx = realLevels.findIndex(l => l.id === editId);
+        if(idx !== -1) {
+          realLevels[idx] = { ...realLevels[idx], name, author, difficulty, goldPlayer, platform, mainPortal, goldPercent, otherRecords, videoUrl, gdId };
+        } else {
+          realLevels.push({ id: editId, name, author, difficulty, goldPlayer, platform, mainPortal, goldPercent, otherRecords, videoUrl, gdId });
+        }
+      } else {
+        let newItem = { id: 'real_' + Date.now(), name, author, difficulty, goldPlayer, platform, mainPortal, goldPercent, otherRecords, videoUrl, gdId };
+        if(pos >= 0 && pos <= realLevels.length) realLevels.splice(pos, 0, newItem);
+        else realLevels.push(newItem);
+      }
+
+      localStorage.setItem('gd_absolute_real', JSON.stringify(realLevels));
+      closeModal('modal-add-real');
+      render();
+      alert("¡Nivel Rateado guardado con éxito!");
+    }
+
+    function saveLevel(e) {
+      e.preventDefault();
+      const editId = document.getElementById('edit-level-id').value;
+      const pos = parseInt(document.getElementById('level-position').value) - 1;
+      const name = document.getElementById('level-name').value;
+      const author = document.getElementById('level-author').value;
+      const verifier = document.getElementById('level-verifier').value;
+      const platform = document.getElementById('level-platform').value;
+      const mainPortal = document.getElementById('level-main-portal').value;
+      const progress = parseInt(document.getElementById('level-progress').value) || 100;
+      const playstyle = document.getElementById('level-playstyle').value;
+      const videoUrl = document.getElementById('level-video-url').value;
+      const img = document.getElementById('level-img-url').value;
+      const gdId = document.getElementById('level-gd-id').value;
+
+      if(editId) {
+        let idx = levels.findIndex(l => l.id === editId);
+        if(idx !== -1) {
+          levels[idx] = { ...levels[idx], name, author, verifier, platform, mainPortal, progress, playstyle, videoUrl, img, gdId };
+        } else {
+          levels.push({ id: editId, name, author, verifier, platform, mainPortal, progress, playstyle, videoUrl, img, gdId });
+        }
+      } else {
+        let newItem = { id: 'lvl_' + Date.now(), name, author, verifier, platform, mainPortal, progress, playstyle, videoUrl, img, gdId };
+        if(pos >= 0 && pos <= levels.length) levels.splice(pos, 0, newItem);
+        else levels.push(newItem);
+      }
+
+      localStorage.setItem('gd_absolute_levels', JSON.stringify(levels));
+      closeModal('modal-add');
+      render();
+    }
+
+    function saveImpossibleLevel(e) {
+      e.preventDefault();
+      const editId = document.getElementById('edit-impossible-id').value;
+      const pos = parseInt(document.getElementById('impossible-position').value) - 1;
+      const name = document.getElementById('impossible-name').value;
+      const author = document.getElementById('impossible-author').value;
+      const verifier = document.getElementById('impossible-verifier').value;
+      const platform = document.getElementById('impossible-platform').value;
+      const mainPortal = document.getElementById('impossible-main-portal').value;
+      const videoUrl = document.getElementById('impossible-video-url').value;
+      const img = document.getElementById('impossible-img-url').value;
+      const gdId = document.getElementById('impossible-gd-id').value;
+
+      if(editId) {
+        let idx = impossibleLevels.findIndex(l => l.id === editId);
+        if(idx !== -1) {
+          impossibleLevels[idx] = { ...impossibleLevels[idx], name, author, verifier, platform, mainPortal, videoUrl, img, gdId };
+        } else {
+          impossibleLevels.push({ id: editId, name, author, verifier, platform, mainPortal, videoUrl, img, gdId });
+        }
+      } else {
+        let newItem = { id: 'imp_' + Date.now(), name, author, verifier, platform, mainPortal, videoUrl, img, gdId };
+        if(pos >= 0 && pos <= impossibleLevels.length) impossibleLevels.splice(pos, 0, newItem);
+        else impossibleLevels.push(newItem);
+      }
+
+      localStorage.setItem('gd_absolute_impossible', JSON.stringify(impossibleLevels));
+      closeModal('modal-add-impossible');
+      render();
+    }
+
+    function savePlayer(e) {
+      e.preventDefault();
+      const editId = document.getElementById('edit-player-id').value;
+      const name = document.getElementById('player-name').value;
+      const img = document.getElementById('player-img-url').value;
+      const info = document.getElementById('player-info').value;
+      const country = document.getElementById('player-country').value || "Costa Rica";
+      const bestPortal = document.getElementById('player-best-portal').value || "Wave";
+
+      if(editId) {
+        let idx = customPlayers.findIndex(p => p.id === editId);
+        if(idx !== -1) {
+          customPlayers[idx] = { ...customPlayers[idx], name, img, info, country, bestPortal };
+        } else {
+          customPlayers.push({ id: editId, name, img, info, country, bestPortal });
+        }
+      } else {
+        customPlayers.push({ id: 'pl_' + Date.now(), name, img, info, country, bestPortal });
+      }
+
+      localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
+      closeModal('modal-add-player');
+      render();
+    }
+
+    function exportData() {
+      const data = { levels, impossibleLevels, realLevels, customPlayers, communityIdeas };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'la_absolute_list_backup.json';
+      a.click();
+      closeModal('modal-menu');
+    }
+
+    function importData() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if(data.levels) levels = data.levels;
+            if(data.impossibleLevels) impossibleLevels = data.impossibleLevels;
+            if(data.realLevels) realLevels = data.realLevels;
+            if(data.customPlayers) customPlayers = data.customPlayers;
+            if(data.communityIdeas) communityIdeas = data.communityIdeas;
+
+            localStorage.setItem('gd_absolute_levels', JSON.stringify(levels));
+            localStorage.setItem('gd_absolute_impossible', JSON.stringify(impossibleLevels));
+            localStorage.setItem('gd_absolute_real', JSON.stringify(realLevels));
+            localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
+            localStorage.setItem('gd_absolute_ideas', JSON.stringify(communityIdeas));
+
+            render();
+            alert("¡Backup importado con éxito!");
+          } catch(err) {
+            alert("Error al importar el archivo JSON.");
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+      closeModal('modal-menu');
+    }
+
+    window.onload = function() {
+      loadSavedTheme();
+      initActiveUsersCounter();
+      checkAutoBackup();
+
+      levels = JSON.parse(localStorage.getItem('gd_absolute_levels')) || [];
+      impossibleLevels = JSON.parse(localStorage.getItem('gd_absolute_impossible')) || [];
+      realLevels = JSON.parse(localStorage.getItem('gd_absolute_real')) || [];
+      customPlayers = JSON.parse(localStorage.getItem('gd_absolute_players')) || [];
+      communityIdeas = JSON.parse(localStorage.getItem('gd_absolute_ideas')) || [];
+
+      updateIdeasCountBadge();
+      render();
+    };
   </script>
 </body>
 </html>
