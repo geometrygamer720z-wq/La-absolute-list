@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Absolute List</title>
-  <!-- Cliente de Supabase para base de datos pública -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #0b0d14;
@@ -28,7 +26,8 @@
     .section { display: none; }
     .section.active { display: block; }
 
-    .card { background: var(--card-bg); border-radius: 12px; padding: 12px 15px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; border: 1px solid #24293e; }
+    .card { background: var(--card-bg); border-radius: 12px; padding: 12px 15px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; border: 1px solid #24293e; cursor: pointer; transition: transform 0.2s; }
+    .card:active { transform: scale(0.98); }
     .rank { font-size: 1.4rem; font-weight: bold; color: var(--accent); min-width: 55px; text-align: center; }
     .thumb { width: 95px; height: 60px; border-radius: 8px; object-fit: cover; background: #000; flex-shrink: 0; }
     
@@ -37,23 +36,40 @@
     .info .meta-small { font-size: 0.75rem; color: var(--text-dim); line-height: 1.3; }
     .info .meta-small b { color: #d1d5db; font-weight: 600; }
 
-    .delete-btn { position: absolute; right: 10px; top: 10px; background: transparent; border: none; color: #ff6b6b; cursor: pointer; font-size: 1.1rem; }
+    .delete-btn { position: absolute; right: 10px; top: 10px; background: rgba(255, 71, 87, 0.2); border: none; color: #ff6b6b; cursor: pointer; font-size: 1rem; padding: 4px 8px; border-radius: 6px; z-index: 5; }
 
     /* Botón flotante "+" */
     .fab { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: var(--accent); color: white; border-radius: 50%; border: none; font-size: 2rem; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 90; }
 
-    /* Ventana emergente (Modal) */
+    /* Ventanas emergentes (Modales) */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
-    .modal-content { background: var(--card-bg); width: 100%; max-width: 420px; padding: 20px; border-radius: 12px; border: 1px solid #2e334d; max-height: 90vh; overflow-y: auto; }
-    .modal-content h2 { margin-bottom: 15px; color: var(--accent); font-size: 1.2rem; }
+    .modal-content { background: var(--card-bg); width: 100%; max-width: 450px; padding: 20px; border-radius: 12px; border: 1px solid #2e334d; max-height: 90vh; overflow-y: auto; }
+    .modal-content h2 { margin-bottom: 15px; color: var(--accent); font-size: 1.3rem; }
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: var(--text-dim); }
-    .form-group input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #2e334d; background: #0b0d14; color: white; outline: none; font-size: 0.9rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #2e334d; background: #0b0d14; color: white; outline: none; font-size: 0.9rem; }
+    .form-group textarea { resize: vertical; height: 70px; }
+    
+    .btn-search { background: #2e334d; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; margin-top: 5px; width: 100%; text-align: center; }
+
     .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn { flex: 1; padding: 11px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
     .btn-submit { background: var(--accent); color: white; }
     .btn-cancel { background: #2e334d; color: white; }
     
+    /* Estilos para Detalles Grandes del Nivel */
+    .detail-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; background: #000; }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #24293e; font-size: 0.85rem; }
+    .detail-row span { color: var(--text-dim); }
+    .detail-row b { color: #fff; }
+    .song-box { text-align: right; }
+    .song-id-small { font-size: 0.7rem; color: var(--text-dim); display: block; }
+    
+    .detail-desc { background: #0b0d14; padding: 10px; border-radius: 6px; margin-top: 5px; font-size: 0.85rem; color: #d1d5db; line-height: 1.4; }
+    
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 15px; background: #000; }
+    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
     .loading-text { text-align: center; color: var(--text-dim); margin-top: 30px; font-size: 0.9rem; }
   </style>
 </head>
@@ -81,16 +97,16 @@
   </div>
 
   <!-- Botón Añadir "+" -->
-  <button class="fab" onclick="openModal()">+</button>
+  <button class="fab" onclick="openModal('modal-add')">+</button>
 
-  <!-- Ventana Modal -->
-  <div id="modal" class="modal">
+  <!-- Modal Añadir Nivel -->
+  <div id="modal-add" class="modal">
     <div class="modal-content">
       <h2>Añadir Nuevo Nivel</h2>
       <form id="level-form" onsubmit="saveLevel(event)">
         <div class="form-group">
           <label>Contraseña Admin</label>
-          <input type="password" id="admin-pass" required placeholder="Clave para añadir">
+          <input type="password" id="admin-pass" required placeholder="Introduce clave admin">
         </div>
         <div class="form-group">
           <label>Posición / Top (1 a 2000)</label>
@@ -98,35 +114,102 @@
         </div>
         <div class="form-group">
           <label>Nombre del Nivel</label>
-          <input type="text" id="level-name" required placeholder="Ej: Bloodlust">
+          <input type="text" id="level-name" required placeholder="Ej: Slaughterhouse">
         </div>
         <div class="form-group">
           <label>Autor / Creador</label>
-          <input type="text" id="level-author" required placeholder="Ej: Knobbelboy">
+          <input type="text" id="level-author" required placeholder="Ej: IcEDcave">
         </div>
         <div class="form-group">
           <label>Verificador / Pasado por</label>
-          <input type="text" id="level-verifier" required placeholder="Ej: Knobbelboy">
+          <input type="text" id="level-verifier" required placeholder="Ej: Doggie">
+        </div>
+        
+        <!-- Sección de Imagen -->
+        <div class="form-group">
+          <label>Imagen del Nivel (URL o subir archivo)</label>
+          <input type="text" id="level-img-url" placeholder="Pegar URL de la imagen aquí">
+          <button type="button" class="btn-search" onclick="searchGoogleImage()">🔍 Buscar imagen en Google</button>
+          <label style="margin-top: 8px;">O sube una imagen desde tu celular:</label>
+          <input type="file" id="level-file" accept="image/*">
+        </div>
+
+        <!-- Canción -->
+        <div class="form-group">
+          <label>Nombre de la Canción</label>
+          <input type="text" id="level-song-name" placeholder="Ej: At the Speed of Light">
         </div>
         <div class="form-group">
-          <label>Seleccionar Foto/Imagen desde Celular</label>
-          <input type="file" id="level-file" accept="image/*" required>
+          <label>ID de la Canción (Song ID)</label>
+          <input type="text" id="level-song-id" placeholder="Ej: 467339">
         </div>
+
+        <!-- Video Opcional -->
+        <div class="form-group">
+          <label>Link de Video de YouTube (Opcional)</label>
+          <input type="url" id="level-video-url" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+
+        <!-- Descripción Opcional -->
+        <div class="form-group">
+          <label>Descripción del Nivel (Opcional)</label>
+          <textarea id="level-desc" placeholder="Escribe detalles del gameplay, dificultades..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de Lanzamiento</label>
+          <input type="date" id="level-launch">
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de Verificación</label>
+          <input type="date" id="level-verified-date">
+        </div>
+
+        <div class="form-group">
+          <label>ID del Nivel en Geometry Dash</label>
+          <input type="text" id="level-gd-id" placeholder="Ej: 75232822">
+        </div>
+
         <div class="modal-actions">
-          <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancelar</button>
+          <button type="button" class="btn btn-cancel" onclick="closeModal('modal-add')">Cancelar</button>
           <button type="submit" class="btn btn-submit" id="submit-btn">Guardar Nivel</button>
         </div>
       </form>
     </div>
   </div>
 
-  <script>
-    const ADMIN_PASSWORD = "1234"; // CAMBIA TU CONTRASEÑA AQUÍ SI QUIERES
+  <!-- Modal Detalle del Nivel Grande -->
+  <div id="modal-detail" class="modal">
+    <div class="modal-content">
+      <h2 id="detail-title" style="margin-bottom:10px;">Nombre del Nivel</h2>
+      <img id="detail-img" class="detail-img" src="" alt="Portada">
+      
+      <div id="detail-info-list"></div>
 
-    // Inicialización de Supabase con base de datos pública
-    const SUPABASE_URL = "https://xyzcompany.supabase.co"; 
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; 
-    
+      <!-- Descripción si existe -->
+      <div id="desc-box" style="margin-top: 15px; display:none;">
+        <label style="font-size:0.8rem; color:var(--text-dim);">Descripción:</label>
+        <div id="detail-desc" class="detail-desc"></div>
+      </div>
+
+      <!-- Video si existe -->
+      <div id="video-box" style="margin-top: 15px; display:none;">
+        <label style="font-size:0.8rem; color:var(--text-dim);">Video de Verificación / Gameplay:</label>
+        <div class="video-container">
+          <iframe id="detail-video" src="" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top:20px;">
+        <button type="button" class="btn btn-cancel" onclick="closeModal('modal-detail')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = "6767XDXD"; // CONTRASEÑA DE ADMINISTRADOR
+
     let levels = [];
 
     function switchTab(tab) {
@@ -142,10 +225,25 @@
       }
     }
 
-    function openModal() { document.getElementById('modal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { 
+      document.getElementById(id).style.display = 'none'; 
+      if(id === 'modal-detail') {
+        // Pausar video al cerrar
+        document.getElementById('detail-video').src = '';
+      }
+    }
 
-    // Convertir la imagen seleccionada a base64 para guardarla fácilmente
+    function searchGoogleImage() {
+      const name = document.getElementById('level-name').value;
+      if(!name) {
+        alert("Escribe primero el nombre del nivel arriba para buscar la imagen.");
+        return;
+      }
+      const query = encodeURIComponent(name + " geometry dash");
+      window.open(`https://www.google.com/search?tbm=isch&q=${query}`, '_blank');
+    }
+
     function readFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -153,6 +251,13 @@
         reader.onerror = error => reject(error);
         reader.readAsDataURL(file);
       });
+    }
+
+    function getYouTubeEmbedUrl(url) {
+      if(!url) return null;
+      let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      let match = url.match(regExp);
+      return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
     }
 
     async function saveLevel(e) {
@@ -169,7 +274,17 @@
 
       try {
         const fileInput = document.getElementById('level-file');
-        const imgData = await readFileAsBase64(fileInput.files[0]);
+        const urlInput = document.getElementById('level-img-url').value;
+        let finalImg = urlInput;
+
+        if(fileInput.files.length > 0) {
+          finalImg = await readFileAsBase64(fileInput.files[0]);
+        }
+
+        if(!finalImg) {
+          finalImg = "https://via.placeholder.com/400x200?text=Sin+Imagen";
+        }
+
         const targetPos = parseInt(document.getElementById('level-position').value);
 
         const newLevel = {
@@ -177,17 +292,22 @@
           name: document.getElementById('level-name').value,
           author: document.getElementById('level-author').value,
           verifier: document.getElementById('level-verifier').value,
-          img: imgData
+          img: finalImg,
+          songName: document.getElementById('level-song-name').value || "Desconocida",
+          songId: document.getElementById('level-song-id').value || "N/A",
+          videoUrl: document.getElementById('level-video-url').value || "",
+          desc: document.getElementById('level-desc').value || "",
+          launch: document.getElementById('level-launch').value || "No registrada",
+          verifiedDate: document.getElementById('level-verified-date').value || "No registrada",
+          gdId: document.getElementById('level-gd-id').value || "N/A"
         };
 
-        // Insertar en la posición indicada (Top 1 - 2000)
         let localLevels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
         const index = Math.min(Math.max(targetPos - 1, 0), localLevels.length);
         localLevels.splice(index, 0, newLevel);
         
         localStorage.setItem('gd_absolute_list', JSON.stringify(localLevels));
 
-        // Recargar página para actualizar la vista inmediatamente
         window.location.reload();
       } catch (err) {
         alert("Error al guardar el nivel: " + err.message);
@@ -196,7 +316,8 @@
       }
     }
 
-    function deleteLevel(id) {
+    function deleteLevel(event, id) {
+      event.stopPropagation();
       const pass = prompt("Ingresa la contraseña para borrar:");
       if(pass === ADMIN_PASSWORD) {
         let localLevels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
@@ -208,6 +329,49 @@
       }
     }
 
+    function showDetails(index) {
+      const lvl = levels[index];
+      document.getElementById('detail-title').innerText = `#${index + 1} - ${lvl.name}`;
+      document.getElementById('detail-img').src = lvl.img;
+
+      const infoList = document.getElementById('detail-info-list');
+      infoList.innerHTML = `
+        <div class="detail-row"><span>Creador / Autor:</span> <b>${lvl.author}</b></div>
+        <div class="detail-row"><span>Verificador:</span> <b>${lvl.verifier}</b></div>
+        <div class="detail-row">
+          <span>Canción:</span> 
+          <div class="song-box">
+            <b>${lvl.songName}</b>
+            <span class="song-id-small">ID: ${lvl.songId}</span>
+          </div>
+        </div>
+        <div class="detail-row"><span>Fecha Lanzamiento:</span> <b>${lvl.launch}</b></div>
+        <div class="detail-row"><span>Fecha Verificación:</span> <b>${lvl.verifiedDate}</b></div>
+        <div class="detail-row"><span>ID del Nivel:</span> <b>${lvl.gdId}</b></div>
+      `;
+
+      // Manejo de Descripción Opcional
+      const descBox = document.getElementById('desc-box');
+      if(lvl.desc.trim() !== "") {
+        document.getElementById('detail-desc').innerText = lvl.desc;
+        descBox.style.display = 'block';
+      } else {
+        descBox.style.display = 'none';
+      }
+
+      // Manejo de Video Opcional
+      const videoBox = document.getElementById('video-box');
+      const embedUrl = getYouTubeEmbedUrl(lvl.videoUrl);
+      if(embedUrl) {
+        document.getElementById('detail-video').src = embedUrl;
+        videoBox.style.display = 'block';
+      } else {
+        videoBox.style.display = 'none';
+      }
+
+      openModal('modal-detail');
+    }
+
     function render() {
       levels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
 
@@ -217,7 +381,7 @@
       
       levels.forEach((lvl, index) => {
         levelsDiv.innerHTML += `
-          <div class="card">
+          <div class="card" onclick="showDetails(${index})">
             <div class="rank">#${index + 1}</div>
             <img class="thumb" src="${lvl.img}" onerror="this.src='https://via.placeholder.com/95x60?text=GD'">
             <div class="info">
@@ -225,12 +389,12 @@
               <div class="meta-small">Creador: <b>${lvl.author}</b></div>
               <div class="meta-small">Pasado por: <b>${lvl.verifier}</b></div>
             </div>
-            <button class="delete-btn" onclick="deleteLevel(${lvl.id})">✕</button>
+            <button class="delete-btn" onclick="deleteLevel(event, ${lvl.id})">✕</button>
           </div>
         `;
       });
 
-      // Render Top Jugadores (Calculado en base a verificadores)
+      // Render Top Jugadores
       const playersDiv = document.getElementById('players-list');
       const playerCounts = {};
       
@@ -255,9 +419,7 @@
       });
     }
 
-    // Cargar los datos
     render();
   </script>
 </body>
 </html>
-
