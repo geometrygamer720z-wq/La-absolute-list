@@ -55,7 +55,7 @@
       background: transparent;
       border: none;
       color: var(--text-dim);
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       cursor: pointer;
       padding: 5px;
     }
@@ -92,8 +92,8 @@
     .search-container { max-width: 650px; margin: 15px auto 5px auto; padding: 0 15px; }
     .search-input { width: 100%; padding: 10px 15px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; color: #fff; font-size: 0.85rem; outline: none; }
 
-    .nav-tabs { display: flex; justify-content: center; gap: 6px; margin: 15px 0; flex-wrap: wrap; }
-    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 20px; font-weight: bold; font-size: 0.75rem; cursor: pointer; }
+    .nav-tabs { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
+    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--card-border); padding: 9px 16px; border-radius: 20px; font-weight: bold; font-size: 0.82rem; cursor: pointer; flex: 1; max-width: 180px; text-align: center; }
     .tab-btn.active { background: var(--card-border); color: #fff; border-color: var(--accent); }
 
     .container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
@@ -104,7 +104,8 @@
     .card.top-gold { border: 2px solid var(--gold); box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); }
 
     .rank { font-size: 1.3rem; font-weight: bold; min-width: 45px; text-align: center; }
-    .thumb { width: 90px; height: 58px; border-radius: 8px; object-fit: cover; background: #000; flex-shrink: 0; }
+    .thumb { width: 90px; height: 58px; border-radius: 8px; object-fit: cover; background: #000; flex-shrink: 0; transition: transform 0.2s; }
+    .thumb:hover { transform: scale(1.04); }
 
     .info { flex-grow: 1; overflow: hidden; }
     .info-header { display: flex; align-items: center; gap: 6px; }
@@ -116,11 +117,6 @@
 
     .gold-badge { font-size: 0.7rem; color: var(--gold); font-weight: bold; display: block; margin-top: 2px; }
 
-    .cinema-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-    .cinema-item { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--card-border); cursor: pointer; text-align: center; padding-bottom: 5px; }
-    .cinema-item img { width: 100%; height: 90px; object-fit: cover; }
-    .cinema-item p { font-size: 0.75rem; font-weight: bold; padding: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
     .fab { position: fixed; bottom: 20px; right: 20px; width: 58px; height: 58px; background: var(--card-bg); color: white; border-radius: 50%; border: 1px solid var(--accent); font-size: 1.8rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 90; }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
@@ -131,12 +127,12 @@
     .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--card-border); background: #0d0f12; color: white; outline: none; font-size: 0.85rem; }
 
     .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; }
+    .btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-submit { background: var(--accent); color: #000; }
     .btn-cancel { background: #161920; color: var(--text-dim); border: 1px solid var(--card-border); }
 
-    .roulette-box { text-align: center; padding: 15px; background: #0d0f12; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--card-border); }
-    
+    .roulette-icon-img { width: 24px; height: 24px; object-fit: contain; }
+
     .detail-img { width: 100%; height: 170px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; background: #000; }
     .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 0.82rem; }
     .detail-row span { color: var(--text-dim); }
@@ -162,8 +158,8 @@
     <div class="header-title">LA ABSOLUTE LIST</div>
 
     <div class="stats-bar">
-      <div class="stat-item"><div class="stat-val" id="stat-total-levels">0</div><div class="stat-lbl">Niveles</div></div>
-      <div class="stat-item"><div class="stat-val" id="stat-total-real">0</div><div class="stat-lbl">Top Real</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-total-levels">0</div><div class="stat-lbl">Niveles Míos</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-total-real">0</div><div class="stat-lbl">Top Rateados</div></div>
       <div class="stat-item"><div class="stat-val" id="stat-total-players">0</div><div class="stat-lbl">Jugadores</div></div>
     </div>
   </header>
@@ -173,45 +169,15 @@
   </div>
 
   <div class="nav-tabs">
-    <button class="tab-btn active" id="tab-levels-btn" onclick="switchTab('levels')">Top Niveles</button>
-    <button class="tab-btn" id="tab-real-btn" onclick="switchTab('real')">🔥 Top Real (Rateados)</button>
-    <button class="tab-btn" id="tab-players-btn" onclick="switchTab('players')">Top Jugadores</button>
-    <button class="tab-btn" id="tab-roulette-btn" onclick="switchTab('roulette')">🎰 Ruleta / VS</button>
-    <button class="tab-btn" id="tab-cinema-btn" onclick="switchTab('cinema')">🎬 Modo Cine</button>
+    <button class="tab-btn active" id="tab-levels-btn" onclick="switchTab('levels')">Niveles Míos</button>
+    <button class="tab-btn" id="tab-real-btn" onclick="switchTab('real')">🔥 Top Rateados</button>
+    <button class="tab-btn" id="tab-players-btn" onclick="switchTab('players')">👑 Top Jugadores</button>
   </div>
 
   <div class="container">
     <div id="levels-section" class="section active"><div id="levels-list"></div></div>
     <div id="real-section" class="section"><div id="real-list"></div></div>
     <div id="players-section" class="section"><div id="players-list"></div></div>
-
-    <div id="roulette-section" class="section">
-      <div class="roulette-box">
-        <h3 style="margin-bottom:10px;">🎰 Demon Roulette (Tus Niveles)</h3>
-        <div class="modal-actions" style="margin-bottom:10px;">
-          <button class="btn btn-cancel" onclick="spinRoulette('hardcore')">Hardcore (Top 1-50)</button>
-          <button class="btn btn-cancel" onclick="spinRoulette('easy')">Fácil (Top 50-100)</button>
-          <button class="btn btn-submit" onclick="spinRoulette('all')">Aleatorio</button>
-        </div>
-        <div id="roulette-result" style="margin-top:10px; font-weight:bold; color:var(--accent);">Presiona un botón para girar</div>
-      </div>
-
-      <div class="roulette-box">
-        <h3 style="margin-bottom:10px;">🔥 Ruleta Top Real Rateados</h3>
-        <button class="btn btn-submit" onclick="spinRealRoulette()">Girar Ruleta Top Real</button>
-        <div id="real-roulette-result" style="margin-top:10px; font-weight:bold; color:var(--gold);">Gira niveles del Top Real</div>
-      </div>
-
-      <div class="roulette-box">
-        <h3 style="margin-bottom:10px;">⚔️ Modo Versus / Reto</h3>
-        <button class="btn btn-submit" onclick="startVersus()">Generar Reto VS</button>
-        <div id="versus-result" style="margin-top:10px; font-size:0.85rem;"></div>
-      </div>
-    </div>
-
-    <div id="cinema-section" class="section">
-      <div id="cinema-grid" class="cinema-grid"></div>
-    </div>
   </div>
 
   <button class="fab" onclick="startAddProcess()">+</button>
@@ -221,11 +187,28 @@
     <div class="modal-content">
       <h2>Opciones de la Lista</h2>
       <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn btn-cancel" onclick="openModal('modal-roulette')">
+          <svg class="roulette-icon-img" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20M12 12l7-7M12 12l-7 7"/></svg>
+          🎰 Modos Ruleta
+        </button>
         <button class="btn btn-cancel" onclick="exportData()">💾 Exportar Backup</button>
         <button class="btn btn-cancel" onclick="importData()">📥 Importar Backup</button>
         <button class="btn btn-cancel" onclick="showChangelog()">📜 Ver Historial</button>
       </div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="closeModal('modal-menu')">Cerrar</button></div>
+    </div>
+  </div>
+
+  <!-- Modal Ruleta (En los 3 Puntos) -->
+  <div id="modal-roulette" class="modal">
+    <div class="modal-content">
+      <h2>🎰 Ruleta de Niveles</h2>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn btn-cancel" onclick="spinRoulette('mine')">Girar en "Niveles Míos"</button>
+        <button class="btn btn-cancel" onclick="spinRoulette('real')">Girar en "Top Rateados"</button>
+      </div>
+      <div id="roulette-result" style="margin-top:15px; font-weight:bold; text-align:center; color:var(--accent);">Presiona una opción para elegir un nivel al azar</div>
+      <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="closeModal('modal-roulette')">Cerrar</button></div>
     </div>
   </div>
 
@@ -310,7 +293,7 @@
     </div>
   </div>
 
-  <!-- Modal Detalle Nivel -->
+  <!-- Modal Detalle Nivel / Modo Cine -->
   <div id="modal-detail" class="modal">
     <div class="modal-content">
       <h2 id="detail-title"></h2>
@@ -328,7 +311,6 @@
     let realLevels = [];
     let customPlayers = [];
 
-    // Iconos PNG transparentes de las caritas Demon
     const DEMON_ICONS = {
       hard: 'https://images.wikia.nocookie.net/geometry-dash/images/c/c2/Hard_Demon.png',
       insane: 'https://images.wikia.nocookie.net/geometry-dash/images/d/d4/Insane_Demon.png',
@@ -393,25 +375,12 @@
       return total;
     }
 
-    function spinRoulette(mode) {
-      if(levels.length === 0) return alert("Añade niveles primero.");
-      let pool = mode === 'hardcore' ? levels.slice(0, 50) : (mode === 'easy' ? levels.slice(49, 100) : levels);
-      if(pool.length === 0) pool = levels;
+    function spinRoulette(type) {
+      let pool = type === 'mine' ? levels : realLevels;
+      if(pool.length === 0) return alert("No hay niveles registrados en esta categoría.");
       const picked = pool[Math.floor(Math.random() * pool.length)];
-      document.getElementById('roulette-result').innerHTML = `🎯 Nivel Seleccionado: <br> <b>#${levels.indexOf(picked)+1} - ${picked.name}</b>`;
-    }
-
-    function spinRealRoulette() {
-      if(realLevels.length === 0) return alert("Añade niveles al Top Real primero.");
-      const picked = realLevels[Math.floor(Math.random() * realLevels.length)];
-      document.getElementById('real-roulette-result').innerHTML = `🔥 Top Real Seleccionado: <br> <b>#${realLevels.indexOf(picked)+1} - ${picked.name}</b>`;
-    }
-
-    function startVersus() {
-      if(levels.length < 2) return alert("Se necesitan al menos 2 niveles.");
-      const p1 = levels[Math.floor(Math.random() * levels.length)];
-      const p2 = levels[Math.floor(Math.random() * levels.length)];
-      document.getElementById('versus-result').innerHTML = `⚔️ <b>Duelo VS:</b><br>J1: <b>${p1.name}</b> (#${levels.indexOf(p1)+1}) | J2: <b>${p2.name}</b> (#${levels.indexOf(p2)+1})`;
+      const rank = pool.indexOf(picked) + 1;
+      document.getElementById('roulette-result').innerHTML = `🎯 Nivel Específico:<br><b>#${rank} - ${picked.name}</b> (${picked.author})`;
     }
 
     function exportData() {
@@ -433,7 +402,7 @@
       } else alert("Clave incorrecta");
     }
 
-    function showChangelog() { alert("📜 Historial de Cambios:\n- Añadidas caritas PNG de Hard, Insane y Extreme Demon\n- Selector de dificultad en Top Real\n- Puntuación adaptada por dificultad"); }
+    function showChangelog() { alert("📜 Historial de Cambios:\n- Navegación simplificada en 3 pestañas principales\n- Ruleta movida al menú '•••'\n- Modo Cine activable tocando cualquier foto de nivel"); }
 
     async function saveLevel(e) {
       e.preventDefault();
@@ -555,7 +524,7 @@
         `;
       });
 
-      // Render Top Real (Rateados con Carita Demon)
+      // Render Top Real
       const realDiv = document.getElementById('real-list');
       realDiv.innerHTML = '';
       realLevels.filter(l => l.name.toLowerCase().includes(q) || l.goldPlayer.toLowerCase().includes(q)).forEach(lvl => {
@@ -606,13 +575,6 @@
             </div>
           </div>
         `;
-      });
-
-      // Modo Cine
-      const cinemaGrid = document.getElementById('cinema-grid');
-      cinemaGrid.innerHTML = '';
-      levels.forEach((l, i) => {
-        cinemaGrid.innerHTML += `<div class="cinema-item" onclick="showDetails(${i}, 'normal')"><img src="${l.img}"><p>#${i+1} ${l.name}</p></div>`;
       });
     }
 
