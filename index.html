@@ -14,20 +14,29 @@
       --accent: #00d2ff;
       --text: #ffffff;
       --text-dim: #9aa0a6;
+      --gold: #ffd700;
+      --red-neon: #ff2a6d;
+      --blue-neon: #05d9e8;
     }
+
+    body.theme-lava { --bg: #120909; --card-bg: #201313; --card-border: #381f1f; --accent: #ff4757; }
+    body.theme-doki { --bg: #140d12; --card-bg: #20161d; --card-border: #382333; --accent: #ff75a0; }
+    body.theme-geode { --bg: #09120d; --card-bg: #132017; --card-border: #1f3825; --accent: #2ed573; }
+    body.theme-cyber { --bg: #0d0b14; --card-bg: #181424; --card-border: #2a223d; --accent: #eccc68; }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; transition: background 0.3s; }
     
     header { 
-      background: linear-gradient(180deg, #13161c 0%, #0d0f12 100%); 
-      padding: 25px 20px; 
+      background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, var(--bg) 100%); 
+      padding: 20px 15px 10px 15px; 
       display: flex; 
+      flex-direction: column;
       align-items: center; 
-      justify-content: center; 
+      position: relative;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
     }
     
-    /* Título estilizado */
     .header-title { 
       font-family: 'Montserrat', sans-serif;
       font-weight: 900;
@@ -36,506 +45,574 @@
       text-transform: uppercase; 
       letter-spacing: 2px;
       color: #ffffff;
-      text-shadow: 
-        0 0 10px rgba(255, 255, 255, 0.5),
-        0 0 20px rgba(255, 255, 255, 0.2),
-        2px 2px 4px rgba(0, 0, 0, 0.9);
-      position: relative;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     }
-    
-    .nav-tabs { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
-    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--card-border); padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-    .tab-btn.active { background: #232733; border-color: #3b4254; color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.05); }
+
+    .top-menu-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .theme-selector {
+      position: absolute;
+      top: 18px;
+      left: 15px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      width: 100%;
+      max-width: 650px;
+      justify-content: space-around;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 10px 15px;
+      border-radius: 10px;
+    }
+    .stat-item { text-align: center; }
+    .stat-val { font-size: 1rem; font-weight: bold; color: var(--accent); }
+    .stat-lbl { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; }
+
+    .search-container { max-width: 650px; margin: 15px auto 5px auto; padding: 0 15px; }
+    .search-input { width: 100%; padding: 10px 15px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; color: #fff; font-size: 0.85rem; outline: none; }
+
+    .nav-tabs { display: flex; justify-content: center; gap: 6px; margin: 15px 0; flex-wrap: wrap; }
+    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 20px; font-weight: bold; font-size: 0.75rem; cursor: pointer; }
+    .tab-btn.active { background: var(--card-border); color: #fff; border-color: var(--accent); }
 
     .container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
     .section { display: none; }
     .section.active { display: block; }
 
-    /* Tarjeta de Nivel */
-    .card { 
-      background: var(--card-bg); 
-      border-radius: 12px; 
-      padding: 12px 15px; 
-      margin-bottom: 12px; 
-      display: flex; 
-      gap: 12px; 
-      align-items: center; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5); 
-      position: relative; 
-      border: 1px solid var(--card-border); 
-      cursor: pointer; 
-      transition: transform 0.2s, border-color 0.3s; 
-    }
-    .card:active { transform: scale(0.98); }
-    .rank { font-size: 1.4rem; font-weight: bold; color: var(--card-accent, #ffffff); min-width: 55px; text-align: center; }
-    .thumb { width: 95px; height: 60px; border-radius: 8px; object-fit: cover; background: #000; flex-shrink: 0; }
-    
+    .card { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; border: 1px solid var(--card-border); cursor: pointer; position: relative; }
+    .card.top-gold { border: 2px solid var(--gold); box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); }
+
+    .rank { font-size: 1.3rem; font-weight: bold; min-width: 45px; text-align: center; }
+    .thumb { width: 90px; height: 58px; border-radius: 8px; object-fit: cover; background: #000; flex-shrink: 0; }
+
     .info { flex-grow: 1; overflow: hidden; }
-    .info h3 { font-size: 1.1rem; color: #fff; margin-bottom: 3px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-    .info .meta-small { font-size: 0.75rem; color: var(--text-dim); line-height: 1.3; }
-    .info .meta-small b { color: #d1d5db; font-weight: 600; }
+    .info-header { display: flex; align-items: center; gap: 6px; }
+    .info h3 { font-size: 1rem; color: #fff; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin: 0; }
+    .demon-icon { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
 
-    .delete-btn { position: absolute; right: 10px; top: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #8e94a6; cursor: pointer; font-size: 0.9rem; padding: 3px 7px; border-radius: 6px; z-index: 5; transition: 0.2s; }
-    .delete-btn:hover { background: rgba(255, 71, 87, 0.2); color: #ff6b6b; }
+    .info .meta-small { font-size: 0.72rem; color: var(--text-dim); }
+    .info .meta-small b { color: #d1d5db; }
 
-    /* Botón flotante "+" */
-    .fab { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #232733; color: white; border-radius: 50%; border: 1px solid #3b4254; font-size: 1.8rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 90; transition: transform 0.2s; }
-    .fab:active { transform: scale(0.9); }
+    .gold-badge { font-size: 0.7rem; color: var(--gold); font-weight: bold; display: block; margin-top: 2px; }
 
-    /* Ventanas emergentes (Modales) */
+    .cinema-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .cinema-item { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--card-border); cursor: pointer; text-align: center; padding-bottom: 5px; }
+    .cinema-item img { width: 100%; height: 90px; object-fit: cover; }
+    .cinema-item p { font-size: 0.75rem; font-weight: bold; padding: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .fab { position: fixed; bottom: 20px; right: 20px; width: 58px; height: 58px; background: var(--card-bg); color: white; border-radius: 50%; border: 1px solid var(--accent); font-size: 1.8rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 90; }
+
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
     .modal-content { background: var(--card-bg); width: 100%; max-width: 450px; padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); max-height: 90vh; overflow-y: auto; }
-    .modal-content h2 { margin-bottom: 15px; color: #fff; font-size: 1.3rem; }
+    .modal-content h2 { margin-bottom: 15px; color: #fff; font-size: 1.2rem; }
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: var(--text-dim); }
-    .form-group input, .form-group textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--card-border); background: #0d0f12; color: white; outline: none; font-size: 0.9rem; }
-    .form-group textarea { resize: vertical; height: 70px; }
-    
-    .btn-search { background: #232733; color: #fff; border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; margin-top: 5px; width: 100%; text-align: center; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--card-border); background: #0d0f12; color: white; outline: none; font-size: 0.85rem; }
 
     .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .btn { flex: 1; padding: 11px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    .btn-submit { background: #2e3545; color: white; border: 1px solid #434c63; }
+    .btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; }
+    .btn-submit { background: var(--accent); color: #000; }
     .btn-cancel { background: #161920; color: var(--text-dim); border: 1px solid var(--card-border); }
+
+    .roulette-box { text-align: center; padding: 15px; background: #0d0f12; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--card-border); }
     
-    /* Detalles del Nivel */
-    .detail-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; background: #000; }
-    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--card-border); font-size: 0.85rem; }
+    .detail-img { width: 100%; height: 170px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; background: #000; }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 0.82rem; }
     .detail-row span { color: var(--text-dim); }
     .detail-row b { color: #fff; }
-    .song-box { text-align: right; }
-    .song-id-small { font-size: 0.7rem; color: var(--text-dim); display: block; }
-    
-    .detail-desc { background: #0d0f12; padding: 10px; border-radius: 6px; margin-top: 5px; font-size: 0.85rem; color: #d1d5db; line-height: 1.4; border: 1px solid var(--card-border); }
-    
-    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 15px; background: #000; }
-    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-    .loading-text { text-align: center; color: var(--text-dim); margin-top: 30px; font-size: 0.9rem; }
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; background: #000; }
+    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
   </style>
 </head>
 <body>
 
   <header>
+    <select class="theme-selector" onchange="changeTheme(this.value)">
+      <option value="default">Absoluto Neon</option>
+      <option value="lava">Lava / Slaughterhouse</option>
+      <option value="doki">Doki Soft</option>
+      <option value="geode">Geode GD</option>
+      <option value="cyber">Cyberpunk</option>
+    </select>
+
+    <button class="top-menu-btn" onclick="openModal('modal-menu')">•••</button>
+
     <div class="header-title">LA ABSOLUTE LIST</div>
+
+    <div class="stats-bar">
+      <div class="stat-item"><div class="stat-val" id="stat-total-levels">0</div><div class="stat-lbl">Niveles</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-total-real">0</div><div class="stat-lbl">Top Real</div></div>
+      <div class="stat-item"><div class="stat-val" id="stat-total-players">0</div><div class="stat-lbl">Jugadores</div></div>
+    </div>
   </header>
 
+  <div class="search-container">
+    <input type="text" id="search-bar" class="search-input" placeholder="🔍 Buscar nivel, autor, jugador o ID..." oninput="render()">
+  </div>
+
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('levels')">Top Niveles</button>
-    <button class="tab-btn" onclick="switchTab('players')">Top Jugadores</button>
+    <button class="tab-btn active" id="tab-levels-btn" onclick="switchTab('levels')">Top Niveles</button>
+    <button class="tab-btn" id="tab-real-btn" onclick="switchTab('real')">🔥 Top Real (Rateados)</button>
+    <button class="tab-btn" id="tab-players-btn" onclick="switchTab('players')">Top Jugadores</button>
+    <button class="tab-btn" id="tab-roulette-btn" onclick="switchTab('roulette')">🎰 Ruleta / VS</button>
+    <button class="tab-btn" id="tab-cinema-btn" onclick="switchTab('cinema')">🎬 Modo Cine</button>
   </div>
 
   <div class="container">
-    <!-- Sección Niveles -->
-    <div id="levels-section" class="section active">
-      <div id="levels-list"><p class="loading-text">Cargando lista...</p></div>
+    <div id="levels-section" class="section active"><div id="levels-list"></div></div>
+    <div id="real-section" class="section"><div id="real-list"></div></div>
+    <div id="players-section" class="section"><div id="players-list"></div></div>
+
+    <div id="roulette-section" class="section">
+      <div class="roulette-box">
+        <h3 style="margin-bottom:10px;">🎰 Demon Roulette (Tus Niveles)</h3>
+        <div class="modal-actions" style="margin-bottom:10px;">
+          <button class="btn btn-cancel" onclick="spinRoulette('hardcore')">Hardcore (Top 1-50)</button>
+          <button class="btn btn-cancel" onclick="spinRoulette('easy')">Fácil (Top 50-100)</button>
+          <button class="btn btn-submit" onclick="spinRoulette('all')">Aleatorio</button>
+        </div>
+        <div id="roulette-result" style="margin-top:10px; font-weight:bold; color:var(--accent);">Presiona un botón para girar</div>
+      </div>
+
+      <div class="roulette-box">
+        <h3 style="margin-bottom:10px;">🔥 Ruleta Top Real Rateados</h3>
+        <button class="btn btn-submit" onclick="spinRealRoulette()">Girar Ruleta Top Real</button>
+        <div id="real-roulette-result" style="margin-top:10px; font-weight:bold; color:var(--gold);">Gira niveles del Top Real</div>
+      </div>
+
+      <div class="roulette-box">
+        <h3 style="margin-bottom:10px;">⚔️ Modo Versus / Reto</h3>
+        <button class="btn btn-submit" onclick="startVersus()">Generar Reto VS</button>
+        <div id="versus-result" style="margin-top:10px; font-size:0.85rem;"></div>
+      </div>
     </div>
 
-    <!-- Sección Jugadores -->
-    <div id="players-section" class="section">
-      <div id="players-list"><p class="loading-text">Cargando jugadores...</p></div>
+    <div id="cinema-section" class="section">
+      <div id="cinema-grid" class="cinema-grid"></div>
     </div>
   </div>
 
-  <!-- Botón Añadir "+" -->
   <button class="fab" onclick="startAddProcess()">+</button>
 
-  <!-- Modal Verificación Admin Previa -->
+  <!-- Modal Menú "•••" -->
+  <div id="modal-menu" class="modal">
+    <div class="modal-content">
+      <h2>Opciones de la Lista</h2>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn btn-cancel" onclick="exportData()">💾 Exportar Backup</button>
+        <button class="btn btn-cancel" onclick="importData()">📥 Importar Backup</button>
+        <button class="btn btn-cancel" onclick="showChangelog()">📜 Ver Historial</button>
+      </div>
+      <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="closeModal('modal-menu')">Cerrar</button></div>
+    </div>
+  </div>
+
+  <!-- Modal Auth -->
   <div id="modal-auth" class="modal">
     <div class="modal-content">
       <h2>Acceso Requerido</h2>
       <form onsubmit="verifyAdminAccess(event)">
-        <div class="form-group">
-          <label>Ingresa la clave de administrador para continuar:</label>
-          <input type="password" id="pre-admin-pass" required placeholder="Clave admin">
-        </div>
+        <div class="form-group"><label>Clave Admin:</label><input type="password" id="pre-admin-pass" required></div>
         <div class="modal-actions">
           <button type="button" class="btn btn-cancel" onclick="closeModal('modal-auth')">Cancelar</button>
-          <button type="submit" class="btn btn-submit">Verificar</button>
+          <button type="submit" class="btn btn-submit">Ingresar</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Añadir Nivel -->
+  <!-- Modal Añadir Nivel Normal -->
   <div id="modal-add" class="modal">
     <div class="modal-content">
-      <h2>Añadir Nuevo Nivel</h2>
+      <h2>Añadir Nivel Personalizado</h2>
       <form id="level-form" onsubmit="saveLevel(event)">
-        <div class="form-group">
-          <label>Posición / Top (1 a 2000)</label>
-          <input type="number" id="level-position" min="1" max="2000" required placeholder="Ej: 1">
-        </div>
-        <div class="form-group">
-          <label>Nombre del Nivel</label>
-          <input type="text" id="level-name" required placeholder="Ej: Slaughterhouse">
-        </div>
-        <div class="form-group">
-          <label>Autor / Creador</label>
-          <input type="text" id="level-author" required placeholder="Ej: IcEDcave">
-        </div>
-        <div class="form-group">
-          <label>Verificador / Pasado por</label>
-          <input type="text" id="level-verifier" required placeholder="Ej: Doggie">
-        </div>
-
-        <!-- Video de YouTube (Para video y miniatura) -->
-        <div class="form-group">
-          <label>Link de Video de YouTube (Se usa para la miniatura y color)</label>
-          <input type="url" id="level-video-url" placeholder="https://www.youtube.com/watch?v=...">
-        </div>
-
-        <!-- Imagen personalizada opcional -->
-        <div class="form-group">
-          <label>O imagen personalizada (Opcional)</label>
-          <input type="text" id="level-img-url" placeholder="Pegar URL de la imagen aquí">
-          <button type="button" class="btn-search" onclick="searchGoogleImage()">🔍 Buscar imagen en Google</button>
-          <label style="margin-top: 8px;">O sube una imagen desde tu celular:</label>
-          <input type="file" id="level-file" accept="image/*">
-        </div>
-
-        <!-- Canción -->
-        <div class="form-group">
-          <label>Nombre de la Canción</label>
-          <input type="text" id="level-song-name" placeholder="Ej: At the Speed of Light">
-        </div>
-        <div class="form-group">
-          <label>ID de la Canción (Song ID)</label>
-          <input type="text" id="level-song-id" placeholder="Ej: 467339">
-        </div>
-
-        <!-- Descripción Opcional -->
-        <div class="form-group">
-          <label>Descripción del Nivel (Opcional)</label>
-          <textarea id="level-desc" placeholder="Escribe detalles del gameplay, dificultades..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Fecha de Lanzamiento</label>
-          <input type="date" id="level-launch">
-        </div>
-
-        <div class="form-group">
-          <label>Fecha de Verificación</label>
-          <input type="date" id="level-verified-date">
-        </div>
-
-        <div class="form-group">
-          <label>ID del Nivel en Geometry Dash</label>
-          <input type="text" id="level-gd-id" placeholder="Ej: 75232822">
-        </div>
-
+        <div class="form-group"><label>Top (1 a 2000)</label><input type="number" id="level-position" min="1" required></div>
+        <div class="form-group"><label>Nombre del Nivel</label><input type="text" id="level-name" required></div>
+        <div class="form-group"><label>Autor / Creador</label><input type="text" id="level-author" required></div>
+        <div class="form-group"><label>Verificador</label><input type="text" id="level-verifier" required></div>
+        <div class="form-group"><label>Progreso (%)</label><input type="number" id="level-progress" min="1" max="100" value="100"></div>
+        <div class="form-group"><label>Link Video YouTube</label><input type="url" id="level-video-url"></div>
+        <div class="form-group"><label>Imagen</label><input type="text" id="level-img-url"><input type="file" id="level-file" accept="image/*" style="margin-top:5px;"></div>
+        <div class="form-group"><label>Nombre Canción</label><input type="text" id="level-song-name"></div>
+        <div class="form-group"><label>ID Canción</label><input type="text" id="level-song-id"></div>
+        <div class="form-group"><label>ID GD</label><input type="text" id="level-gd-id"></div>
         <div class="modal-actions">
           <button type="button" class="btn btn-cancel" onclick="closeModal('modal-add')">Cancelar</button>
-          <button type="submit" class="btn btn-submit" id="submit-btn">Guardar Nivel</button>
+          <button type="submit" class="btn btn-submit">Guardar Nivel</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Detalle del Nivel Grande -->
+  <!-- Modal Añadir Top Real (Rateado) -->
+  <div id="modal-add-real" class="modal">
+    <div class="modal-content">
+      <h2>Añadir Nivel del Top Real (Rateado)</h2>
+      <form onsubmit="saveRealLevel(event)">
+        <div class="form-group"><label>Top Oficial (1 a 2000)</label><input type="number" id="real-position" min="1" required></div>
+        <div class="form-group"><label>Nombre del Nivel Rateado</label><input type="text" id="real-name" required placeholder="Ej: Tidal Wave"></div>
+        <div class="form-group"><label>Creador Oficial</label><input type="text" id="real-author" required placeholder="Ej: OniLink"></div>
+        <div class="form-group">
+          <label>Dificultad Demon</label>
+          <select id="real-difficulty" required>
+            <option value="hard">Hard Demon</option>
+            <option value="insane">Insane Demon</option>
+            <option value="extreme" selected>Extreme Demon</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Jugador con Gold Record</label><input type="text" id="real-gold-player" required placeholder="Nombre de tu jugador"></div>
+        <div class="form-group"><label>Récord Alcanzado (%)</label><input type="number" id="real-gold-percent" min="1" max="100" value="100" required></div>
+        <div class="form-group"><label>Link Video YouTube</label><input type="url" id="real-video-url"></div>
+        <div class="form-group"><label>ID GD Oficial</label><input type="text" id="real-gd-id"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeModal('modal-add-real')">Cancelar</button>
+          <button type="submit" class="btn btn-submit">Guardar Rateado</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Añadir Jugador -->
+  <div id="modal-add-player" class="modal">
+    <div class="modal-content">
+      <h2>Añadir Jugador</h2>
+      <form id="player-form" onsubmit="savePlayer(event)">
+        <div class="form-group"><label>Nombre Jugador</label><input type="text" id="player-name" required></div>
+        <div class="form-group"><label>Foto Avatar</label><input type="text" id="player-img-url"><input type="file" id="player-file" accept="image/*" style="margin-top:5px;"></div>
+        <div class="form-group"><label>Info / Detalles</label><input type="text" id="player-info"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeModal('modal-add-player')">Cancelar</button>
+          <button type="submit" class="btn btn-submit">Guardar Jugador</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Detalle Nivel -->
   <div id="modal-detail" class="modal">
     <div class="modal-content">
-      <h2 id="detail-title" style="margin-bottom:10px;">Nombre del Nivel</h2>
-      <img id="detail-img" class="detail-img" src="" alt="Portada">
-      
+      <h2 id="detail-title"></h2>
+      <img id="detail-img" class="detail-img" src="">
       <div id="detail-info-list"></div>
-
-      <!-- Descripción si existe -->
-      <div id="desc-box" style="margin-top: 15px; display:none;">
-        <label style="font-size:0.8rem; color:var(--text-dim);">Descripción:</label>
-        <div id="detail-desc" class="detail-desc"></div>
-      </div>
-
-      <!-- Video si existe -->
-      <div id="video-box" style="margin-top: 15px; display:none;">
-        <label style="font-size:0.8rem; color:var(--text-dim);">Video de Verificación / Gameplay:</label>
-        <div class="video-container">
-          <iframe id="detail-video" src="" allowfullscreen></iframe>
-        </div>
-      </div>
-
-      <div class="modal-actions" style="margin-top:20px;">
-        <button type="button" class="btn btn-cancel" onclick="closeModal('modal-detail')">Cerrar</button>
-      </div>
+      <div id="video-box" style="margin-top:10px; display:none;"><div class="video-container"><iframe id="detail-video" src="" allowfullscreen></iframe></div></div>
+      <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-cancel" onclick="closeModal('modal-detail')">Cerrar</button></div>
     </div>
   </div>
 
   <script>
     const ADMIN_PASSWORD = "6767XDXD";
-
+    let currentTab = 'levels';
     let levels = [];
+    let realLevels = [];
+    let customPlayers = [];
+
+    // Iconos PNG transparentes de las caritas Demon
+    const DEMON_ICONS = {
+      hard: 'https://images.wikia.nocookie.net/geometry-dash/images/c/c2/Hard_Demon.png',
+      insane: 'https://images.wikia.nocookie.net/geometry-dash/images/d/d4/Insane_Demon.png',
+      extreme: 'https://images.wikia.nocookie.net/geometry-dash/images/9/9e/Extreme_Demon.png'
+    };
+
+    function changeTheme(theme) { document.body.className = theme === 'default' ? '' : `theme-${theme}`; }
 
     function switchTab(tab) {
+      currentTab = tab;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      
-      if(tab === 'levels') {
-        document.querySelectorAll('.tab-btn')[0].classList.add('active');
-        document.getElementById('levels-section').classList.add('active');
-      } else {
-        document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        document.getElementById('players-section').classList.add('active');
-      }
+      document.getElementById(`tab-${tab}-btn`).classList.add('active');
+      document.getElementById(`${tab}-section`).classList.add('active');
     }
 
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { 
-      document.getElementById(id).style.display = 'none'; 
-      if(id === 'modal-detail') {
-        document.getElementById('detail-video').src = '';
-      }
-    }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; if(id==='modal-detail') document.getElementById('detail-video').src=''; }
 
-    function startAddProcess() {
-      document.getElementById('pre-admin-pass').value = '';
-      openModal('modal-auth');
+    function startAddProcess() { 
+      document.getElementById('pre-admin-pass').value = ''; 
+      openModal('modal-auth'); 
     }
 
     function verifyAdminAccess(e) {
       e.preventDefault();
-      const pass = document.getElementById('pre-admin-pass').value;
-      if(pass === ADMIN_PASSWORD) {
+      if(document.getElementById('pre-admin-pass').value === ADMIN_PASSWORD) {
         closeModal('modal-auth');
-        openModal('modal-add');
-      } else {
-        alert("Contraseña incorrecta");
-      }
-    }
-
-    function searchGoogleImage() {
-      const name = document.getElementById('level-name').value;
-      if(!name) {
-        alert("Escribe primero el nombre del nivel arriba para buscar la imagen.");
-        return;
-      }
-      const query = encodeURIComponent(name + " geometry dash");
-      window.open(`https://www.google.com/search?tbm=isch&q=${query}`, '_blank');
-    }
-
-    function readFileAsBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-      });
+        if(currentTab === 'levels') openModal('modal-add');
+        else if(currentTab === 'real') openModal('modal-add-real');
+        else openModal('modal-add-player');
+      } else alert("Clave incorrecta");
     }
 
     function getYouTubeId(url) {
       if(!url) return null;
-      let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      let match = url.match(regExp);
+      let match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
       return (match && match[2].length === 11) ? match[2] : null;
     }
 
-    function getYouTubeEmbedUrl(url) {
-      const id = getYouTubeId(url);
-      return id ? `https://www.youtube.com/embed/${id}` : null;
-    }
+    function getYouTubeEmbedUrl(url) { const id = getYouTubeId(url); return id ? `https://www.youtube.com/embed/${id}` : null; }
+    function getYouTubeThumbnail(url) { const id = getYouTubeId(url); return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null; }
 
-    function getYouTubeThumbnail(url) {
-      const id = getYouTubeId(url);
-      return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
-    }
-
-    /* Extrae el color dominante de una imagen */
-    function extractColorFromImage(imageUrl) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = imageUrl;
-        img.onload = () => {
-          try {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 50;
-            canvas.height = 50;
-            ctx.drawImage(img, 0, 0, 50, 50);
-            const data = ctx.getImageData(0, 0, 50, 50).data;
-            
-            let r = 0, g = 0, b = 0, count = 0;
-            for (let i = 0; i < data.length; i += 16) {
-              r += data[i];
-              g += data[i+1];
-              b += data[i+2];
-              count++;
-            }
-            r = Math.floor(r / count);
-            g = Math.floor(g / count);
-            b = Math.floor(b / count);
-
-            // Asegura un mínimo de brillo para destacar en fondo oscuro
-            if (r < 60 && g < 60 && b < 60) {
-              r += 80; g += 80; b += 80;
-            }
-
-            resolve(`rgb(${r}, ${g}, ${b})`);
-          } catch(e) {
-            resolve('#3b4254');
-          }
-        };
-        img.onerror = () => resolve('#3b4254');
+    function calculatePlayerPoints(playerLevels, playerRealLevels) {
+      let total = 0;
+      playerLevels.forEach(l => {
+        const rank = levels.indexOf(l) + 1;
+        if(rank === 1) total += 400;
+        else if(rank <= 5) total += 300;
+        else if(rank <= 10) total += 200;
+        else if(rank <= 100) total += 100;
+        else total += 50;
       });
+
+      playerRealLevels.forEach(rl => {
+        const diff = rl.difficulty || 'extreme';
+        if(diff === 'extreme') total += 500;
+        else if(diff === 'insane') total += 300;
+        else if(diff === 'hard') total += 150;
+      });
+
+      return total;
     }
+
+    function spinRoulette(mode) {
+      if(levels.length === 0) return alert("Añade niveles primero.");
+      let pool = mode === 'hardcore' ? levels.slice(0, 50) : (mode === 'easy' ? levels.slice(49, 100) : levels);
+      if(pool.length === 0) pool = levels;
+      const picked = pool[Math.floor(Math.random() * pool.length)];
+      document.getElementById('roulette-result').innerHTML = `🎯 Nivel Seleccionado: <br> <b>#${levels.indexOf(picked)+1} - ${picked.name}</b>`;
+    }
+
+    function spinRealRoulette() {
+      if(realLevels.length === 0) return alert("Añade niveles al Top Real primero.");
+      const picked = realLevels[Math.floor(Math.random() * realLevels.length)];
+      document.getElementById('real-roulette-result').innerHTML = `🔥 Top Real Seleccionado: <br> <b>#${realLevels.indexOf(picked)+1} - ${picked.name}</b>`;
+    }
+
+    function startVersus() {
+      if(levels.length < 2) return alert("Se necesitan al menos 2 niveles.");
+      const p1 = levels[Math.floor(Math.random() * levels.length)];
+      const p2 = levels[Math.floor(Math.random() * levels.length)];
+      document.getElementById('versus-result').innerHTML = `⚔️ <b>Duelo VS:</b><br>J1: <b>${p1.name}</b> (#${levels.indexOf(p1)+1}) | J2: <b>${p2.name}</b> (#${levels.indexOf(p2)+1})`;
+    }
+
+    function exportData() {
+      if(prompt("Clave admin:") === ADMIN_PASSWORD) {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ levels, realLevels, customPlayers }));
+        const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "absolute_list_backup.json"); dl.click(); dl.remove();
+      } else alert("Clave incorrecta");
+    }
+
+    function importData() {
+      if(prompt("Clave admin:") === ADMIN_PASSWORD) {
+        try {
+          const parsed = JSON.parse(prompt("Pega el código JSON del backup:"));
+          if(parsed.levels) localStorage.setItem('gd_absolute_list', JSON.stringify(parsed.levels));
+          if(parsed.realLevels) localStorage.setItem('gd_absolute_real', JSON.stringify(parsed.realLevels));
+          if(parsed.customPlayers) localStorage.setItem('gd_absolute_players', JSON.stringify(parsed.customPlayers));
+          window.location.reload();
+        } catch(e) { alert("JSON no válido."); }
+      } else alert("Clave incorrecta");
+    }
+
+    function showChangelog() { alert("📜 Historial de Cambios:\n- Añadidas caritas PNG de Hard, Insane y Extreme Demon\n- Selector de dificultad en Top Real\n- Puntuación adaptada por dificultad"); }
 
     async function saveLevel(e) {
       e.preventDefault();
+      const videoUrl = document.getElementById('level-video-url').value;
+      const fileInput = document.getElementById('level-file');
+      const urlInput = document.getElementById('level-img-url').value;
+      let finalImg = getYouTubeThumbnail(videoUrl) || (fileInput.files.length > 0 ? await readFileAsBase64(fileInput.files[0]) : urlInput) || "https://via.placeholder.com/400x200?text=GD";
 
-      const submitBtn = document.getElementById('submit-btn');
-      submitBtn.innerText = "Guardando...";
-      submitBtn.disabled = true;
+      const targetPos = parseInt(document.getElementById('level-position').value);
+      const newLevel = {
+        id: Date.now(),
+        name: document.getElementById('level-name').value,
+        author: document.getElementById('level-author').value,
+        verifier: document.getElementById('level-verifier').value,
+        progress: parseInt(document.getElementById('level-progress').value) || 100,
+        img: finalImg,
+        songName: document.getElementById('level-song-name').value || "Desconocida",
+        songId: document.getElementById('level-song-id').value || "N/A",
+        videoUrl: videoUrl || "",
+        gdId: document.getElementById('level-gd-id').value || "N/A"
+      };
 
-      try {
-        const videoUrl = document.getElementById('level-video-url').value;
-        const fileInput = document.getElementById('level-file');
-        const urlInput = document.getElementById('level-img-url').value;
-        
-        let finalImg = "";
-
-        const ytThumb = getYouTubeThumbnail(videoUrl);
-        if (ytThumb) {
-          finalImg = ytThumb;
-        } else if (fileInput.files.length > 0) {
-          finalImg = await readFileAsBase64(fileInput.files[0]);
-        } else if (urlInput) {
-          finalImg = urlInput;
-        } else {
-          finalImg = "https://via.placeholder.com/400x200?text=Sin+Imagen";
-        }
-
-        // Obtener color extraído de la miniatura
-        const accentColor = await extractColorFromImage(finalImg);
-
-        const targetPos = parseInt(document.getElementById('level-position').value);
-
-        const newLevel = {
-          id: Date.now(),
-          name: document.getElementById('level-name').value,
-          author: document.getElementById('level-author').value,
-          verifier: document.getElementById('level-verifier').value,
-          img: finalImg,
-          themeColor: accentColor,
-          songName: document.getElementById('level-song-name').value || "Desconocida",
-          songId: document.getElementById('level-song-id').value || "N/A",
-          videoUrl: videoUrl || "",
-          desc: document.getElementById('level-desc').value || "",
-          launch: document.getElementById('level-launch').value || "No registrada",
-          verifiedDate: document.getElementById('level-verified-date').value || "No registrada",
-          gdId: document.getElementById('level-gd-id').value || "N/A"
-        };
-
-        let localLevels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
-        const index = Math.min(Math.max(targetPos - 1, 0), localLevels.length);
-        localLevels.splice(index, 0, newLevel);
-        
-        localStorage.setItem('gd_absolute_list', JSON.stringify(localLevels));
-
-        window.location.reload();
-      } catch (err) {
-        alert("Error al guardar el nivel: " + err.message);
-        submitBtn.innerText = "Guardar Nivel";
-        submitBtn.disabled = false;
-      }
+      let local = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
+      local.splice(Math.min(Math.max(targetPos - 1, 0), local.length), 0, newLevel);
+      localStorage.setItem('gd_absolute_list', JSON.stringify(local));
+      window.location.reload();
     }
 
-    function deleteLevel(event, id) {
-      event.stopPropagation();
-      const pass = prompt("Ingresa la contraseña para borrar:");
-      if(pass === ADMIN_PASSWORD) {
-        let localLevels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
-        localLevels = localLevels.filter(l => l.id !== id);
-        localStorage.setItem('gd_absolute_list', JSON.stringify(localLevels));
-        window.location.reload();
-      } else if(pass !== null) {
-        alert("Contraseña incorrecta");
-      }
+    async function saveRealLevel(e) {
+      e.preventDefault();
+      const videoUrl = document.getElementById('real-video-url').value;
+      let finalImg = getYouTubeThumbnail(videoUrl) || "https://via.placeholder.com/400x200?text=Top+Real";
+
+      const targetPos = parseInt(document.getElementById('real-position').value);
+      const newReal = {
+        id: Date.now(),
+        name: document.getElementById('real-name').value,
+        author: document.getElementById('real-author').value,
+        difficulty: document.getElementById('real-difficulty').value,
+        goldPlayer: document.getElementById('real-gold-player').value,
+        goldPercent: parseInt(document.getElementById('real-gold-percent').value) || 100,
+        img: finalImg,
+        videoUrl: videoUrl || "",
+        gdId: document.getElementById('real-gd-id').value || "N/A"
+      };
+
+      let localReal = JSON.parse(localStorage.getItem('gd_absolute_real')) || [];
+      localReal.splice(Math.min(Math.max(targetPos - 1, 0), localReal.length), 0, newReal);
+      localStorage.setItem('gd_absolute_real', JSON.stringify(localReal));
+      window.location.reload();
     }
 
-    function showDetails(index) {
-      const lvl = levels[index];
+    function readFileAsBase64(f) {
+      return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = e => rej(e); r.readAsDataURL(f); });
+    }
+
+    async function savePlayer(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('player-file');
+      let finalImg = document.getElementById('player-img-url').value || (fileInput.files.length > 0 ? await readFileAsBase64(fileInput.files[0]) : "https://via.placeholder.com/150");
+      let local = JSON.parse(localStorage.getItem('gd_absolute_players')) || [];
+      local.push({ id: Date.now(), name: document.getElementById('player-name').value, img: finalImg, info: document.getElementById('player-info').value || "Jugador" });
+      localStorage.setItem('gd_absolute_players', JSON.stringify(local));
+      window.location.reload();
+    }
+
+    function showDetails(index, type='normal') {
+      const lvl = type === 'normal' ? levels[index] : realLevels[index];
       document.getElementById('detail-title').innerText = `#${index + 1} - ${lvl.name}`;
       document.getElementById('detail-img').src = lvl.img;
 
-      const infoList = document.getElementById('detail-info-list');
-      infoList.innerHTML = `
-        <div class="detail-row"><span>Creador / Autor:</span> <b>${lvl.author}</b></div>
-        <div class="detail-row"><span>Verificador:</span> <b>${lvl.verifier}</b></div>
-        <div class="detail-row">
-          <span>Canción:</span> 
-          <div class="song-box">
-            <b>${lvl.songName}</b>
-            <span class="song-id-small">ID: ${lvl.songId}</span>
-          </div>
-        </div>
-        <div class="detail-row"><span>Fecha Lanzamiento:</span> <b>${lvl.launch}</b></div>
-        <div class="detail-row"><span>Fecha Verificación:</span> <b>${lvl.verifiedDate}</b></div>
-        <div class="detail-row"><span>ID del Nivel:</span> <b>${lvl.gdId}</b></div>
-      `;
-
-      const descBox = document.getElementById('desc-box');
-      if(lvl.desc.trim() !== "") {
-        document.getElementById('detail-desc').innerText = lvl.desc;
-        descBox.style.display = 'block';
+      if(type === 'normal') {
+        document.getElementById('detail-info-list').innerHTML = `
+          <div class="detail-row"><span>Creador:</span> <b>${lvl.author}</b></div>
+          <div class="detail-row"><span>Verificador:</span> <b>${lvl.verifier}</b></div>
+          <div class="detail-row"><span>Canción:</span> <b>${lvl.songName} (${lvl.songId})</b></div>
+          <div class="detail-row"><span>ID GD:</span> <b>${lvl.gdId}</b></div>
+        `;
       } else {
-        descBox.style.display = 'none';
+        const demonImg = DEMON_ICONS[lvl.difficulty || 'extreme'];
+        document.getElementById('detail-info-list').innerHTML = `
+          <div class="detail-row"><span>Creador Oficial:</span> <b>${lvl.author}</b></div>
+          <div class="detail-row"><span>Dificultad:</span> <img src="${demonImg}" class="demon-icon"></div>
+          <div class="detail-row"><span>🏆 Gold Record:</span> <b style="color:var(--gold);">${lvl.goldPlayer} (${lvl.goldPercent}%)</b></div>
+          <div class="detail-row"><span>ID GD:</span> <b>${lvl.gdId}</b></div>
+        `;
       }
 
-      const videoBox = document.getElementById('video-box');
-      const embedUrl = getYouTubeEmbedUrl(lvl.videoUrl);
-      if(embedUrl) {
-        document.getElementById('detail-video').src = embedUrl;
-        videoBox.style.display = 'block';
-      } else {
-        videoBox.style.display = 'none';
-      }
-
+      const embed = getYouTubeEmbedUrl(lvl.videoUrl);
+      document.getElementById('video-box').style.display = embed ? 'block' : 'none';
+      if(embed) document.getElementById('detail-video').src = embed;
       openModal('modal-detail');
     }
 
     function render() {
       levels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
+      realLevels = JSON.parse(localStorage.getItem('gd_absolute_real')) || [];
+      customPlayers = JSON.parse(localStorage.getItem('gd_absolute_players')) || [];
+      const q = document.getElementById('search-bar').value.toLowerCase().trim();
 
+      document.getElementById('stat-total-levels').innerText = levels.length;
+      document.getElementById('stat-total-real').innerText = realLevels.length;
+
+      // Render Niveles Normales
       const levelsDiv = document.getElementById('levels-list');
-      levelsDiv.innerHTML = levels.length === 0 ? '<p class="loading-text">No hay niveles añadidos aún en La Absolute List.<br>Toca + para agregar uno.</p>' : '';
-      
-      levels.forEach((lvl, index) => {
-        const color = lvl.themeColor || '#3b4254';
+      levelsDiv.innerHTML = '';
+      levels.filter(l => l.name.toLowerCase().includes(q) || l.verifier.toLowerCase().includes(q)).forEach(lvl => {
+        const idx = levels.indexOf(lvl);
         levelsDiv.innerHTML += `
-          <div class="card" style="border-left: 4px solid ${color}; --card-accent: ${color};" onclick="showDetails(${index})">
-            <div class="rank">#${index + 1}</div>
-            <img class="thumb" src="${lvl.img}" onerror="this.src='https://via.placeholder.com/95x60?text=GD'">
+          <div class="card" onclick="showDetails(${idx}, 'normal')">
+            <div class="rank">#${idx+1}</div>
+            <img class="thumb" src="${lvl.img}">
             <div class="info">
               <h3>${lvl.name}</h3>
               <div class="meta-small">Creador: <b>${lvl.author}</b></div>
-              <div class="meta-small">Pasado por: <b>${lvl.verifier}</b></div>
+              <div class="meta-small">Pasado por: <b>${lvl.verifier} (${lvl.progress||100}%)</b></div>
             </div>
-            <button class="delete-btn" onclick="deleteLevel(event, ${lvl.id})">✕</button>
           </div>
         `;
       });
 
-      const playersDiv = document.getElementById('players-list');
-      const playerCounts = {};
-      
-      levels.forEach(lvl => {
-        playerCounts[lvl.verifier] = (playerCounts[lvl.verifier] || 0) + 1;
+      // Render Top Real (Rateados con Carita Demon)
+      const realDiv = document.getElementById('real-list');
+      realDiv.innerHTML = '';
+      realLevels.filter(l => l.name.toLowerCase().includes(q) || l.goldPlayer.toLowerCase().includes(q)).forEach(lvl => {
+        const idx = realLevels.indexOf(lvl);
+        const demonImg = DEMON_ICONS[lvl.difficulty || 'extreme'];
+        realDiv.innerHTML += `
+          <div class="card top-gold" onclick="showDetails(${idx}, 'real')">
+            <div class="rank" style="color:var(--gold);">#${idx+1}</div>
+            <img class="thumb" src="${lvl.img}">
+            <div class="info">
+              <div class="info-header">
+                <h3>${lvl.name}</h3>
+                <img src="${demonImg}" class="demon-icon" alt="Demon">
+              </div>
+              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+              <span class="gold-badge">🏆 Gold Record: ${lvl.goldPlayer} (${lvl.goldPercent}%)</span>
+            </div>
+          </div>
+        `;
       });
 
-      const sortedPlayers = Object.keys(playerCounts).sort((a,b) => playerCounts[b] - playerCounts[a]);
+      // Render Jugadores
+      const playersDiv = document.getElementById('players-list');
+      playersDiv.innerHTML = '';
       
-      playersDiv.innerHTML = sortedPlayers.length === 0 ? '<p class="loading-text">Sin datos de jugadores todavía.</p>' : '';
-      
-      sortedPlayers.forEach((player, index) => {
+      let pMapNormal = {}, pMapReal = {};
+      levels.forEach(l => { if(!pMapNormal[l.verifier]) pMapNormal[l.verifier] = []; pMapNormal[l.verifier].push(l); });
+      realLevels.forEach(l => { if(!pMapReal[l.goldPlayer]) pMapReal[l.goldPlayer] = []; pMapReal[l.goldPlayer].push(l); });
+
+      const allPlayerNames = Array.from(new Set([...Object.keys(pMapNormal), ...Object.keys(pMapReal)]));
+      const playerList = allPlayerNames.map(name => ({
+        name,
+        pts: calculatePlayerPoints(pMapNormal[name] || [], pMapReal[name] || []),
+        countNormal: (pMapNormal[name] || []).length,
+        countReal: (pMapReal[name] || []).length
+      })).sort((a,b) => b.pts - a.pts);
+
+      document.getElementById('stat-total-players').innerText = playerList.length;
+
+      playerList.filter(p => p.name.toLowerCase().includes(q)).forEach((p, i) => {
         playersDiv.innerHTML += `
           <div class="card">
-            <div class="rank">#${index + 1}</div>
+            <div class="rank">#${i+1}</div>
             <div class="info">
-              <h3>${player}</h3>
-              <div class="meta-small">Niveles completados en la lista: <b>${playerCounts[player]}</b></div>
+              <h3>${p.name}</h3>
+              <div class="meta-small">Puntos Totales: <b>${p.pts} pts</b></div>
+              <div class="meta-small">Niveles Lista: <b>${p.countNormal}</b> | Rateados Gold: <b>${p.countReal}</b></div>
             </div>
           </div>
         `;
+      });
+
+      // Modo Cine
+      const cinemaGrid = document.getElementById('cinema-grid');
+      cinemaGrid.innerHTML = '';
+      levels.forEach((l, i) => {
+        cinemaGrid.innerHTML += `<div class="cinema-item" onclick="showDetails(${i}, 'normal')"><img src="${l.img}"><p>#${i+1} ${l.name}</p></div>`;
       });
     }
 
