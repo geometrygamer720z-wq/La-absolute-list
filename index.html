@@ -39,25 +39,11 @@
     }
 
     #maintenance-banner {
-      background: #ff4757;
-      color: #fff;
-      text-align: center;
-      font-size: 0.75rem;
-      font-weight: bold;
-      padding: 5px;
-      display: none;
-      z-index: 1000;
-      position: relative;
+      background: #ff4757; color: #fff; text-align: center; font-size: 0.75rem; font-weight: bold; padding: 5px; display: none; z-index: 1000; position: relative;
     }
 
     .gd-particle {
-      position: absolute;
-      background: var(--particle-color);
-      width: 6px;
-      height: 6px;
-      pointer-events: none;
-      animation: floatUp linear infinite;
-      z-index: 0;
+      position: absolute; background: var(--particle-color); width: 6px; height: 6px; pointer-events: none; animation: floatUp linear infinite; z-index: 0;
     }
     @keyframes floatUp {
       0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
@@ -67,65 +53,27 @@
     }
     
     header, .search-wrapper, .nav-tabs-main, .nav-tabs-sub, .container, .fab, .modal {
-      position: relative;
-      z-index: 2;
+      position: relative; z-index: 2;
     }
 
     header { 
       background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, var(--bg) 100%); 
-      padding: 20px 15px 10px 15px; 
-      display: flex; 
-      flex-direction: column;
-      align-items: center; 
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+      padding: 20px 15px 10px 15px; display: flex; flex-direction: column; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
     }
     
     .header-title { 
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-style: italic;
-      font-size: 1.8rem; 
-      text-transform: uppercase; 
-      letter-spacing: 2px;
-      color: #ffffff;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-      cursor: pointer;
-      user-select: none;
-      margin-top: 5px;
+      font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); cursor: pointer; user-select: none; margin-top: 5px;
     }
 
     .top-menu-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: transparent;
-      border: none;
-      color: var(--text-dim);
-      font-size: 1.6rem;
-      cursor: pointer;
-      padding: 5px;
+      position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-dim); font-size: 1.6rem; cursor: pointer; padding: 5px;
     }
 
     .live-counter-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(46, 213, 115, 0.1);
-      border: 1px solid rgba(46, 213, 115, 0.3);
-      color: #2ed573;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      margin-bottom: 8px;
+      display: inline-flex; align-items: center; gap: 6px; background: rgba(46, 213, 115, 0.1); border: 1px solid rgba(46, 213, 115, 0.3); color: #2ed573; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; margin-bottom: 8px;
     }
     .live-dot {
-      width: 7px;
-      height: 7px;
-      background: #2ed573;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #2ed573;
-      animation: pulseDot 1.5s infinite;
+      width: 7px; height: 7px; background: #2ed573; border-radius: 50%; box-shadow: 0 0 8px #2ed573; animation: pulseDot 1.5s infinite;
     }
     @keyframes pulseDot {
       0% { opacity: 1; transform: scale(1); }
@@ -134,93 +82,37 @@
     }
 
     .stats-bar {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      width: 100%;
-      max-width: 650px;
-      justify-content: space-around;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 10px 15px;
-      border-radius: 10px;
+      display: flex; gap: 10px; margin-top: 10px; width: 100%; max-width: 650px; justify-content: space-around; background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px 15px; border-radius: 10px;
     }
     .stat-item { text-align: center; }
     .stat-val { font-size: 1rem; font-weight: bold; color: var(--accent); }
     .stat-lbl { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; }
 
     .search-wrapper {
-      display: flex;
-      gap: 8px;
-      max-width: 650px;
-      margin: 15px auto 5px auto;
-      padding: 0 15px;
-      position: relative;
+      display: flex; gap: 8px; max-width: 650px; margin: 15px auto 5px auto; padding: 0 15px; position: relative;
     }
     .search-input { 
-      flex: 1;
-      padding: 10px 15px; 
-      background: var(--card-bg); 
-      border: 1px solid var(--card-border); 
-      border-radius: 20px; 
-      color: #fff; 
-      font-size: 0.85rem; 
-      outline: none; 
+      flex: 1; padding: 10px 15px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; color: #fff; font-size: 0.85rem; outline: none; 
     }
     .autocomplete-dropdown {
-      position: absolute;
-      top: 45px;
-      left: 15px;
-      right: 85px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      z-index: 50;
-      max-height: 120px;
-      overflow-y: auto;
-      display: none;
+      position: absolute; top: 45px; left: 15px; right: 85px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; z-index: 50; max-height: 120px; overflow-y: auto; display: none;
     }
     .autocomplete-item {
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      color: var(--text-dim);
+      padding: 8px 12px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);
     }
     .autocomplete-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
 
     .filter-btn-right {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: #fff;
-      padding: 0 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      font-weight: bold;
+      background: var(--card-bg); border: 1px solid var(--card-border); color: #fff; padding: 0 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: bold;
     }
 
     .diff-filter-bar {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
+      display: flex; justify-content: center; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;
     }
     .diff-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-dim);
-      padding: 5px 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-weight: bold;
+      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-dim); padding: 5px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer; font-weight: bold;
     }
-    .diff-btn.active {
-      border-color: var(--gold);
-      color: #fff;
-      background: var(--card-border);
-    }
+    .diff-btn.active { border-color: var(--gold); color: #fff; background: var(--card-border); }
 
     .nav-tabs-main { display: flex; justify-content: center; gap: 6px; margin: 15px 0 6px 0; flex-wrap: wrap; }
     .nav-tabs-sub { display: flex; justify-content: center; margin-bottom: 15px; gap: 6px; align-items: center; flex-wrap: wrap; }
@@ -229,16 +121,13 @@
     .tab-btn.active { background: var(--card-border); color: #fff; border-color: var(--accent); }
     
     .tab-btn-sub {
-      background: rgba(255,255,255,0.04);
-      color: var(--text-dim);
-      border: 1px solid var(--card-border);
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 0.7rem;
-      cursor: pointer;
-      font-weight: bold;
+      background: rgba(255,255,255,0.04); color: var(--text-dim); border: 1px solid var(--card-border); padding: 5px 10px; border-radius: 15px; font-size: 0.7rem; cursor: pointer; font-weight: bold;
     }
     .tab-btn-sub.active { background: var(--card-border); color: var(--gold); border-color: var(--gold); }
+
+    .country-filter-select {
+      background: var(--card-bg); color: #fff; border: 1px solid var(--card-border); padding: 5px 12px; border-radius: 15px; font-size: 0.7rem; outline: none; cursor: pointer;
+    }
 
     .container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
     .section { display: none; }
@@ -258,19 +147,22 @@
     .info .meta-small { font-size: 0.72rem; color: var(--text-dim); }
     .info .meta-small b { color: #d1d5db; }
 
-    .gold-badge { font-size: 0.7rem; color: var(--gold); font-weight: bold; display: block; margin-top: 2px; }
     .new-badge { background: var(--gold); color: #000; font-size: 0.6rem; font-weight: bold; padding: 1px 5px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+    .platform-badge { background: rgba(0, 210, 255, 0.15); color: var(--accent); border: 1px solid rgba(0, 210, 255, 0.3); font-size: 0.6rem; font-weight: bold; padding: 1px 6px; border-radius: 4px; margin-left: 4px; }
 
     .fav-star { position: absolute; top: 10px; right: 12px; background: transparent; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-dim); }
     .fav-star.active { color: var(--gold); }
 
-    .actions-right { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; margin-right: 25px; }
+    .actions-right { display: none; flex-direction: column; gap: 4px; align-items: flex-end; margin-right: 25px; }
+    body.admin-mode .actions-right { display: flex; }
+
     .btn-edit { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; cursor: pointer; }
     .btn-edit:hover { background: var(--accent); color: #000; }
     .btn-delete-card { background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #ff6b6b; padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; cursor: pointer; margin-top: 3px; }
     .btn-delete-card:hover { background: #e74c3c; color: #fff; }
 
-    .fab { position: fixed; bottom: 20px; right: 20px; width: 58px; height: 58px; background: var(--card-bg); color: white; border-radius: 50%; border: 1px solid var(--accent); font-size: 1.8rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 90; }
+    .fab { position: fixed; bottom: 20px; right: 20px; width: 58px; height: 58px; background: var(--card-bg); color: white; border-radius: 50%; border: 1px solid var(--accent); font-size: 1.8rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 90; }
+    body.admin-mode .fab { display: flex; }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
     .modal-content { background: var(--card-bg); width: 100%; max-width: 450px; padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); max-height: 90vh; overflow-y: auto; }
@@ -306,9 +198,7 @@
     .country-option {
       padding: 6px 10px; font-size: 0.8rem; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 8px;
     }
-    .country-option:hover, .country-option.selected {
-      background: var(--card-border); color: #fff;
-    }
+    .country-option:hover, .country-option.selected { background: var(--card-border); color: #fff; }
 
     /* Estilos Ruleta Fullscreen */
     .roulette-overlay {
@@ -318,17 +208,12 @@
       color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .roulette-close-btn {
-      position: absolute; top: 20px; right: 20px; background: transparent; border: none;
-      color: white; font-size: 36px; cursor: pointer; z-index: 10000;
+      position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: white; font-size: 36px; cursor: pointer; z-index: 10000;
     }
     .roulette-result-card {
-      background: #1a1a1a; border: 2px solid #333; border-radius: 12px;
-      padding: 24px; text-align: center; max-width: 500px; width: 90%;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      background: #1a1a1a; border: 2px solid #333; border-radius: 12px; padding: 24px; text-align: center; max-width: 500px; width: 90%; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
     }
-    .roulette-thumbnail {
-      width: 100%; height: 200px; border-radius: 8px; margin-bottom: 16px; object-fit: cover; background: #000;
-    }
+    .roulette-thumbnail { width: 100%; height: 200px; border-radius: 8px; margin-bottom: 16px; object-fit: cover; background: #000; }
     .roulette-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
     .btn-surrender { background-color: #e74c3c; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
     .percent-input-container { display: flex; gap: 8px; }
@@ -337,19 +222,11 @@
 
     /* Menú Discord */
     .discord-menu-overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: rgba(0, 0, 0, 0.8); z-index: 9999;
-      display: flex; justify-content: center; align-items: center;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;
     }
-    .discord-menu-card {
-      background: #2f3136; padding: 24px; border-radius: 10px; display: flex; flex-direction: column; gap: 12px; width: 320px;
-    }
-    .btn-discord-action {
-      background-color: #5865F2; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block;
-    }
-    .btn-report-action {
-      background-color: #ed4245; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center;
-    }
+    .discord-menu-card { background: #2f3136; padding: 24px; border-radius: 10px; display: flex; flex-direction: column; gap: 12px; width: 320px; }
+    .btn-discord-action { background-color: #5865F2; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block; }
+    .btn-report-action { background-color: #ed4245; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; }
 
     #toast-notification {
       position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(120px);
@@ -405,6 +282,9 @@
   <div class="nav-tabs-sub">
     <button class="tab-btn-sub fav-filter-toggle" id="fav-toggle-btn" onclick="playClickSound(); toggleFavFilter()">⭐ Favoritos</button>
     <button class="tab-btn-sub fav-filter-toggle" id="uncompleted-toggle-btn" onclick="playClickSound(); toggleUncompletedFilter()">⏳ Sin Completar</button>
+    <select id="country-filter-select" class="country-filter-select" onchange="playClickSound(); render()">
+      <option value="all">🌍 Todos los países</option>
+    </select>
   </div>
 
   <div class="container">
@@ -430,8 +310,11 @@
   <!-- Modal Menú "•••" -->
   <div id="modal-menu" class="modal">
     <div class="modal-content">
-      <h2>Opciones de la Lista</h2>
+      <h2>Opciones</h2>
       <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn btn-submit" id="admin-mode-toggle-btn" onclick="playClickSound(); requestAdminMode()">🔓 Modo Admin</button>
+        <button class="btn btn-cancel" id="admin-ideas-btn" style="display:none; background:rgba(0,210,255,0.2); border:1px solid var(--accent);" onclick="playClickSound(); openAdminIdeasModal()">💡 Ideas de la comunidad (<span id="ideas-count-badge">0</span>)</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); openCommunityIdeaModal()">💬 Añadir idea a la lista</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openDiscordMenu()">👾 Discord (Opciones)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openThemeSelectorModal()">🎨 Cambiar Tema (Estilo)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openCustomThemeModal()">🎨 Personalizar Colores & Partículas</button>
@@ -446,6 +329,40 @@
         <button class="btn btn-cancel" onclick="playClickSound(); importData()">📥 Importar Backup</button>
       </div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="playClickSound(); closeModal('modal-menu')">Cerrar</button></div>
+    </div>
+  </div>
+
+  <!-- Modal Enviar Idea de la Comunidad -->
+  <div id="modal-community-idea" class="modal">
+    <div class="modal-content">
+      <h2>💡 Sugerir Idea</h2>
+      <form onsubmit="submitCommunityIdea(event)">
+        <div class="form-group"><label>Tu Nombre:</label><input type="text" id="idea-author" required placeholder="Ej: Samuel"></div>
+        <div class="form-group">
+          <label>Categoría:</label>
+          <select id="idea-category" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%;">
+            <option value="Opción">Opción</option>
+            <option value="Interfaz">Interfaz</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Comentario / Idea:</label><textarea id="idea-comment" rows="3" required placeholder="Describe tu idea..." style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%; border:1px solid var(--card-border);"></textarea></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeModal('modal-community-idea')">Cancelar</button>
+          <button type="submit" class="btn btn-submit">Enviar Idea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ver Ideas (Admin Mode) -->
+  <div id="modal-admin-ideas" class="modal">
+    <div class="modal-content">
+      <h2>💡 Ideas de la Comunidad</h2>
+      <div id="admin-ideas-list" style="max-height: 280px; overflow-y: auto; margin-bottom: 15px;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="clearAllIdeas()" style="background:#ed4245; color:#fff;">Borrar Todas</button>
+        <button class="btn btn-submit" onclick="closeModal('modal-admin-ideas')">Cerrar</button>
+      </div>
     </div>
   </div>
 
@@ -570,9 +487,10 @@
   <div id="modal-player-profile" class="modal">
     <div class="modal-content">
       <div style="text-align:center; margin-bottom:15px;">
-        <img id="profile-avatar" src="" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--accent); margin-bottom:8px;">
+        <img id="profile-avatar" src="" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--accent); margin-bottom:8px;" onerror="this.src='https://via.placeholder.com/150'">
         <h2 id="profile-name" style="margin:0;"></h2>
         <span id="profile-country" style="font-size:0.8rem; color:var(--accent); display:block; margin-top:2px;"></span>
+        <span id="profile-best-portal" style="font-size:0.75rem; color:var(--gold); display:block; margin-top:2px;"></span>
         <span id="profile-info" style="font-size:0.75rem; color:var(--text-dim); display:block; margin-top:4px;"></span>
       </div>
       <div id="profile-details-list"></div>
@@ -635,20 +553,6 @@
     </div>
   </div>
 
-  <!-- Modal Auth General (Añadir) -->
-  <div id="modal-auth" class="modal">
-    <div class="modal-content">
-      <h2>Acceso Requerido</h2>
-      <form onsubmit="verifyAdminAccess(event)">
-        <div class="form-group"><label>Clave Admin:</label><input type="password" id="pre-admin-pass" required></div>
-        <div class="modal-actions">
-          <button type="button" class="btn btn-cancel" onclick="closeModal('modal-auth')">Cancelar</button>
-          <button type="submit" class="btn btn-submit">Ingresar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <!-- Modal Añadir/Editar Nivel Absolute -->
   <div id="modal-add" class="modal">
     <div class="modal-content">
@@ -659,6 +563,25 @@
         <div class="form-group"><label>Nombre del Nivel</label><input type="text" id="level-name" required></div>
         <div class="form-group"><label>Autor / Creador</label><input type="text" id="level-author" required></div>
         <div class="form-group"><label>Victores (Separados por comas)</label><input type="text" id="level-verifier" required></div>
+        <div class="form-group"><label>Plataforma del Verificador Principal</label>
+          <select id="level-platform" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%;">
+            <option value="PC">PC</option>
+            <option value="Android">Android</option>
+            <option value="Ambos">Ambos</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Mecánica principal (¿De qué se trata más?)</label>
+          <select id="level-main-portal" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%;">
+            <option value="Wave">Wave</option>
+            <option value="Ship">Ship</option>
+            <option value="Ball">Ball</option>
+            <option value="UFO">UFO</option>
+            <option value="Spider">Spider</option>
+            <option value="Robot">Robot</option>
+            <option value="Cube">Cube</option>
+            <option value="Todos los portales">Todos los portales</option>
+          </select>
+        </div>
         <div class="form-group"><label>Progreso (%)</label><input type="number" id="level-progress" min="1" max="100" value="100"></div>
         <div class="form-group"><label>Estilo Destacado (Modo de Juego)</label>
           <select id="level-playstyle" class="form-group" style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px;">
@@ -694,6 +617,25 @@
         <div class="form-group"><label>Nombre del Nivel</label><input type="text" id="impossible-name" required></div>
         <div class="form-group"><label>Autor / Creador</label><input type="text" id="impossible-author" required></div>
         <div class="form-group"><label>Victores / Verificadores</label><input type="text" id="impossible-verifier" required></div>
+        <div class="form-group"><label>Plataforma del Verificador</label>
+          <select id="impossible-platform" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%;">
+            <option value="PC">PC</option>
+            <option value="Android">Android</option>
+            <option value="Ambos">Ambos</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Mecánica principal (¿De qué se trata más?)</label>
+          <select id="impossible-main-portal" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%;">
+            <option value="Wave">Wave</option>
+            <option value="Ship">Ship</option>
+            <option value="Ball">Ball</option>
+            <option value="UFO">UFO</option>
+            <option value="Spider">Spider</option>
+            <option value="Robot">Robot</option>
+            <option value="Cube">Cube</option>
+            <option value="Todos los portales">Todos los portales</option>
+          </select>
+        </div>
         <div class="form-group"><label>Link Video YouTube</label><input type="url" id="impossible-video-url"></div>
         <div class="form-group"><label>Imagen URL</label><input type="text" id="impossible-img-url"></div>
         <div class="form-group"><label>ID GD</label><input type="text" id="impossible-gd-id"></div>
@@ -723,13 +665,32 @@
           </select>
         </div>
         <div class="form-group"><label>Jugador con Récord (Principal)</label><input type="text" id="real-gold-player" required></div>
+        <div class="form-group"><label>Plataforma del Récord Principal</label>
+          <select id="real-platform" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%;">
+            <option value="PC">PC</option>
+            <option value="Android">Android</option>
+            <option value="Ambos">Ambos</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Mecánica principal (¿De qué se trata más?)</label>
+          <select id="real-main-portal" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%;">
+            <option value="Wave">Wave</option>
+            <option value="Ship">Ship</option>
+            <option value="Ball">Ball</option>
+            <option value="UFO">UFO</option>
+            <option value="Spider">Spider</option>
+            <option value="Robot">Robot</option>
+            <option value="Cube">Cube</option>
+            <option value="Todos los portales">Todos los portales</option>
+          </select>
+        </div>
         <div class="form-group"><label>Récord (%)</label><input type="number" id="real-gold-percent" min="1" max="100" value="100" required></div>
         
         <!-- Sección de Récords de los Demás (Sin Límite) -->
         <div class="form-group" style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px dashed var(--card-border);">
           <label style="color: var(--accent); font-weight: bold; margin-bottom: 8px;">🏆 Récords de los demás:</label>
           <div id="other-records-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;"></div>
-          <button type="button" class="btn btn-cancel" style="padding: 6px; font-size: 0.75rem;" onclick="addOtherRecordInput('', '')">+ Añadir Récord</button>
+          <button type="button" class="btn btn-cancel" style="padding: 6px; font-size: 0.75rem;" onclick="addOtherRecordInput('', '', 'PC')">+ Añadir Récord</button>
         </div>
 
         <div class="form-group"><label>Link Video YouTube</label><input type="url" id="real-video-url"></div>
@@ -742,17 +703,33 @@
     </div>
   </div>
 
-  <!-- Modal Añadir/Editar Jugador (Con Selector de País estilo WhatsApp) -->
+  <!-- Modal Añadir/Editar Jugador -->
   <div id="modal-add-player" class="modal">
     <div class="modal-content">
       <h2 id="modal-player-title">Añadir Jugador</h2>
       <form id="player-form" onsubmit="savePlayer(event)">
         <input type="hidden" id="edit-player-id">
         <div class="form-group"><label>Nombre Jugador</label><input type="text" id="player-name" required></div>
-        <div class="form-group"><label>Foto Avatar URL</label><input type="text" id="player-img-url"><input type="file" id="player-file" accept="image/*" style="margin-top:5px;"></div>
+        <div class="form-group">
+          <label>Foto Avatar (URL o Archivo)</label>
+          <input type="text" id="player-img-url" placeholder="https://...">
+          <input type="file" id="player-file" accept="image/*" style="margin-top:5px;" onchange="handlePlayerImageUpload(event)">
+        </div>
         <div class="form-group"><label>Nota / Frase del Jugador</label><input type="text" id="player-info" placeholder="Ej: ¡A por el Top 1!"></div>
         
-        <!-- Selector de País tipo WhatsApp con Buscador -->
+        <div class="form-group"><label>¿En qué es mejor? (Portal preferido)</label>
+          <select id="player-best-portal" required style="background:#0d0f12; color:#fff; padding:8px; border-radius:6px; width:100%;">
+            <option value="Wave">Wave</option>
+            <option value="Ship">Ship</option>
+            <option value="Ball">Ball</option>
+            <option value="UFO">UFO</option>
+            <option value="Spider">Spider</option>
+            <option value="Robot">Robot</option>
+            <option value="Cube">Cube</option>
+            <option value="Todos los portales">Todos los portales</option>
+          </select>
+        </div>
+
         <div class="form-group">
           <label>País del Jugador:</label>
           <input type="hidden" id="player-country" value="Costa Rica">
@@ -778,7 +755,7 @@
       <div id="detail-info-list"></div>
       
       <div style="margin-top:15px;">
-        <label style="font-size:0.8rem; color:var(--text-dim); display:block; margin-bottom:5px;">💬 Comentarios:</label>
+        <label style="font-size:0.8rem; color:var(--text-dim); display:block; margin-bottom:5px;">💬 Comentarios (<span id="comment-count-display">0</span>):</label>
         <div id="comments-container" style="max-height:120px; overflow-y:auto; margin-bottom:8px;"></div>
         <div style="display:flex; gap:6px;">
           <input type="text" id="comment-author-input" placeholder="Tu nombre" style="width:30%; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
@@ -798,20 +775,22 @@
     let currentDiffFilter = 'all';
     let showOnlyFavorites = false;
     let showOnlyUncompleted = false;
-    let pendingActionData = null; // { type, action: 'edit'|'delete', index }
+    let pendingActionData = null; 
     let selectedDetailLevelId = null;
     let currentPenaltyPercent = 0;
+    let isAdminModeActive = false;
 
     let levels = [];
     let impossibleLevels = [];
     let realLevels = [];
     let customPlayers = [];
+    let communityIdeas = [];
 
     const COUNTRIES_LIST = [
       "Costa Rica", "Argentina", "México", "España", "Chile", "Colombia", "Perú", "Estados Unidos",
       "Brasil", "Uruguay", "Venezuela", "Bolivia", "Ecuador", "Guatemala", "Honduras", "El Salvador",
       "Nicaragua", "Panamá", "República Dominicana", "Puerto Rico", "Canadá", "Francia", "Alemania",
-      "Reino Unido", "Italia", "Japón", "Corea del Sur", "Australia", "Rusia", "México"
+      "Reino Unido", "Italia", "Japón", "Corea del Sur", "Australia", "Rusia"
     ];
 
     const ACHIEVEMENTS_LIST = Array.from({length: 100}, (_, i) => ({
@@ -825,6 +804,24 @@
       insane: 'https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-insane.png',
       extreme: 'https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png'
     };
+
+    // --- EFECTO DE AUDIO LIMPIO Y SUTIL ---
+    function playClickSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(580, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(320, ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.03, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.04);
+      } catch(e) {}
+    }
 
     function initActiveUsersCounter() {
       let activeCount = parseInt(localStorage.getItem('gd_absolute_live_count')) || 1;
@@ -859,23 +856,6 @@
         p.style.animationDelay = (Math.random() * 5) + 's';
         container.appendChild(p);
       }
-    }
-
-    function playClickSound() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.05);
-        gain.gain.setValueAtTime(0.05, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.05);
-      } catch(e) {}
     }
 
     function showToast(desc) {
@@ -913,7 +893,7 @@
     }
 
     function toggleMaintenanceMode() {
-      const current = localStorage.getItem('gd_absolute_maintenance') === 'true';
+      closeModal('modal-menu');
       pendingActionData = { type: 'maintenance', action: 'toggle' };
       document.getElementById('modal-auth-title').innerText = "Modo Mantenimiento (Admin)";
       document.getElementById('edit-pass-input').value = '';
@@ -921,7 +901,7 @@
     }
 
     function changeTheme(theme) {
-      document.body.className = theme === 'default' ? '' : `theme-${theme}`;
+      document.body.className = (isAdminModeActive ? 'admin-mode ' : '') + (theme === 'default' ? '' : `theme-${theme}`);
       localStorage.setItem('gd_absolute_theme', theme);
     }
 
@@ -1057,7 +1037,23 @@
       else alert("Selecciona una pestaña válida para añadir elementos.");
     }
 
-    // --- MANEJO DE ACCIONES SEGURAS (EDICIÓN Y BORRADO CON MISMA CONTRASEÑA) ---
+    function requestAdminMode() {
+      closeModal('modal-menu');
+      if (isAdminModeActive) {
+        isAdminModeActive = false;
+        document.body.classList.remove('admin-mode');
+        document.getElementById('admin-mode-toggle-btn').innerText = "🔓 Modo Admin";
+        document.getElementById('admin-ideas-btn').style.display = 'none';
+        alert("Modo Admin desactivado.");
+        render();
+        return;
+      }
+      pendingActionData = { type: 'admin_mode_auth', action: 'verify' };
+      document.getElementById('modal-auth-title').innerText = "Contraseña de Admin";
+      document.getElementById('edit-pass-input').value = '';
+      openModal('modal-edit-pass');
+    }
+
     function requestEdit(type, idx) {
       pendingActionData = { type, action: 'edit', index: idx };
       document.getElementById('modal-auth-title').innerText = "Contraseña de Admin (Editar)";
@@ -1082,6 +1078,17 @@
 
       closeModal('modal-edit-pass');
       
+      if(pendingActionData.type === 'admin_mode_auth') {
+        isAdminModeActive = true;
+        document.body.classList.add('admin-mode');
+        document.getElementById('admin-mode-toggle-btn').innerText = "🔒 Bloquear Modo Admin";
+        document.getElementById('admin-ideas-btn').style.display = 'block';
+        updateIdeasCountBadge();
+        alert("¡Modo Admin activado correctamente!");
+        render();
+        return;
+      }
+
       if(pendingActionData.type === 'maintenance') {
         const current = localStorage.getItem('gd_absolute_maintenance') === 'true';
         localStorage.setItem('gd_absolute_maintenance', (!current).toString());
@@ -1123,6 +1130,8 @@
       document.getElementById('level-name').value = lvl.name;
       document.getElementById('level-author').value = lvl.author;
       document.getElementById('level-verifier').value = lvl.verifier;
+      document.getElementById('level-platform').value = lvl.platform || 'PC';
+      document.getElementById('level-main-portal').value = lvl.mainPortal || 'Wave';
       document.getElementById('level-progress').value = lvl.progress || 100;
       document.getElementById('level-playstyle').value = lvl.playstyle || 'wave';
       document.getElementById('level-video-url').value = lvl.videoUrl || "";
@@ -1141,6 +1150,8 @@
       document.getElementById('impossible-name').value = lvl.name;
       document.getElementById('impossible-author').value = lvl.author;
       document.getElementById('impossible-verifier').value = lvl.verifier;
+      document.getElementById('impossible-platform').value = lvl.platform || 'PC';
+      document.getElementById('impossible-main-portal').value = lvl.mainPortal || 'Wave';
       document.getElementById('impossible-video-url').value = lvl.videoUrl || "";
       document.getElementById('impossible-img-url').value = lvl.img || "";
       document.getElementById('impossible-gd-id').value = lvl.gdId || "";
@@ -1156,6 +1167,8 @@
       document.getElementById('real-author').value = lvl.author;
       document.getElementById('real-difficulty').value = lvl.difficulty || 'extreme';
       document.getElementById('real-gold-player').value = lvl.goldPlayer;
+      document.getElementById('real-platform').value = lvl.platform || 'PC';
+      document.getElementById('real-main-portal').value = lvl.mainPortal || 'Wave';
       document.getElementById('real-gold-percent').value = lvl.goldPercent || 100;
       document.getElementById('real-video-url').value = lvl.videoUrl || "";
       document.getElementById('real-gd-id').value = lvl.gdId || "";
@@ -1163,13 +1176,13 @@
       const container = document.getElementById('other-records-container');
       container.innerHTML = '';
       if(lvl.otherRecords && Array.isArray(lvl.otherRecords)) {
-        lvl.otherRecords.forEach(rec => addOtherRecordInput(rec.player, rec.percent));
+        lvl.otherRecords.forEach(rec => addOtherRecordInput(rec.player, rec.percent, rec.platform || 'PC'));
       }
 
       openModal('modal-add-real');
     }
 
-    function addOtherRecordInput(playerName = '', percentVal = '') {
+    function addOtherRecordInput(playerName = '', percentVal = '', platformVal = 'PC') {
       const container = document.getElementById('other-records-container');
       const row = document.createElement('div');
       row.style.display = 'flex';
@@ -1177,6 +1190,11 @@
       row.innerHTML = `
         <input type="text" placeholder="Nombre jugador" class="other-rec-player" value="${playerName}" style="flex:2; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
         <input type="number" placeholder="%" class="other-rec-percent" min="1" max="100" value="${percentVal}" style="flex:1; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
+        <select class="other-rec-platform" style="padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
+          <option value="PC" ${platformVal==='PC'?'selected':''}>PC</option>
+          <option value="Android" ${platformVal==='Android'?'selected':''}>Android</option>
+          <option value="Ambos" ${platformVal==='Ambos'?'selected':''}>Ambos</option>
+        </select>
         <button type="button" class="btn btn-cancel" style="padding:4px 8px; font-size:0.7rem; background:#ed4245; color:#fff;" onclick="this.parentElement.remove()">X</button>
       `;
       container.appendChild(row);
@@ -1189,12 +1207,23 @@
       document.getElementById('player-name').value = p.name;
       document.getElementById('player-img-url').value = p.img || "";
       document.getElementById('player-info').value = p.info || "";
+      document.getElementById('player-best-portal').value = p.bestPortal || 'Wave';
       document.getElementById('player-country').value = p.country || "Costa Rica";
       renderCountryList('');
       openModal('modal-add-player');
     }
 
-    // --- SELECTOR DE PAÍS ESTILO WHATSAPP CON BUSCADOR ---
+    function handlePlayerImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('player-img-url').value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
     function renderCountryList(filterText = '') {
       const listContainer = document.getElementById('country-options-list');
       listContainer.innerHTML = '';
@@ -1221,8 +1250,72 @@
       });
     }
 
-    function filterCountryList(val) {
-      renderCountryList(val);
+    function filterCountryList(val) { renderCountryList(val); }
+
+    function updateCountryFilterDropdown() {
+      const select = document.getElementById('country-filter-select');
+      const currentVal = select.value;
+      let countriesFound = new Set();
+      customPlayers.forEach(p => { if(p.country) countriesFound.add(p.country); });
+
+      select.innerHTML = '<option value="all">🌍 Todos los países</option>';
+      countriesFound.forEach(c => {
+        select.innerHTML += `<option value="${c}" ${c === currentVal ? 'selected' : ''}>${c}</option>`;
+      });
+    }
+
+    function openCommunityIdeaModal() {
+      closeModal('modal-menu');
+      openModal('modal-community-idea');
+    }
+
+    function submitCommunityIdea(e) {
+      e.preventDefault();
+      const author = document.getElementById('idea-author').value.trim();
+      const category = document.getElementById('idea-category').value;
+      const comment = document.getElementById('idea-comment').value.trim();
+
+      communityIdeas.push({ author, category, comment, date: new Date().toLocaleDateString() });
+      localStorage.setItem('gd_absolute_ideas', JSON.stringify(communityIdeas));
+      
+      closeModal('modal-community-idea');
+      alert("¡Idea enviada con éxito a los administradores!");
+    }
+
+    function updateIdeasCountBadge() {
+      document.getElementById('ideas-count-badge').innerText = communityIdeas.length;
+    }
+
+    function openAdminIdeasModal() {
+      closeModal('modal-menu');
+      const list = document.getElementById('admin-ideas-list');
+      list.innerHTML = '';
+      if(communityIdeas.length === 0) {
+        list.innerHTML = '<p style="text-align:center; color:var(--text-dim);">No hay ideas pendientes.</p>';
+      } else {
+        communityIdeas.forEach((item, i) => {
+          list.innerHTML += `
+            <div class="feed-item">
+              <div style="display:flex; justify-content:space-between;">
+                <b>[${item.category}] por ${item.author}</b>
+                <span style="color:var(--text-dim); font-size:0.7rem;">${item.date}</span>
+              </div>
+              <p style="margin-top:4px; color:#fff;">${item.comment}</p>
+            </div>
+          `;
+        });
+      }
+      openModal('modal-admin-ideas');
+    }
+
+    function clearAllIdeas() {
+      if(confirm("¿Seguro que deseas borrar todas las ideas?")) {
+        communityIdeas = [];
+        localStorage.removeItem('gd_absolute_ideas');
+        updateIdeasCountBadge();
+        closeModal('modal-admin-ideas');
+        alert("¡Ideas borradas!");
+      }
     }
 
     function triggerSecretDiscord() {
@@ -1287,7 +1380,7 @@
       e.preventDefault();
       const txt = document.getElementById('credits-textarea').value;
       localStorage.setItem('gd_absolute_credits_text', txt);
-      closeModal('modal-edit-pass');
+      closeModal('modal-edit-credits');
       alert("¡Créditos actualizados!");
     }
 
@@ -1330,6 +1423,7 @@
       document.getElementById('profile-avatar').src = p ? p.img : 'https://via.placeholder.com/150';
       document.getElementById('profile-name').innerText = playerName;
       document.getElementById('profile-country').innerText = p && p.country ? `🌐 ${p.country}` : '🌐 Costa Rica';
+      document.getElementById('profile-best-portal').innerText = p && p.bestPortal ? `⭐ Mejor en: ${p.bestPortal}` : '⭐ Mejor en: Wave';
       document.getElementById('profile-info').innerText = p && p.info ? `💬 "${p.info}"` : 'Jugador de la comunidad';
 
       let countN = 0, countI = 0, countR = 0;
@@ -1465,10 +1559,11 @@
     function renderPlayers() {
       const listContainer = document.getElementById('players-list');
       listContainer.innerHTML = '';
+      const selectedCountryFilter = document.getElementById('country-filter-select').value;
 
       let playerMap = {};
       customPlayers.forEach(cp => {
-        playerMap[cp.name] = { name: cp.name, img: cp.img || 'https://via.placeholder.com/150', info: cp.info || '', country: cp.country || 'Costa Rica', levels: [], impossible: [], real: [] };
+        playerMap[cp.name] = { name: cp.name, img: cp.img || 'https://via.placeholder.com/150', info: cp.info || '', country: cp.country || 'Costa Rica', bestPortal: cp.bestPortal || 'Wave', levels: [], impossible: [], real: [] };
       });
 
       levels.forEach(l => {
@@ -1476,7 +1571,7 @@
           l.verifier.split(',').forEach(v => {
             let name = v.trim();
             if(!name) return;
-            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', levels: [], impossible: [], real: [] };
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
             playerMap[name].levels.push(l);
           });
         }
@@ -1487,7 +1582,7 @@
           l.verifier.split(',').forEach(v => {
             let name = v.trim();
             if(!name) return;
-            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', levels: [], impossible: [], real: [] };
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
             playerMap[name].impossible.push(l);
           });
         }
@@ -1497,7 +1592,7 @@
         if(rl.goldPlayer) {
           let name = rl.goldPlayer.trim();
           if(name) {
-            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', levels: [], impossible: [], real: [] };
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
             playerMap[name].real.push(rl);
           }
         }
@@ -1505,7 +1600,7 @@
           rl.otherRecords.forEach(rec => {
             let name = rec.player.trim();
             if(name) {
-              if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', levels: [], impossible: [], real: [] };
+              if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
               playerMap[name].real.push({ ...rl, goldPercent: rec.percent });
             }
           });
@@ -1518,10 +1613,16 @@
       }));
 
       playersArray.sort((a, b) => b.points - a.points);
+
+      // Filtrar por país si está seleccionado
+      if(selectedCountryFilter !== 'all') {
+        playersArray = playersArray.filter(p => p.country === selectedCountryFilter);
+      }
+
       document.getElementById('stat-total-players').innerText = playersArray.length;
 
       if(playersArray.length === 0) {
-        listContainer.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:20px;">No hay jugadores registrados.</p>';
+        listContainer.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:20px;">No hay jugadores registrados con este filtro.</p>';
         return;
       }
 
@@ -1535,7 +1636,7 @@
             <img class="thumb" src="${p.img}" style="border-radius:50%; width:50px; height:50px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/150'">
             <div class="info">
               <h3>${p.name} ${idx === 0 ? '<span class="new-badge">#1 RANK</span>' : ''}</h3>
-              <div class="meta-small">Puntos: <b>${p.points} pts</b> | País: <b>${p.country}</b></div>
+              <div class="meta-small">Puntos: <b>${p.points} pts</b> | País: <b>${p.country}</b> | ⭐ <b>${p.bestPortal}</b></div>
             </div>
             <div class="actions-right" onclick="event.stopPropagation()">
               ${originalIdx !== -1 ? `<button class="btn-edit" onclick="requestEdit('player', ${originalIdx})">✏️</button>` : ''}
@@ -1589,6 +1690,8 @@
       const styleFilter = document.getElementById('filter-playstyle').value;
       const favs = JSON.parse(localStorage.getItem('gd_absolute_favorites')) || [];
 
+      updateCountryFilterDropdown();
+
       // --- RENDER ABSOLUTE ---
       const levelsContainer = document.getElementById('levels-list');
       levelsContainer.innerHTML = '';
@@ -1608,6 +1711,8 @@
         let rank = originalIdx + 1;
         let img = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
         let isFav = favs.includes(lvl.id);
+        let platformBadge = lvl.platform ? `<span class="platform-badge">${lvl.platform}</span>` : '';
+        let portalBadge = lvl.mainPortal ? `<span class="meta-small" style="color:var(--gold);">[${lvl.mainPortal}]</span>` : '';
 
         levelsContainer.innerHTML += `
           <div class="card ${rank === 1 ? 'top-gold' : ''}" onclick="openDetailModal('level', ${originalIdx})">
@@ -1618,8 +1723,9 @@
               <div class="info-header">
                 <h3>${lvl.name}</h3>
                 ${rank === 1 ? '<span class="new-badge">TOP 1</span>' : ''}
+                ${platformBadge}
               </div>
-              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+              <div class="meta-small">Creador: <b>${lvl.author}</b> ${portalBadge}</div>
             </div>
             <div class="actions-right" onclick="event.stopPropagation()">
               <button class="btn-edit" onclick="requestEdit('level', ${originalIdx})">✏️</button>
@@ -1645,6 +1751,8 @@
         let rank = originalIdx + 1;
         let img = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
         let isFav = favs.includes(lvl.id);
+        let platformBadge = lvl.platform ? `<span class="platform-badge">${lvl.platform}</span>` : '';
+        let portalBadge = lvl.mainPortal ? `<span class="meta-small" style="color:var(--gold);">[${lvl.mainPortal}]</span>` : '';
 
         impContainer.innerHTML += `
           <div class="card ${rank === 1 ? 'top-gold' : ''}" onclick="openDetailModal('impossible', ${originalIdx})">
@@ -1652,8 +1760,11 @@
             <div class="rank">#${rank}</div>
             <img class="thumb" src="${img}" onerror="this.src='https://via.placeholder.com/320x180'">
             <div class="info">
-              <h3>${lvl.name}</h3>
-              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+              <div class="info-header">
+                <h3>${lvl.name}</h3>
+                ${platformBadge}
+              </div>
+              <div class="meta-small">Creador: <b>${lvl.author}</b> ${portalBadge}</div>
             </div>
             <div class="actions-right" onclick="event.stopPropagation()">
               <button class="btn-edit" onclick="requestEdit('impossible', ${originalIdx})">✏️</button>
@@ -1681,6 +1792,8 @@
         let img = getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
         let diffIcon = DEMON_ICONS[lvl.difficulty || 'extreme'];
         let isFav = favs.includes(lvl.id);
+        let platformBadge = lvl.platform ? `<span class="platform-badge">${lvl.platform}</span>` : '';
+        let portalBadge = lvl.mainPortal ? `<span class="meta-small" style="color:var(--gold);">[${lvl.mainPortal}]</span>` : '';
 
         realContainer.innerHTML += `
           <div class="card" onclick="openDetailModal('real', ${originalIdx})">
@@ -1691,8 +1804,9 @@
               <div class="info-header">
                 <h3>${lvl.name}</h3>
                 <img class="demon-icon" src="${diffIcon}">
+                ${platformBadge}
               </div>
-              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+              <div class="meta-small">Creador: <b>${lvl.author}</b> ${portalBadge}</div>
               <div class="meta-small">Récord principal: <b>${lvl.goldPlayer}</b> (${lvl.goldPercent || 100}%)</div>
             </div>
             <div class="actions-right" onclick="event.stopPropagation()">
@@ -1741,6 +1855,9 @@
       document.getElementById('detail-img').src = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
       
       let infoHTML = `<div class="detail-row"><span>Creador:</span> <b>${lvl.author}</b></div>`;
+      if(lvl.platform) infoHTML += `<div class="detail-row"><span>Plataforma:</span> <b>${lvl.platform}</b></div>`;
+      if(lvl.mainPortal) infoHTML += `<div class="detail-row"><span>Mecánica principal:</span> <b>${lvl.mainPortal}</b></div>`;
+
       if(type === 'level' || type === 'impossible') {
         infoHTML += `<div class="detail-row"><span>Verificador(es):</span> <b>${lvl.verifier}</b></div>`;
       } else {
@@ -1751,7 +1868,7 @@
         if(lvl.otherRecords && lvl.otherRecords.length > 0) {
           infoHTML += `<div style="margin-top:8px; font-size:0.78rem; color:var(--text-dim);"><b>Otros récords:</b></div>`;
           lvl.otherRecords.forEach(r => {
-            infoHTML += `<div class="detail-row" style="padding-left:10px;"><span>${r.player}</span> <b>${r.percent}%</b></div>`;
+            infoHTML += `<div class="detail-row" style="padding-left:10px;"><span>${r.player} (${r.platform || 'PC'})</span> <b>${r.percent}%</b></div>`;
           });
         }
       }
@@ -1774,6 +1891,7 @@
       let comments = allComments[selectedDetailLevelId] || [];
       let container = document.getElementById('comments-container');
       
+      document.getElementById('comment-count-display').innerText = comments.length;
       container.innerHTML = '';
       if(comments.length === 0) {
         container.innerHTML = '<p style="font-size:0.75rem; color:var(--text-dim); text-align:center;">No hay comentarios todavía.</p>';
@@ -1812,6 +1930,8 @@
       const author = document.getElementById('real-author').value;
       const difficulty = document.getElementById('real-difficulty').value;
       const goldPlayer = document.getElementById('real-gold-player').value;
+      const platform = document.getElementById('real-platform').value;
+      const mainPortal = document.getElementById('real-main-portal').value;
       const goldPercent = parseInt(document.getElementById('real-gold-percent').value) || 100;
       const videoUrl = document.getElementById('real-video-url').value;
       const gdId = document.getElementById('real-gd-id').value;
@@ -1821,20 +1941,21 @@
       rows.forEach(row => {
         const player = row.querySelector('.other-rec-player').value.trim();
         const percent = parseInt(row.querySelector('.other-rec-percent').value);
+        const recPlatform = row.querySelector('.other-rec-platform').value;
         if(player && !isNaN(percent)) {
-          otherRecords.push({ player, percent });
+          otherRecords.push({ player, percent, platform: recPlatform });
         }
       });
 
       if(editId) {
         let idx = realLevels.findIndex(l => l.id === editId);
         if(idx !== -1) {
-          realLevels[idx] = { ...realLevels[idx], name, author, difficulty, goldPlayer, goldPercent, otherRecords, videoUrl, gdId };
+          realLevels[idx] = { ...realLevels[idx], name, author, difficulty, goldPlayer, platform, mainPortal, goldPercent, otherRecords, videoUrl, gdId };
         } else {
-          realLevels.push({ id: editId, name, author, difficulty, goldPlayer, goldPercent, otherRecords, videoUrl, gdId });
+          realLevels.push({ id: editId, name, author, difficulty, goldPlayer, platform, mainPortal, goldPercent, otherRecords, videoUrl, gdId });
         }
       } else {
-        let newItem = { id: 'real_' + Date.now(), name, author, difficulty, goldPlayer, goldPercent, otherRecords, videoUrl, gdId };
+        let newItem = { id: 'real_' + Date.now(), name, author, difficulty, goldPlayer, platform, mainPortal, goldPercent, otherRecords, videoUrl, gdId };
         if(pos >= 0 && pos <= realLevels.length) realLevels.splice(pos, 0, newItem);
         else realLevels.push(newItem);
       }
@@ -1852,6 +1973,8 @@
       const name = document.getElementById('level-name').value;
       const author = document.getElementById('level-author').value;
       const verifier = document.getElementById('level-verifier').value;
+      const platform = document.getElementById('level-platform').value;
+      const mainPortal = document.getElementById('level-main-portal').value;
       const progress = parseInt(document.getElementById('level-progress').value) || 100;
       const playstyle = document.getElementById('level-playstyle').value;
       const videoUrl = document.getElementById('level-video-url').value;
@@ -1861,12 +1984,12 @@
       if(editId) {
         let idx = levels.findIndex(l => l.id === editId);
         if(idx !== -1) {
-          levels[idx] = { ...levels[idx], name, author, verifier, progress, playstyle, videoUrl, img, gdId };
+          levels[idx] = { ...levels[idx], name, author, verifier, platform, mainPortal, progress, playstyle, videoUrl, img, gdId };
         } else {
-          levels.push({ id: editId, name, author, verifier, progress, playstyle, videoUrl, img, gdId });
+          levels.push({ id: editId, name, author, verifier, platform, mainPortal, progress, playstyle, videoUrl, img, gdId });
         }
       } else {
-        let newItem = { id: 'lvl_' + Date.now(), name, author, verifier, progress, playstyle, videoUrl, img, gdId };
+        let newItem = { id: 'lvl_' + Date.now(), name, author, verifier, platform, mainPortal, progress, playstyle, videoUrl, img, gdId };
         if(pos >= 0 && pos <= levels.length) levels.splice(pos, 0, newItem);
         else levels.push(newItem);
       }
@@ -1883,6 +2006,8 @@
       const name = document.getElementById('impossible-name').value;
       const author = document.getElementById('impossible-author').value;
       const verifier = document.getElementById('impossible-verifier').value;
+      const platform = document.getElementById('impossible-platform').value;
+      const mainPortal = document.getElementById('impossible-main-portal').value;
       const videoUrl = document.getElementById('impossible-video-url').value;
       const img = document.getElementById('impossible-img-url').value;
       const gdId = document.getElementById('impossible-gd-id').value;
@@ -1890,12 +2015,12 @@
       if(editId) {
         let idx = impossibleLevels.findIndex(l => l.id === editId);
         if(idx !== -1) {
-          impossibleLevels[idx] = { ...impossibleLevels[idx], name, author, verifier, videoUrl, img, gdId };
+          impossibleLevels[idx] = { ...impossibleLevels[idx], name, author, verifier, platform, mainPortal, videoUrl, img, gdId };
         } else {
-          impossibleLevels.push({ id: editId, name, author, verifier, videoUrl, img, gdId });
+          impossibleLevels.push({ id: editId, name, author, verifier, platform, mainPortal, videoUrl, img, gdId });
         }
       } else {
-        let newItem = { id: 'imp_' + Date.now(), name, author, verifier, videoUrl, img, gdId };
+        let newItem = { id: 'imp_' + Date.now(), name, author, verifier, platform, mainPortal, videoUrl, img, gdId };
         if(pos >= 0 && pos <= impossibleLevels.length) impossibleLevels.splice(pos, 0, newItem);
         else impossibleLevels.push(newItem);
       }
@@ -1912,16 +2037,17 @@
       const img = document.getElementById('player-img-url').value;
       const info = document.getElementById('player-info').value;
       const country = document.getElementById('player-country').value || "Costa Rica";
+      const bestPortal = document.getElementById('player-best-portal').value || "Wave";
 
       if(editId) {
         let idx = customPlayers.findIndex(p => p.id === editId);
         if(idx !== -1) {
-          customPlayers[idx] = { ...customPlayers[idx], name, img, info, country };
+          customPlayers[idx] = { ...customPlayers[idx], name, img, info, country, bestPortal };
         } else {
-          customPlayers.push({ id: editId, name, img, info, country });
+          customPlayers.push({ id: editId, name, img, info, country, bestPortal });
         }
       } else {
-        customPlayers.push({ id: 'pl_' + Date.now(), name, img, info, country });
+        customPlayers.push({ id: 'pl_' + Date.now(), name, img, info, country, bestPortal });
       }
 
       localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
@@ -1930,7 +2056,7 @@
     }
 
     function exportData() {
-      const data = { levels, impossibleLevels, realLevels, customPlayers };
+      const data = { levels, impossibleLevels, realLevels, customPlayers, communityIdeas };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1954,11 +2080,13 @@
             if(data.impossibleLevels) impossibleLevels = data.impossibleLevels;
             if(data.realLevels) realLevels = data.realLevels;
             if(data.customPlayers) customPlayers = data.customPlayers;
+            if(data.communityIdeas) communityIdeas = data.communityIdeas;
 
             localStorage.setItem('gd_absolute_levels', JSON.stringify(levels));
             localStorage.setItem('gd_absolute_impossible', JSON.stringify(impossibleLevels));
             localStorage.setItem('gd_absolute_real', JSON.stringify(realLevels));
             localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
+            localStorage.setItem('gd_absolute_ideas', JSON.stringify(communityIdeas));
 
             render();
             alert("¡Backup importado con éxito!");
@@ -1981,7 +2109,9 @@
       impossibleLevels = JSON.parse(localStorage.getItem('gd_absolute_impossible')) || [];
       realLevels = JSON.parse(localStorage.getItem('gd_absolute_real')) || [];
       customPlayers = JSON.parse(localStorage.getItem('gd_absolute_players')) || [];
+      communityIdeas = JSON.parse(localStorage.getItem('gd_absolute_ideas')) || [];
 
+      updateIdeasCountBadge();
       render();
     };
   </script>
