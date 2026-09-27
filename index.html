@@ -1,79 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=1024" />
-        <title>Your List Name</title>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Absolute List</title>
+  <!-- Cliente de Supabase para base de datos pública -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #0b0d14;
+      --card-bg: #161926;
+      --accent: #ff4757;
+      --text: #ffffff;
+      --text-dim: #8e94a6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; }
+    
+    header { background: #11131f; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--accent); }
+    .header-title { color: var(--accent); font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .nav-tabs { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+    .tab-btn { background: var(--card-bg); color: var(--text); border: 1px solid #2e334d; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+    .tab-btn.active { background: var(--accent); border-color: var(--accent); }
 
-        <!-- Replace your server icon by uploading an image file named "list_icon.png"-->
-        <link rel="icon" href="/list_icon.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@500;700&display=swap"
-            rel="stylesheet"
-        />
-        <link rel="stylesheet" type="text/css" href="/css/reset.css" />
-        <link rel="stylesheet" type="text/css" href="/css/typography.css" />
-        <link rel="stylesheet" type="text/css" href="/css/main.css" />
-        <link rel="stylesheet" type="text/css" href="/css/pages/list.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/css/pages/leaderboard.css"
-        />
-        <link rel="stylesheet" type="text/css" href="/css/pages/roulette.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/nav.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/btn.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/css/components/tabs.css"
-        />
-        <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
-        <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        <script type="module" src="/js/main.js"></script>
-    </head>
-    <body id="app">
-        <header :class="{ dark: store.dark }">
-            <div class="logo">
-                <h2>Sample List</h2>
-                <p>v1.0.0</p>
+    .container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .card { background: var(--card-bg); border-radius: 12px; padding: 12px 15px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; border: 1px solid #24293e; }
+    .rank { font-size: 1.4rem; font-weight: bold; color: var(--accent); min-width: 55px; text-align: center; }
+    .thumb { width: 95px; height: 60px; border-radius: 8px; object-fit: cover; background: #000; flex-shrink: 0; }
+    
+    .info { flex-grow: 1; overflow: hidden; }
+    .info h3 { font-size: 1.1rem; color: #fff; margin-bottom: 3px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+    .info .meta-small { font-size: 0.75rem; color: var(--text-dim); line-height: 1.3; }
+    .info .meta-small b { color: #d1d5db; font-weight: 600; }
+
+    .delete-btn { position: absolute; right: 10px; top: 10px; background: transparent; border: none; color: #ff6b6b; cursor: pointer; font-size: 1.1rem; }
+
+    /* Botón flotante "+" */
+    .fab { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: var(--accent); color: white; border-radius: 50%; border: none; font-size: 2rem; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 90; }
+
+    /* Ventana emergente (Modal) */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
+    .modal-content { background: var(--card-bg); width: 100%; max-width: 420px; padding: 20px; border-radius: 12px; border: 1px solid #2e334d; max-height: 90vh; overflow-y: auto; }
+    .modal-content h2 { margin-bottom: 15px; color: var(--accent); font-size: 1.2rem; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: var(--text-dim); }
+    .form-group input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #2e334d; background: #0b0d14; color: white; outline: none; font-size: 0.9rem; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .btn { flex: 1; padding: 11px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .btn-submit { background: var(--accent); color: white; }
+    .btn-cancel { background: #2e334d; color: white; }
+    
+    .loading-text { text-align: center; color: var(--text-dim); margin-top: 30px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">La Absolute List</div>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('levels')">Top Niveles</button>
+    <button class="tab-btn" onclick="switchTab('players')">Top Jugadores</button>
+  </div>
+
+  <div class="container">
+    <!-- Sección Niveles -->
+    <div id="levels-section" class="section active">
+      <div id="levels-list"><p class="loading-text">Cargando lista...</p></div>
+    </div>
+
+    <!-- Sección Jugadores -->
+    <div id="players-section" class="section">
+      <div id="players-list"><p class="loading-text">Cargando jugadores...</p></div>
+    </div>
+  </div>
+
+  <!-- Botón Añadir "+" -->
+  <button class="fab" onclick="openModal()">+</button>
+
+  <!-- Ventana Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2>Añadir Nuevo Nivel</h2>
+      <form id="level-form" onsubmit="saveLevel(event)">
+        <div class="form-group">
+          <label>Contraseña Admin</label>
+          <input type="password" id="admin-pass" required placeholder="Clave para añadir">
+        </div>
+        <div class="form-group">
+          <label>Posición / Top (1 a 2000)</label>
+          <input type="number" id="level-position" min="1" max="2000" required placeholder="Ej: 1">
+        </div>
+        <div class="form-group">
+          <label>Nombre del Nivel</label>
+          <input type="text" id="level-name" required placeholder="Ej: Bloodlust">
+        </div>
+        <div class="form-group">
+          <label>Autor / Creador</label>
+          <input type="text" id="level-author" required placeholder="Ej: Knobbelboy">
+        </div>
+        <div class="form-group">
+          <label>Verificador / Pasado por</label>
+          <input type="text" id="level-verifier" required placeholder="Ej: Knobbelboy">
+        </div>
+        <div class="form-group">
+          <label>Seleccionar Foto/Imagen desde Celular</label>
+          <input type="file" id="level-file" accept="image/*" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-submit" id="submit-btn">Guardar Nivel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = "1234"; // CAMBIA TU CONTRASEÑA AQUÍ SI QUIERES
+
+    // Inicialización de Supabase con base de datos pública
+    const SUPABASE_URL = "https://xyzcompany.supabase.co"; 
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; 
+    
+    let levels = [];
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      
+      if(tab === 'levels') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('levels-section').classList.add('active');
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('players-section').classList.add('active');
+      }
+    }
+
+    function openModal() { document.getElementById('modal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    // Convertir la imagen seleccionada a base64 para guardarla fácilmente
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function saveLevel(e) {
+      e.preventDefault();
+      const pass = document.getElementById('admin-pass').value;
+      if(pass !== ADMIN_PASSWORD) {
+        alert("Contraseña de administración incorrecta");
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.innerText = "Guardando...";
+      submitBtn.disabled = true;
+
+      try {
+        const fileInput = document.getElementById('level-file');
+        const imgData = await readFileAsBase64(fileInput.files[0]);
+        const targetPos = parseInt(document.getElementById('level-position').value);
+
+        const newLevel = {
+          id: Date.now(),
+          name: document.getElementById('level-name').value,
+          author: document.getElementById('level-author').value,
+          verifier: document.getElementById('level-verifier').value,
+          img: imgData
+        };
+
+        // Insertar en la posición indicada (Top 1 - 2000)
+        let localLevels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
+        const index = Math.min(Math.max(targetPos - 1, 0), localLevels.length);
+        localLevels.splice(index, 0, newLevel);
+        
+        localStorage.setItem('gd_absolute_list', JSON.stringify(localLevels));
+
+        // Recargar página para actualizar la vista inmediatamente
+        window.location.reload();
+      } catch (err) {
+        alert("Error al guardar el nivel: " + err.message);
+        submitBtn.innerText = "Guardar Nivel";
+        submitBtn.disabled = false;
+      }
+    }
+
+    function deleteLevel(id) {
+      const pass = prompt("Ingresa la contraseña para borrar:");
+      if(pass === ADMIN_PASSWORD) {
+        let localLevels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
+        localLevels = localLevels.filter(l => l.id !== id);
+        localStorage.setItem('gd_absolute_list', JSON.stringify(localLevels));
+        window.location.reload();
+      } else if(pass !== null) {
+        alert("Contraseña incorrecta");
+      }
+    }
+
+    function render() {
+      levels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
+
+      // Render Niveles
+      const levelsDiv = document.getElementById('levels-list');
+      levelsDiv.innerHTML = levels.length === 0 ? '<p class="loading-text">No hay niveles añadidos aún en La Absolute List.<br>Toca + para agregar uno.</p>' : '';
+      
+      levels.forEach((lvl, index) => {
+        levelsDiv.innerHTML += `
+          <div class="card">
+            <div class="rank">#${index + 1}</div>
+            <img class="thumb" src="${lvl.img}" onerror="this.src='https://via.placeholder.com/95x60?text=GD'">
+            <div class="info">
+              <h3>${lvl.name}</h3>
+              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+              <div class="meta-small">Pasado por: <b>${lvl.verifier}</b></div>
             </div>
-            <nav class="nav">
-                <router-link class="nav__tab" to="/">
-                    <span class="type-label-lg">List</span>
-                </router-link>
-                <router-link class="nav__tab" to="/leaderboard">
-                    <span class="type-label-lg">Leaderboard</span>
-                </router-link>
-                <router-link class="nav__tab" to="/roulette">
-                    <span class="type-label-lg">Roulette</span>
-                </router-link>
-                <div class="nav__actions">
-                    <button
-                        class="nav__icon"
-                        @click.prevent="store.toggleDark()"
-                    >
-                        <img
-                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
-                            alt=""
-                        />
-                    </button>
-                    <!-- Replace the '#' with your discord server's invite-->
-                    <a class="nav__icon" href="#">
-                        <img src="/assets/discord.svg" alt="Discord Logo" />
-                    </a>
-                    <!-- List record submission form, add a link to replace the '#' when putting a link to your list submission form-->
-                    <a
-                        class="nav__cta type-label-lg"
-                        href="#"
-                        target="_blank"
-                        >Submit Record</a
-                    >
-                </div>
-            </nav>
-        </header>
-        <router-view :class="{ dark: store.dark }"></router-view>
-    </body>
+            <button class="delete-btn" onclick="deleteLevel(${lvl.id})">✕</button>
+          </div>
+        `;
+      });
+
+      // Render Top Jugadores (Calculado en base a verificadores)
+      const playersDiv = document.getElementById('players-list');
+      const playerCounts = {};
+      
+      levels.forEach(lvl => {
+        playerCounts[lvl.verifier] = (playerCounts[lvl.verifier] || 0) + 1;
+      });
+
+      const sortedPlayers = Object.keys(playerCounts).sort((a,b) => playerCounts[b] - playerCounts[a]);
+      
+      playersDiv.innerHTML = sortedPlayers.length === 0 ? '<p class="loading-text">Sin datos de jugadores todavía.</p>' : '';
+      
+      sortedPlayers.forEach((player, index) => {
+        playersDiv.innerHTML += `
+          <div class="card">
+            <div class="rank">#${index + 1}</div>
+            <div class="info">
+              <h3>${player}</h3>
+              <div class="meta-small">Niveles completados en la lista: <b>${playerCounts[player]}</b></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Cargar los datos
+    render();
+  </script>
+</body>
 </html>
+
