@@ -309,6 +309,47 @@
     .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 10px; background: #000; }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
+    /* Estilos Ruleta Fullscreen */
+    .roulette-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(0, 0, 0, 0.92); z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .roulette-close-btn {
+      position: absolute; top: 20px; right: 20px; background: transparent; border: none;
+      color: white; font-size: 36px; cursor: pointer; z-index: 10000;
+    }
+    .roulette-result-card {
+      background: #1a1a1a; border: 2px solid #333; border-radius: 12px;
+      padding: 24px; text-align: center; max-width: 500px; width: 90%;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .roulette-thumbnail {
+      width: 100%; height: 200px; border-radius: 8px; margin-bottom: 16px; object-fit: cover; background: #000;
+    }
+    .roulette-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+    .btn-surrender { background-color: #e74c3c; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .percent-input-container { display: flex; gap: 8px; }
+    .percent-input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #2a2a2a; color: white; }
+    .btn-submit-percent { background-color: #3498db; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+    /* Menú Discord con Sub-opciones */
+    .discord-menu-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8); z-index: 9999;
+      display: flex; justify-content: center; align-items: center;
+    }
+    .discord-menu-card {
+      background: #2f3136; padding: 24px; border-radius: 10px; display: flex; flex-direction: column; gap: 12px; width: 320px;
+    }
+    .btn-discord-action {
+      background-color: #5865F2; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block;
+    }
+    .btn-report-action {
+      background-color: #ed4245; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center;
+    }
+
     #toast-notification {
       position: fixed;
       bottom: 25px;
@@ -406,8 +447,7 @@
     <div class="modal-content">
       <h2>Opciones de la Lista</h2>
       <div style="display:flex; flex-direction:column; gap:10px;">
-        <button class="btn btn-cancel" onclick="playClickSound(); handleDiscordClick()">👾 Ir al Discord</button>
-        <button class="btn btn-cancel" onclick="playClickSound(); reportExpiredDiscord()">⚠️ Reportar Link Vencido</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); openDiscordMenu()">👾 Discord (Opciones)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openThemeSelectorModal()">🎨 Cambiar Tema (Estilo)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openCustomThemeModal()">🎨 Personalizar Colores & Partículas</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openPointsCalculator()">🧮 Calculadora de Puntos</button>
@@ -596,7 +636,7 @@
     </div>
   </div>
 
-  <!-- Modal Ruleta -->
+  <!-- Modal Ruleta Selección de Lista -->
   <div id="modal-roulette" class="modal">
     <div class="modal-content">
       <h2>🎰 Ruleta de Niveles</h2>
@@ -605,7 +645,6 @@
         <button class="btn btn-cancel" onclick="spinRoulette('impossible')">Girar en "Impossible"</button>
         <button class="btn btn-cancel" onclick="spinRoulette('real')">Girar en "Rateados"</button>
       </div>
-      <div id="roulette-result" style="margin-top:15px; font-weight:bold; text-align:center; color:var(--accent);">Presiona una opción</div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="closeModal('modal-roulette')">Cerrar</button></div>
     </div>
   </div>
@@ -680,7 +719,7 @@
     </div>
   </div>
 
-  <!-- Modal Añadir/Editar Rateado -->
+  <!-- Modal Añadir/Editar Rateado (Con Récords de los demás sin límite) -->
   <div id="modal-add-real" class="modal">
     <div class="modal-content">
       <h2 id="modal-real-title">Añadir Rateado</h2>
@@ -697,8 +736,16 @@
             <option value="extreme" selected>Extreme Demon</option>
           </select>
         </div>
-        <div class="form-group"><label>Jugador con Récord</label><input type="text" id="real-gold-player" required></div>
+        <div class="form-group"><label>Jugador con Récord (Principal)</label><input type="text" id="real-gold-player" required></div>
         <div class="form-group"><label>Récord (%)</label><input type="number" id="real-gold-percent" min="1" max="100" value="100" required></div>
+        
+        <!-- Sección de Récords de los Demás (Sin Límite) -->
+        <div class="form-group" style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px dashed var(--card-border);">
+          <label style="color: var(--accent); font-weight: bold; margin-bottom: 8px;">🏆 Récords de los demás:</label>
+          <div id="other-records-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;"></div>
+          <button type="button" class="btn btn-cancel" style="padding: 6px; font-size: 0.75rem;" onclick="addOtherRecordInput('', '')">+ Añadir Récord</button>
+        </div>
+
         <div class="form-group"><label>Link Video YouTube</label><input type="url" id="real-video-url"></div>
         <div class="form-group"><label>ID GD Oficial</label><input type="text" id="real-gd-id"></div>
         <div class="modal-actions">
@@ -757,6 +804,7 @@
     let editTargetType = '';
     let editTargetIndex = -1;
     let selectedDetailLevelId = null;
+    let currentPenaltyPercent = 0;
 
     let levels = [];
     let impossibleLevels = [];
@@ -994,7 +1042,12 @@
         closeModal('modal-auth');
         if(currentTab === 'levels') openModal('modal-add');
         else if(currentTab === 'impossible') openModal('modal-add-impossible');
-        else if(currentTab === 'real') openModal('modal-add-real');
+        else if(currentTab === 'real') {
+          document.getElementById('modal-real-title').innerText = "Añadir Rateado";
+          document.getElementById('edit-real-id').value = '';
+          document.getElementById('other-records-container').innerHTML = '';
+          openModal('modal-add-real');
+        }
         else if(currentTab === 'players') openModal('modal-add-player');
         else alert("Selecciona una pestaña válida para añadir elementos.");
       } else alert("Clave incorrecta");
@@ -1016,7 +1069,6 @@
         else if (editTargetType === 'impossible') openImpossibleEditor(editTargetIndex);
         else if (editTargetType === 'real') openRealEditor(editTargetIndex);
         else if (editTargetType === 'player') openPlayerEditor(editTargetIndex);
-        else if (editTargetType === 'discord') openModal('modal-discord-config');
         else if (editTargetType === 'credits') openModal('modal-edit-credits');
       } else alert("Clave incorrecta");
     }
@@ -1065,7 +1117,28 @@
       document.getElementById('real-gold-percent').value = lvl.goldPercent || 100;
       document.getElementById('real-video-url').value = lvl.videoUrl || "";
       document.getElementById('real-gd-id').value = lvl.gdId || "";
+
+      // Cargar récords de los demás sin límite
+      const container = document.getElementById('other-records-container');
+      container.innerHTML = '';
+      if(lvl.otherRecords && Array.isArray(lvl.otherRecords)) {
+        lvl.otherRecords.forEach(rec => addOtherRecordInput(rec.player, rec.percent));
+      }
+
       openModal('modal-add-real');
+    }
+
+    function addOtherRecordInput(playerName = '', percentVal = '') {
+      const container = document.getElementById('other-records-container');
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.gap = '6px';
+      row.innerHTML = `
+        <input type="text" placeholder="Nombre jugador" class="other-rec-player" value="${playerName}" style="flex:2; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
+        <input type="number" placeholder="%" class="other-rec-percent" min="1" max="100" value="${percentVal}" style="flex:1; padding:6px; font-size:0.75rem; background:#0d0f12; border:1px solid var(--card-border); color:#fff; border-radius:4px;">
+        <button type="button" class="btn btn-cancel" style="padding:4px 8px; font-size:0.7rem; background:#ed4245; color:#fff;" onclick="this.parentElement.remove()">X</button>
+      `;
+      container.appendChild(row);
     }
 
     function openPlayerEditor(idx) {
@@ -1083,23 +1156,42 @@
       if (pass === ADMIN_PASSWORD) openModal('modal-discord-config');
     }
 
-    function handleDiscordClick() {
-      const savedUrl = localStorage.getItem('gd_absolute_discord');
-      if (savedUrl) window.open(savedUrl, '_blank');
-      else alert("No hay enlace configurado.");
+    // --- MENÚ DISCORD PERSONALIZADO ---
+    function openDiscordMenu() {
+      closeModal('modal-menu');
+      const menuOverlay = document.createElement('div');
+      menuOverlay.className = 'discord-menu-overlay';
+      menuOverlay.id = 'discordMenuUI';
+
+      const savedDiscordUrl = localStorage.getItem('gd_absolute_discord') || 'https://discord.gg/ejemplo';
+
+      menuOverlay.innerHTML = `
+        <div class="discord-menu-card">
+          <h3 style="color: white; text-align: center; margin-top: 0;">Opciones de Discord</h3>
+          <a href="${savedDiscordUrl}" target="_blank" class="btn-discord-action">Dirigirse al Discord</a>
+          <button class="btn-report-action" onclick="reportBrokenLink()">Reportar link vencido</button>
+          <button style="background: transparent; border: none; color: #b9bbbe; cursor: pointer; margin-top: 8px;" onclick="closeDiscordMenu()">Cancelar</button>
+        </div>
+      `;
+      document.body.appendChild(menuOverlay);
+    }
+
+    function closeDiscordMenu() {
+      const menu = document.getElementById('discordMenuUI');
+      if (menu) menu.remove();
+    }
+
+    function reportBrokenLink() {
+      alert("¡Gracias! El reporte del link vencido ha sido enviado al registro de actividad.");
+      logActivityFeed("⚠️ Alerta: Un usuario reportó que el enlace de Discord está vencido.");
+      closeDiscordMenu();
     }
 
     function saveDiscordLink(e) {
       e.preventDefault();
       localStorage.setItem('gd_absolute_discord', document.getElementById('discord-url-input').value);
       closeModal('modal-discord-config');
-      alert("¡Guardado!");
-    }
-
-    function reportExpiredDiscord() {
-      logActivityFeed("⚠️ Alerta: Un usuario reportó que el link de invitación de Discord ha expirado.");
-      alert("¡Gracias! Se ha enviado un aviso al registro de actividad del administrador para actualizar el enlace.");
-      closeModal('modal-menu');
+      alert("¡Enlace de Discord guardado!");
     }
 
     function showCreditsModal() {
@@ -1172,7 +1264,10 @@
       let countN = 0, countI = 0, countR = 0;
       levels.forEach(l => { if((l.verifier||"").includes(playerName)) countN++; });
       impossibleLevels.forEach(l => { if((l.verifier||"").includes(playerName)) countI++; });
-      realLevels.forEach(l => { if(l.goldPlayer === playerName) countR++; });
+      realLevels.forEach(l => { 
+        if(l.goldPlayer === playerName) countR++; 
+        if(l.otherRecords && l.otherRecords.some(r => r.player.toLowerCase() === playerName.toLowerCase())) countR++;
+      });
 
       document.getElementById('profile-details-list').innerHTML = `
         <div class="detail-row"><span>Absolute Levels:</span> <b>${countN}</b></div>
@@ -1230,269 +1325,343 @@
         total += 600;
       });
       playerRealLevels.forEach(rl => {
-        const diff = rl.difficulty || 'extreme';
-        let basePoints = diff === 'extreme' ? 500 : 300;
+        let basePoints = rl.difficulty === 'extreme' ? 500 : 300;
         total += basePoints * ((rl.goldPercent !== undefined ? rl.goldPercent : 100) / 100);
       });
       return Math.round(total * 10) / 10;
     }
 
+    // --- MODO RULETA A PANTALLA COMPLETA ---
     function spinRoulette(type) {
-      let pool = type === 'mine' ? levels : type === 'impossible' ? impossibleLevels : realLevels;
-      if(pool.length === 0) return alert("No hay niveles.");
-      const picked = pool[Math.floor(Math.random() * pool.length)];
-      const rank = pool.indexOf(picked) + 1;
-      document.getElementById('roulette-result').innerHTML = `🎯 <b>#${rank} - ${picked.name}</b>`;
-    }
-
-    function exportData() {
-      if(prompt("Clave admin:") === ADMIN_PASSWORD) {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ levels, impossibleLevels, realLevels, customPlayers }));
-        const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "backup.json"); dl.click(); dl.remove();
-      } else alert("Clave incorrecta");
-    }
-
-    function importData() {
-      if(prompt("Clave admin:") === ADMIN_PASSWORD) {
-        try {
-          const parsed = JSON.parse(prompt("Pega el JSON:"));
-          if(parsed.levels) localStorage.setItem('gd_absolute_list', JSON.stringify(parsed.levels));
-          if(parsed.impossibleLevels) localStorage.setItem('gd_absolute_impossible', JSON.stringify(parsed.impossibleLevels));
-          if(parsed.realLevels) localStorage.setItem('gd_absolute_real', JSON.stringify(parsed.realLevels));
-          if(parsed.customPlayers) localStorage.setItem('gd_absolute_players', JSON.stringify(parsed.customPlayers));
-          window.location.reload();
-        } catch(e) { alert("JSON no válido."); }
-      } else alert("Clave incorrecta");
-    }
-
-    async function saveLevel(e) {
-      e.preventDefault();
-      const editId = document.getElementById('edit-level-id').value;
-      const videoUrl = document.getElementById('level-video-url').value;
-      const fileInput = document.getElementById('level-file');
-      const urlInput = document.getElementById('level-img-url').value;
-      let finalImg = getYouTubeThumbnail(videoUrl) || (fileInput.files.length > 0 ? await readFileAsBase64(fileInput.files[0]) : urlInput) || "https://via.placeholder.com/400x200?text=GD";
-
-      const targetPos = parseInt(document.getElementById('level-position').value);
-      const newLevel = {
-        id: editId ? parseInt(editId) : Date.now(),
-        name: document.getElementById('level-name').value,
-        author: document.getElementById('level-author').value,
-        verifier: document.getElementById('level-verifier').value,
-        progress: parseInt(document.getElementById('level-progress').value) || 100,
-        playstyle: document.getElementById('level-playstyle').value || 'wave',
-        img: finalImg,
-        createdAt: Date.now(),
-        songName: document.getElementById('level-song-name').value || "Desconocida",
-        songId: document.getElementById('level-song-id').value || "N/A",
-        videoUrl: videoUrl || "",
-        gdId: document.getElementById('level-gd-id').value || "N/A"
-      };
-
-      let local = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
-      if(editId) {
-        const old = local.find(l => l.id === parseInt(editId));
-        if(old) newLevel.createdAt = old.createdAt || Date.now();
-        local = local.filter(l => l.id !== parseInt(editId));
-      }
-      local.splice(Math.min(Math.max(targetPos - 1, 0), local.length), 0, newLevel);
-      localStorage.setItem('gd_absolute_list', JSON.stringify(local));
-      window.location.reload();
-    }
-
-    async function saveImpossibleLevel(e) {
-      e.preventDefault();
-      const editId = document.getElementById('edit-impossible-id').value;
-      const videoUrl = document.getElementById('impossible-video-url').value;
-      let finalImg = getYouTubeThumbnail(videoUrl) || document.getElementById('impossible-img-url').value || "https://via.placeholder.com/400x200?text=Impossible";
-
-      const targetPos = parseInt(document.getElementById('impossible-position').value);
-      const newImp = {
-        id: editId ? parseInt(editId) : Date.now(),
-        name: document.getElementById('impossible-name').value,
-        author: document.getElementById('impossible-author').value,
-        verifier: document.getElementById('impossible-verifier').value,
-        img: finalImg,
-        createdAt: Date.now(),
-        videoUrl: videoUrl || "",
-        gdId: document.getElementById('impossible-gd-id').value || "N/A"
-      };
-
-      let localImp = JSON.parse(localStorage.getItem('gd_absolute_impossible')) || [];
-      if(editId) {
-        localImp = localImp.filter(l => l.id !== parseInt(editId));
-      }
-      localImp.splice(Math.min(Math.max(targetPos - 1, 0), localImp.length), 0, newImp);
-      localStorage.setItem('gd_absolute_impossible', JSON.stringify(localImp));
-      window.location.reload();
-    }
-
-    async function saveRealLevel(e) {
-      e.preventDefault();
-      const editId = document.getElementById('edit-real-id').value;
-      const videoUrl = document.getElementById('real-video-url').value;
-      let finalImg = getYouTubeThumbnail(videoUrl) || "https://via.placeholder.com/400x200?text=Top+Real";
-
-      const targetPos = parseInt(document.getElementById('real-position').value);
-      const newReal = {
-        id: editId ? parseInt(editId) : Date.now(),
-        name: document.getElementById('real-name').value,
-        author: document.getElementById('real-author').value,
-        difficulty: document.getElementById('real-difficulty').value,
-        goldPlayer: document.getElementById('real-gold-player').value,
-        goldPercent: parseInt(document.getElementById('real-gold-percent').value) || 100,
-        img: finalImg,
-        createdAt: Date.now(),
-        videoUrl: videoUrl || "",
-        gdId: document.getElementById('real-gd-id').value || "N/A"
-      };
-
-      let localReal = JSON.parse(localStorage.getItem('gd_absolute_real')) || [];
-      if(editId) {
-        const old = localReal.find(l => l.id === parseInt(editId));
-        if(old) newReal.createdAt = old.createdAt || Date.now();
-        localReal = localReal.filter(l => l.id !== parseInt(editId));
-      }
-      localReal.splice(Math.min(Math.max(targetPos - 1, 0), localReal.length), 0, newReal);
-      localStorage.setItem('gd_absolute_real', JSON.stringify(localReal));
-      window.location.reload();
-    }
-
-    function readFileAsBase64(f) {
-      return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = e => rej(e); r.readAsDataURL(f); });
-    }
-
-    async function savePlayer(e) {
-      e.preventDefault();
-      const editId = document.getElementById('edit-player-id').value;
-      const fileInput = document.getElementById('player-file');
-      let finalImg = document.getElementById('player-img-url').value || (fileInput.files.length > 0 ? await readFileAsBase64(fileInput.files[0]) : "https://via.placeholder.com/150");
+      closeModal('modal-roulette');
+      let targetList = type === 'mine' ? levels : type === 'impossible' ? impossibleLevels : realLevels;
+      if(targetList.length === 0) return alert("No hay niveles en esta lista.");
       
-      let local = JSON.parse(localStorage.getItem('gd_absolute_players')) || [];
-      if(editId) {
-        local = local.map(p => p.id === parseInt(editId) ? { ...p, name: document.getElementById('player-name').value, img: finalImg, info: document.getElementById('player-info').value || "" } : p);
-      } else {
-        local.push({ id: Date.now(), name: document.getElementById('player-name').value, img: finalImg, info: document.getElementById('player-info').value || "" });
-      }
-      localStorage.setItem('gd_absolute_players', JSON.stringify(local));
-      window.location.reload();
+      let picked = targetList[Math.floor(Math.random() * targetList.length)];
+      let optionName = type === 'mine' ? 'Absolute' : type === 'impossible' ? 'Impossible' : 'Rateados';
+      
+      let levelData = {
+        name: picked.name,
+        author: picked.author,
+        thumbnail: picked.img || getYouTubeThumbnail(picked.videoUrl) || 'https://via.placeholder.com/320x180'
+      };
+
+      openRouletteUI(optionName, levelData);
     }
 
-    function showDetails(index, type='normal') {
-      const lvl = type === 'normal' ? levels[index] : type === 'impossible' ? impossibleLevels[index] : realLevels[index];
-      selectedDetailLevelId = lvl.id;
-      document.getElementById('detail-title').innerText = `#${index + 1} - ${lvl.name}`;
-      document.getElementById('detail-img').src = lvl.img;
+    function openRouletteUI(selectedOption, levelData) {
+      const overlay = document.createElement('div');
+      overlay.className = 'roulette-overlay';
+      overlay.id = 'rouletteUI';
 
-      if(type === 'normal' || type === 'impossible') {
-        const victorsList = (lvl.verifier || "").split(',').map(v => v.trim()).filter(v => v.length > 0);
-        let victorsHTML = '<div style="margin-top:10px;"><label style="font-size:0.8rem; color:var(--text-dim); display:block; margin-bottom:5px;">Victores:</label>';
-        victorsList.forEach((vName, idx) => {
-          let badgeClass = idx === 0 ? 'first' : idx === 1 ? 'second' : idx === 2 ? 'third' : 'standard';
-          let label = idx === 0 ? '🥇 First' : idx === 1 ? '🥈 Second' : idx === 2 ? '🥉 Third' : 'Victor';
-          victorsHTML += `<div class="victor-row"><span><b>${vName}</b></span><span class="victor-tag ${badgeClass}">${label}</span></div>`;
-        });
-        victorsHTML += '</div>';
-
-        document.getElementById('detail-info-list').innerHTML = `
-          <div class="detail-row"><span>Creador:</span> <b>${lvl.author}</b></div>
-          ${type === 'normal' ? `<div class="detail-row"><span>Estilo:</span> <b>${(lvl.playstyle || 'wave').toUpperCase()}</b></div>` : ''}
-          <div class="detail-row"><span>ID GD:</span> <b style="cursor:pointer; color:var(--accent);" onclick="copyToClipboard('${lvl.gdId}')">${lvl.gdId} 📋</b></div>
-          ${victorsHTML}
-        `;
-      } else {
-        const demonImg = DEMON_ICONS[lvl.difficulty || 'extreme'];
-        document.getElementById('detail-info-list').innerHTML = `
-          <div class="detail-row"><span>Creador:</span> <b>${lvl.author}</b></div>
-          <div class="detail-row"><span>Dificultad:</span> <img src="${demonImg}" class="demon-icon"></div>
-          <div class="detail-row"><span>🏆 Récord:</span> <b style="color:var(--gold);">${lvl.goldPlayer} (${lvl.goldPercent}%)</b></div>
-          <div class="detail-row"><span>ID GD:</span> <b style="cursor:pointer; color:var(--accent);" onclick="copyToClipboard('${lvl.gdId}')">${lvl.gdId} 📋</b></div>
-        `;
-      }
-
-      renderComments();
-      const embed = getYouTubeEmbedUrl(lvl.videoUrl);
-      document.getElementById('video-box').style.display = embed ? 'block' : 'none';
-      if(embed) document.getElementById('detail-video').src = embed;
-      openModal('modal-detail');
+      overlay.innerHTML = `
+        <button class="roulette-close-btn" onclick="closeRouletteUI()">&times;</button>
+        <div class="roulette-result-card">
+          <h2>Opción: ${selectedOption}</h2>
+          <img src="${levelData.thumbnail}" alt="${levelData.name}" class="roulette-thumbnail" onerror="this.src='https://via.placeholder.com/320x180'">
+          <h3>${levelData.name}</h3>
+          <p>Creador: <strong>${levelData.author}</strong></p>
+          
+          <div class="roulette-actions">
+            <div class="percent-input-container">
+              <input type="number" id="deathPercentInput" class="percent-input" placeholder="Ingresa tu % (ej. 3)" min="0" max="100">
+              <button class="btn-submit-percent" onclick="submitPercent()">Enviar</button>
+            </div>
+            <button class="btn-surrender" onclick="surrenderRoulette()">Rendirse</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
     }
 
-    function renderComments() {
-      const container = document.getElementById('comments-container');
-      const allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
-      let lvlComments = allComments[selectedDetailLevelId] || [];
-      const likedComments = JSON.parse(localStorage.getItem('gd_absolute_likes')) || [];
+    function closeRouletteUI() {
+      const overlay = document.getElementById('rouletteUI');
+      if (overlay) overlay.remove();
+    }
 
-      lvlComments.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+    function submitPercent() {
+      const input = document.getElementById('deathPercentInput');
+      const val = parseInt(input.value);
 
-      container.innerHTML = lvlComments.length === 0 ? '<div style="font-size:0.75rem; color:var(--text-dim);">Sin comentarios.</div>' : '';
-      lvlComments.forEach((c, idx) => {
-        const isLiked = likedComments.includes(`${selectedDetailLevelId}-${idx}`);
-        const isPinned = idx === 0 && (c.likes || 0) > 0;
-        container.innerHTML += `
-          <div class="comment-box ${isPinned ? 'pinned' : ''}">
-            <div>${isPinned ? '📌 <b>[Destacado]</b> ' : ''}<b>${c.author}:</b> ${c.text}</div>
-            <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${selectedDetailLevelId}, ${idx})">
-              ❤️ <span>${c.likes || 0}</span>
-            </button>
+      if (isNaN(val) || val < 0) {
+        alert("Por favor ingresa un porcentaje válido.");
+        return;
+      }
+
+      // Regla de progresión acumulativa especificada
+      currentPenaltyPercent = val + 1;
+      alert(`Registrado. En el siguiente nivel randomizado deberás superar el requisito de ${currentPenaltyPercent}%.`);
+      closeRouletteUI();
+    }
+
+    function surrenderRoulette() {
+      if (confirm("¿Estás seguro de que deseas rendirte?")) {
+        currentPenaltyPercent = 0;
+        closeRouletteUI();
+      }
+    }
+
+    function renderPlayers() {
+      const listContainer = document.getElementById('players-list');
+      listContainer.innerHTML = '';
+
+      let playerMap = {};
+      customPlayers.forEach(cp => {
+        playerMap[cp.name] = { name: cp.name, img: cp.img || 'https://via.placeholder.com/150', info: cp.info || '', levels: [], impossible: [], real: [] };
+      });
+
+      levels.forEach(l => {
+        if(l.verifier) {
+          l.verifier.split(',').forEach(v => {
+            let name = v.trim();
+            if(!name) return;
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', levels: [], impossible: [], real: [] };
+            playerMap[name].levels.push(l);
+          });
+        }
+      });
+
+      impossibleLevels.forEach(l => {
+        if(l.verifier) {
+          l.verifier.split(',').forEach(v => {
+            let name = v.trim();
+            if(!name) return;
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', levels: [], impossible: [], real: [] };
+            playerMap[name].impossible.push(l);
+          });
+        }
+      });
+
+      realLevels.forEach(rl => {
+        if(rl.goldPlayer) {
+          let name = rl.goldPlayer.trim();
+          if(name) {
+            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', levels: [], impossible: [], real: [] };
+            playerMap[name].real.push(rl);
+          }
+        }
+        if(rl.otherRecords) {
+          rl.otherRecords.forEach(rec => {
+            let name = rec.player.trim();
+            if(name) {
+              if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', levels: [], impossible: [], real: [] };
+              playerMap[name].real.push({ ...rl, goldPercent: rec.percent });
+            }
+          });
+        }
+      });
+
+      let playersArray = Object.values(playerMap).map(p => ({
+        ...p,
+        points: calculatePlayerPoints(p.levels, p.impossible, p.real)
+      }));
+
+      playersArray.sort((a, b) => b.points - a.points);
+      document.getElementById('stat-total-players').innerText = playersArray.length;
+
+      if(playersArray.length === 0) {
+        listContainer.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:20px;">No hay jugadores registrados.</p>';
+        return;
+      }
+
+      playersArray.forEach((p, idx) => {
+        let rankBadge = idx === 0 ? '👑' : `#${idx + 1}`;
+        let originalIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === p.name.toLowerCase());
+
+        listContainer.innerHTML += `
+          <div class="card ${idx === 0 ? 'top-gold' : ''}" onclick="showPlayerProfile('${p.name}')">
+            <div class="rank">${rankBadge}</div>
+            <img class="thumb" src="${p.img}" style="border-radius:50%; width:50px; height:50px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/150'">
+            <div class="info">
+              <h3>${p.name} ${idx === 0 ? '<span class="new-badge">#1 RANK</span>' : ''}</h3>
+              <div class="meta-small">Puntos: <b>${p.points} pts</b></div>
+            </div>
+            ${originalIdx !== -1 ? `
+              <div class="actions-right">
+                <button class="btn-edit" onclick="event.stopPropagation(); requestEdit('player', ${originalIdx})">✏️</button>
+              </div>
+            ` : ''}
           </div>
         `;
       });
     }
 
-    function postComment() {
-      const author = document.getElementById('comment-author-input').value.trim();
-      const text = document.getElementById('comment-text-input').value.trim();
-      if(!author || !text) return alert("Rellena ambos campos.");
-      
-      let allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
-      if(!allComments[selectedDetailLevelId]) allComments[selectedDetailLevelId] = [];
-      allComments[selectedDetailLevelId].push({ author, text, likes: 0 });
-      localStorage.setItem('gd_absolute_comments', JSON.stringify(allComments));
-      
-      document.getElementById('comment-text-input').value = '';
-      renderComments();
-    }
+    function renderCreators() {
+      const listContainer = document.getElementById('creators-list');
+      listContainer.innerHTML = '';
 
-    function toggleLike(levelId, commentIdx) {
-      let allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
-      let likedComments = JSON.parse(localStorage.getItem('gd_absolute_likes')) || [];
-      const key = `${levelId}-${commentIdx}`;
+      let creatorMap = {};
+      levels.forEach(l => {
+        if(l.author) {
+          l.author.split(',').forEach(a => {
+            let name = a.trim();
+            if(!name) return;
+            if(!creatorMap[name]) creatorMap[name] = [];
+            creatorMap[name].push(l);
+          });
+        }
+      });
 
-      if(likedComments.includes(key)) {
-        likedComments = likedComments.filter(k => k !== key);
-        allComments[levelId][commentIdx].likes = Math.max(0, (allComments[levelId][commentIdx].likes || 1) - 1);
-      } else {
-        likedComments.push(key);
-        allComments[levelId][commentIdx].likes = (allComments[levelId][commentIdx].likes || 0) + 1;
+      let creatorsArray = Object.keys(creatorMap).map(name => ({ name, levels: creatorMap[name] }));
+      creatorsArray.sort((a, b) => b.levels.length - a.levels.length);
+
+      if(creatorsArray.length === 0) {
+        listContainer.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:20px;">No hay creadores registrados.</p>';
+        return;
       }
 
-      localStorage.setItem('gd_absolute_comments', JSON.stringify(allComments));
-      localStorage.setItem('gd_absolute_likes', JSON.stringify(likedComments));
-      renderComments();
+      creatorsArray.forEach((c, idx) => {
+        listContainer.innerHTML += `
+          <div class="card">
+            <div class="rank">#${idx + 1}</div>
+            <div class="info">
+              <h3>${c.name}</h3>
+              <div class="meta-small">Niveles en Absolute: <b>${c.levels.length}</b></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function render() {
+      const query = (document.getElementById('search-bar').value || "").toLowerCase();
+      const authFilter = (document.getElementById('filter-author').value || "").toLowerCase();
+      const styleFilter = document.getElementById('filter-playstyle').value;
+      const favs = JSON.parse(localStorage.getItem('gd_absolute_favorites')) || [];
+
+      // --- RENDER ABSOLUTE ---
+      const levelsContainer = document.getElementById('levels-list');
+      levelsContainer.innerHTML = '';
+      let filteredLevels = levels.filter((lvl) => {
+        let matchesQuery = lvl.name.toLowerCase().includes(query) || lvl.author.toLowerCase().includes(query);
+        let matchesAuth = !authFilter || lvl.author.toLowerCase().includes(authFilter);
+        let matchesStyle = styleFilter === 'all' || lvl.playstyle === styleFilter;
+        let matchesFav = !showOnlyFavorites || favs.includes(lvl.id);
+        let matchesUncompleted = !showOnlyUncompleted || (lvl.progress !== undefined && lvl.progress < 100);
+        return matchesQuery && matchesAuth && matchesStyle && matchesFav && matchesUncompleted;
+      });
+
+      document.getElementById('stat-total-levels').innerText = levels.length;
+
+      filteredLevels.forEach((lvl) => {
+        let originalIdx = levels.indexOf(lvl);
+        let rank = originalIdx + 1;
+        let img = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
+        let isFav = favs.includes(lvl.id);
+
+        levelsContainer.innerHTML += `
+          <div class="card ${rank === 1 ? 'top-gold' : ''}" onclick="openDetailModal('level', ${originalIdx})">
+            <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${lvl.id}')">★</button>
+            <div class="rank">#${rank}</div>
+            <img class="thumb" src="${img}" onerror="this.src='https://via.placeholder.com/320x180'">
+            <div class="info">
+              <div class="info-header">
+                <h3>${lvl.name}</h3>
+                ${rank === 1 ? '<span class="new-badge">TOP 1</span>' : ''}
+              </div>
+              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+            </div>
+            <div class="actions-right" onclick="event.stopPropagation()">
+              <button class="btn-edit" onclick="requestEdit('level', ${originalIdx})">✏️</button>
+            </div>
+          </div>
+        `;
+      });
+
+      // --- RENDER IMPOSSIBLE ---
+      const impContainer = document.getElementById('impossible-list');
+      impContainer.innerHTML = '';
+      let filteredImp = impossibleLevels.filter((lvl) => {
+        let matchesQuery = lvl.name.toLowerCase().includes(query) || lvl.author.toLowerCase().includes(query);
+        let matchesFav = !showOnlyFavorites || favs.includes(lvl.id);
+        return matchesQuery && matchesFav;
+      });
+
+      document.getElementById('stat-total-impossible').innerText = impossibleLevels.length;
+
+      filteredImp.forEach((lvl) => {
+        let originalIdx = impossibleLevels.indexOf(lvl);
+        let rank = originalIdx + 1;
+        let img = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
+        let isFav = favs.includes(lvl.id);
+
+        impContainer.innerHTML += `
+          <div class="card ${rank === 1 ? 'top-gold' : ''}" onclick="openDetailModal('impossible', ${originalIdx})">
+            <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${lvl.id}')">★</button>
+            <div class="rank">#${rank}</div>
+            <img class="thumb" src="${img}" onerror="this.src='https://via.placeholder.com/320x180'">
+            <div class="info">
+              <h3>${lvl.name}</h3>
+              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+            </div>
+            <div class="actions-right" onclick="event.stopPropagation()">
+              <button class="btn-edit" onclick="requestEdit('impossible', ${originalIdx})">✏️</button>
+            </div>
+          </div>
+        `;
+      });
+
+      // --- RENDER REAL / RATEADOS ---
+      const realContainer = document.getElementById('real-list');
+      realContainer.innerHTML = '';
+      let filteredReal = realLevels.filter((lvl) => {
+        let matchesQuery = lvl.name.toLowerCase().includes(query) || lvl.author.toLowerCase().includes(query);
+        let matchesDiff = currentDiffFilter === 'all' || lvl.difficulty === currentDiffFilter;
+        let matchesFav = !showOnlyFavorites || favs.includes(lvl.id);
+        return matchesQuery && matchesDiff && matchesFav;
+      });
+
+      document.getElementById('stat-total-real').innerText = realLevels.length;
+
+      filteredReal.forEach((lvl) => {
+        let originalIdx = realLevels.indexOf(lvl);
+        let rank = originalIdx + 1;
+        let img = getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
+        let diffIcon = DEMON_ICONS[lvl.difficulty || 'extreme'];
+        let isFav = favs.includes(lvl.id);
+
+        realContainer.innerHTML += `
+          <div class="card" onclick="openDetailModal('real', ${originalIdx})">
+            <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${lvl.id}')">★</button>
+            <div class="rank">#${rank}</div>
+            <img class="thumb" src="${img}" onerror="this.src='https://via.placeholder.com/320x180'">
+            <div class="info">
+              <div class="info-header">
+                <h3>${lvl.name}</h3>
+                <img class="demon-icon" src="${diffIcon}">
+              </div>
+              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
+              <div class="meta-small">Récord principal: <b>${lvl.goldPlayer}</b> (${lvl.goldPercent || 100}%)</div>
+            </div>
+            <div class="actions-right" onclick="event.stopPropagation()">
+              <button class="btn-edit" onclick="requestEdit('real', ${originalIdx})">✏️</button>
+            </div>
+          </div>
+        `;
+      });
+
+      renderPlayers();
+      renderCreators();
+      checkAchievementsProgress();
     }
 
     function handleSearchInput(val) {
-      render();
       const dropdown = document.getElementById('autocomplete-list');
-      const q = val.toLowerCase().trim();
-      if(!q) { dropdown.style.display = 'none'; return; }
+      if(!val || val.length < 2) { dropdown.style.display = 'none'; render(); return; }
 
       let matches = [];
-      levels.forEach(l => { if(l.name.toLowerCase().includes(q)) matches.push(l.name); });
-      impossibleLevels.forEach(l => { if(l.name.toLowerCase().includes(q)) matches.push(l.name); });
-      realLevels.forEach(l => { if(l.name.toLowerCase().includes(q)) matches.push(l.name); });
-      
-      matches = Array.from(new Set(matches)).slice(0, 5);
-      if(matches.length > 0) {
-        dropdown.innerHTML = '';
-        matches.forEach(m => {
-          dropdown.innerHTML += `<div class="autocomplete-item" onclick="selectAutocomplete('${m}')">${m}</div>`;
-        });
-        dropdown.style.display = 'block';
-      } else {
-        dropdown.style.display = 'none';
-      }
+      levels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
+      impossibleLevels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
+      realLevels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
+
+      if(matches.length === 0) { dropdown.style.display = 'none'; render(); return; }
+
+      dropdown.innerHTML = '';
+      matches.slice(0, 5).forEach(m => {
+        dropdown.innerHTML += `<div class="autocomplete-item" onclick="selectAutocomplete('${m}')">${m}</div>`;
+      });
+      dropdown.style.display = 'block';
+      render();
     }
 
     function selectAutocomplete(name) {
@@ -1501,209 +1670,240 @@
       render();
     }
 
-    function render() {
-      levels = JSON.parse(localStorage.getItem('gd_absolute_list')) || [];
+    function openDetailModal(type, idx) {
+      let lvl = type === 'level' ? levels[idx] : type === 'impossible' ? impossibleLevels[idx] : realLevels[idx];
+      selectedDetailLevelId = lvl.id;
+      
+      document.getElementById('detail-title').innerText = `#${idx + 1} - ${lvl.name}`;
+      document.getElementById('detail-img').src = lvl.img || getYouTubeThumbnail(lvl.videoUrl) || 'https://via.placeholder.com/320x180';
+      
+      let infoHTML = `<div class="detail-row"><span>Creador:</span> <b>${lvl.author}</b></div>`;
+      if(type === 'level' || type === 'impossible') {
+        infoHTML += `<div class="detail-row"><span>Verificador(es):</span> <b>${lvl.verifier}</b></div>`;
+      } else {
+        infoHTML += `
+          <div class="detail-row"><span>Dificultad:</span> <b style="text-transform:uppercase;">${lvl.difficulty} Demon</b></div>
+          <div class="detail-row"><span>🏆 Récord Principal:</span> <b>${lvl.goldPlayer} (${lvl.goldPercent || 100}%)</b></div>
+        `;
+        if(lvl.otherRecords && lvl.otherRecords.length > 0) {
+          infoHTML += `<div style="margin-top:8px; font-size:0.78rem; color:var(--text-dim);"><b>Otros récords:</b></div>`;
+          lvl.otherRecords.forEach(r => {
+            infoHTML += `<div class="detail-row" style="padding-left:10px;"><span>${r.player}</span> <b>${r.percent}%</b></div>`;
+          });
+        }
+      }
+      document.getElementById('detail-info-list').innerHTML = infoHTML;
+
+      let embedUrl = getYouTubeEmbedUrl(lvl.videoUrl);
+      if(embedUrl) {
+        document.getElementById('detail-video').src = embedUrl;
+        document.getElementById('video-box').style.display = 'block';
+      } else {
+        document.getElementById('video-box').style.display = 'none';
+      }
+
+      renderComments();
+      openModal('modal-detail');
+    }
+
+    function renderComments() {
+      let allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
+      let comments = allComments[selectedDetailLevelId] || [];
+      let container = document.getElementById('comments-container');
+      
+      container.innerHTML = '';
+      if(comments.length === 0) {
+        container.innerHTML = '<p style="font-size:0.75rem; color:var(--text-dim); text-align:center;">No hay comentarios todavía.</p>';
+        return;
+      }
+
+      comments.forEach((c, idx) => {
+        container.innerHTML += `
+          <div class="comment-box">
+            <div><b style="color:var(--accent);">${c.author}</b><p style="margin-top:2px; color:#fff;">${c.text}</p></div>
+          </div>
+        `;
+      });
+    }
+
+    function postComment() {
+      const author = document.getElementById('comment-author-input').value.trim();
+      const text = document.getElementById('comment-text-input').value.trim();
+      if(!author || !text) return alert("Completa tu nombre y el comentario.");
+
+      let allComments = JSON.parse(localStorage.getItem('gd_absolute_comments')) || {};
+      if(!allComments[selectedDetailLevelId]) allComments[selectedDetailLevelId] = [];
+
+      allComments[selectedDetailLevelId].push({ author, text });
+      localStorage.setItem('gd_absolute_comments', JSON.stringify(allComments));
+
+      document.getElementById('comment-text-input').value = '';
+      renderComments();
+    }
+
+    function saveRealLevel(e) {
+      e.preventDefault();
+      const editId = document.getElementById('edit-real-id').value;
+      const pos = parseInt(document.getElementById('real-position').value) - 1;
+      const name = document.getElementById('real-name').value;
+      const author = document.getElementById('real-author').value;
+      const difficulty = document.getElementById('real-difficulty').value;
+      const goldPlayer = document.getElementById('real-gold-player').value;
+      const goldPercent = parseInt(document.getElementById('real-gold-percent').value) || 100;
+      const videoUrl = document.getElementById('real-video-url').value;
+      const gdId = document.getElementById('real-gd-id').value;
+
+      // Recopilar récords adicionales sin límite
+      let otherRecords = [];
+      const rows = document.querySelectorAll('#other-records-container > div');
+      rows.forEach(row => {
+        const player = row.querySelector('.other-rec-player').value.trim();
+        const percent = parseInt(row.querySelector('.other-rec-percent').value);
+        if(player && !isNaN(percent)) {
+          otherRecords.push({ player, percent });
+        }
+      });
+
+      let item = { id: editId || 'real_' + Date.now(), name, author, difficulty, goldPlayer, goldPercent, otherRecords, videoUrl, gdId };
+
+      if(editId) {
+        let idx = realLevels.findIndex(l => l.id === editId);
+        if(idx !== -1) realLevels.splice(idx, 1);
+      }
+
+      if(pos >= 0 && pos <= realLevels.length) realLevels.splice(pos, 0, item);
+      else realLevels.push(item);
+
+      localStorage.setItem('gd_absolute_real', JSON.stringify(realLevels));
+      closeModal('modal-add-real');
+      render();
+      alert("¡Nivel Rateado guardado con éxito!");
+    }
+
+    function saveLevel(e) {
+      e.preventDefault();
+      const editId = document.getElementById('edit-level-id').value;
+      const pos = parseInt(document.getElementById('level-position').value) - 1;
+      const name = document.getElementById('level-name').value;
+      const author = document.getElementById('level-author').value;
+      const verifier = document.getElementById('level-verifier').value;
+      const progress = parseInt(document.getElementById('level-progress').value) || 100;
+      const playstyle = document.getElementById('level-playstyle').value;
+      const videoUrl = document.getElementById('level-video-url').value;
+      const img = document.getElementById('level-img-url').value;
+      const gdId = document.getElementById('level-gd-id').value;
+
+      let item = { id: editId || 'lvl_' + Date.now(), name, author, verifier, progress, playstyle, videoUrl, img, gdId };
+
+      if(editId) {
+        let idx = levels.findIndex(l => l.id === editId);
+        if(idx !== -1) levels.splice(idx, 1);
+      }
+      if(pos >= 0 && pos <= levels.length) levels.splice(pos, 0, item);
+      else levels.push(item);
+
+      localStorage.setItem('gd_absolute_levels', JSON.stringify(levels));
+      closeModal('modal-add');
+      render();
+    }
+
+    function saveImpossibleLevel(e) {
+      e.preventDefault();
+      const editId = document.getElementById('edit-impossible-id').value;
+      const pos = parseInt(document.getElementById('impossible-position').value) - 1;
+      const name = document.getElementById('impossible-name').value;
+      const author = document.getElementById('impossible-author').value;
+      const verifier = document.getElementById('impossible-verifier').value;
+      const videoUrl = document.getElementById('impossible-video-url').value;
+      const img = document.getElementById('impossible-img-url').value;
+      const gdId = document.getElementById('impossible-gd-id').value;
+
+      let item = { id: editId || 'imp_' + Date.now(), name, author, verifier, videoUrl, img, gdId };
+
+      if(editId) {
+        let idx = impossibleLevels.findIndex(l => l.id === editId);
+        if(idx !== -1) impossibleLevels.splice(idx, 1);
+      }
+      if(pos >= 0 && pos <= impossibleLevels.length) impossibleLevels.splice(pos, 0, item);
+      else impossibleLevels.push(item);
+
+      localStorage.setItem('gd_absolute_impossible', JSON.stringify(impossibleLevels));
+      closeModal('modal-add-impossible');
+      render();
+    }
+
+    function savePlayer(e) {
+      e.preventDefault();
+      const editId = document.getElementById('edit-player-id').value;
+      const name = document.getElementById('player-name').value;
+      const img = document.getElementById('player-img-url').value;
+      const info = document.getElementById('player-info').value;
+
+      let item = { id: editId || 'pl_' + Date.now(), name, img, info };
+      if(editId) {
+        let idx = customPlayers.findIndex(p => p.id === editId);
+        if(idx !== -1) customPlayers.splice(idx, 1);
+      }
+      customPlayers.push(item);
+
+      localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
+      closeModal('modal-add-player');
+      render();
+    }
+
+    function exportData() {
+      const data = { levels, impossibleLevels, realLevels, customPlayers };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'la_absolute_list_backup.json';
+      a.click();
+      closeModal('modal-menu');
+    }
+
+    function importData() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if(data.levels) levels = data.levels;
+            if(data.impossibleLevels) impossibleLevels = data.impossibleLevels;
+            if(data.realLevels) realLevels = data.realLevels;
+            if(data.customPlayers) customPlayers = data.customPlayers;
+
+            localStorage.setItem('gd_absolute_levels', JSON.stringify(levels));
+            localStorage.setItem('gd_absolute_impossible', JSON.stringify(impossibleLevels));
+            localStorage.setItem('gd_absolute_real', JSON.stringify(realLevels));
+            localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
+
+            render();
+            alert("¡Backup importado con éxito!");
+          } catch(err) {
+            alert("Error al importar el archivo JSON.");
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+      closeModal('modal-menu');
+    }
+
+    window.onload = function() {
+      loadSavedTheme();
+      initActiveUsersCounter();
+      checkAutoBackup();
+
+      levels = JSON.parse(localStorage.getItem('gd_absolute_levels')) || [];
       impossibleLevels = JSON.parse(localStorage.getItem('gd_absolute_impossible')) || [];
       realLevels = JSON.parse(localStorage.getItem('gd_absolute_real')) || [];
       customPlayers = JSON.parse(localStorage.getItem('gd_absolute_players')) || [];
-      const favs = JSON.parse(localStorage.getItem('gd_absolute_favorites')) || [];
 
-      const qName = document.getElementById('search-bar').value.toLowerCase().trim();
-      const playstyleFilter = document.getElementById('filter-playstyle') ? document.getElementById('filter-playstyle').value : 'all';
-      const now = Date.now();
-      const fortyEightHours = 48 * 60 * 60 * 1000;
-
-      document.getElementById('stat-total-levels').innerText = levels.length;
-      document.getElementById('stat-total-impossible').innerText = impossibleLevels.length;
-      document.getElementById('stat-total-real').innerText = realLevels.length;
-
-      // Absolute Levels Render
-      const levelsDiv = document.getElementById('levels-list');
-      levelsDiv.innerHTML = '';
-      levels.filter(l => {
-        const matchesQuery = l.name.toLowerCase().includes(qName);
-        const matchesFav = !showOnlyFavorites || favs.includes(l.id);
-        const matchesPlaystyle = playstyleFilter === 'all' || l.playstyle === playstyleFilter;
-        const matchesUncompleted = !showOnlyUncompleted || !(l.verifier || "").toLowerCase().includes("tú");
-        return matchesQuery && matchesFav && matchesPlaystyle && matchesUncompleted;
-      }).forEach(lvl => {
-        const idx = levels.indexOf(lvl);
-        const isNew = lvl.createdAt && (now - lvl.createdAt < fortyEightHours);
-        const isFav = favs.includes(lvl.id);
-        const isTopGold = idx < 3 ? 'top-gold' : '';
-        const trend = idx % 2 === 0 ? '<span class="trend-arrow trend-up">▲ 1</span>' : '<span class="trend-arrow trend-down">▼ 1</span>';
-
-        levelsDiv.innerHTML += `
-          <div class="card ${isTopGold}" onclick="showDetails(${idx}, 'normal')">
-            <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${lvl.id})">★</button>
-            <div class="rank">#${idx+1} ${trend}</div>
-            <img class="thumb" src="${lvl.img}">
-            <div class="info">
-              <div class="info-header">
-                <h3>${lvl.name}</h3>
-                ${isNew ? '<span class="new-badge">NEW</span>' : ''}
-              </div>
-              <div class="meta-small">Creador: <b>${lvl.author}</b> | Estilo: <b>${(lvl.playstyle || 'wave').toUpperCase()}</b></div>
-              <div class="meta-small">Victores: <b>${lvl.verifier} (${lvl.progress||100}%)</b></div>
-            </div>
-            <div class="actions-right">
-              <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('level', ${idx});">✏️ Editar</button>
-            </div>
-          </div>
-        `;
-      });
-
-      // Absolute Impossible Render
-      const impossibleDiv = document.getElementById('impossible-list');
-      impossibleDiv.innerHTML = '';
-      impossibleLevels.filter(l => {
-        const matchesQuery = l.name.toLowerCase().includes(qName);
-        const matchesFav = !showOnlyFavorites || favs.includes(l.id);
-        const matchesUncompleted = !showOnlyUncompleted || !(l.verifier || "").toLowerCase().includes("tú");
-        return matchesQuery && matchesFav && matchesUncompleted;
-      }).forEach(lvl => {
-        const idx = impossibleLevels.indexOf(lvl);
-        const isNew = lvl.createdAt && (now - lvl.createdAt < fortyEightHours);
-        const isFav = favs.includes(lvl.id);
-        const isTopGold = idx < 3 ? 'top-gold' : '';
-
-        impossibleDiv.innerHTML += `
-          <div class="card ${isTopGold}" onclick="showDetails(${idx}, 'impossible')">
-            <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${lvl.id})">★</button>
-            <div class="rank" style="color:var(--accent);">#${idx+1}</div>
-            <img class="thumb" src="${lvl.img}">
-            <div class="info">
-              <div class="info-header">
-                <h3>${lvl.name}</h3>
-                ${isNew ? '<span class="new-badge">NEW</span>' : ''}
-              </div>
-              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
-              <div class="meta-small">Verificadores: <b>${lvl.verifier}</b></div>
-            </div>
-            <div class="actions-right">
-              <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('impossible', ${idx});">✏️ Editar</button>
-            </div>
-          </div>
-        `;
-      });
-
-      // Top Rateados Render
-      const realDiv = document.getElementById('real-list');
-      realDiv.innerHTML = '';
-      realLevels.filter(l => {
-        const matchesQuery = l.name.toLowerCase().includes(qName);
-        const matchesDiff = currentDiffFilter === 'all' || l.difficulty === currentDiffFilter;
-        const matchesFav = !showOnlyFavorites || favs.includes(l.id);
-        const matchesUncompleted = !showOnlyUncompleted || l.goldPlayer.toLowerCase() !== "tú";
-        return matchesQuery && matchesDiff && matchesFav && matchesUncompleted;
-      }).forEach(lvl => {
-        const idx = realLevels.indexOf(lvl);
-        const demonImg = DEMON_ICONS[lvl.difficulty || 'extreme'];
-        const isNew = lvl.createdAt && (now - lvl.createdAt < fortyEightHours);
-        const isFav = favs.includes(lvl.id);
-
-        realDiv.innerHTML += `
-          <div class="card top-gold" onclick="showDetails(${idx}, 'real')">
-            <button class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${lvl.id})">★</button>
-            <div class="rank" style="color:var(--gold);">#${idx+1}</div>
-            <img class="thumb" src="${lvl.img}">
-            <div class="info">
-              <div class="info-header">
-                <h3>${lvl.name}</h3>
-                <img src="${demonImg}" class="demon-icon">
-                ${isNew ? '<span class="new-badge">NEW</span>' : ''}
-              </div>
-              <div class="meta-small">Creador: <b>${lvl.author}</b></div>
-              <span class="gold-badge">🏆 ${lvl.goldPlayer} (${lvl.goldPercent}%)</span>
-            </div>
-            <div class="actions-right">
-              <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('real', ${idx});">✏️ Editar</button>
-            </div>
-          </div>
-        `;
-      });
-
-      // Top Jugadores Render
-      const playersDiv = document.getElementById('players-list');
-      playersDiv.innerHTML = '';
-      
-      let pMapNormal = {}, pMapImp = {}, pMapReal = {};
-      levels.forEach(l => { (l.verifier||"").split(',').forEach(v => { const name = v.trim(); if(name) { if(!pMapNormal[name]) pMapNormal[name]=[]; pMapNormal[name].push(l); } }); });
-      impossibleLevels.forEach(l => { (l.verifier||"").split(',').forEach(v => { const name = v.trim(); if(name) { if(!pMapImp[name]) pMapImp[name]=[]; pMapImp[name].push(l); } }); });
-      realLevels.forEach(l => { if(!pMapReal[l.goldPlayer]) pMapReal[l.goldPlayer]=[]; pMapReal[l.goldPlayer].push(l); });
-
-      const allPlayerNames = Array.from(new Set([...Object.keys(pMapNormal), ...Object.keys(pMapImp), ...Object.keys(pMapReal), ...customPlayers.map(p => p.name)]));
-      const playerList = allPlayerNames.map(name => ({
-        name,
-        pts: calculatePlayerPoints(pMapNormal[name] || [], pMapImp[name] || [], pMapReal[name] || []),
-        countNormal: (pMapNormal[name] || []).length,
-        countImp: (pMapImp[name] || []).length,
-        countReal: (pMapReal[name] || []).length
-      })).sort((a,b) => b.pts - a.pts);
-
-      document.getElementById('stat-total-players').innerText = playerList.length;
-
-      playerList.filter(p => p.name.toLowerCase().includes(qName)).forEach((p, i) => {
-        let customIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === p.name.toLowerCase());
-        if (customIdx === -1) {
-          customPlayers.push({ id: Date.now() + i, name: p.name, img: "https://via.placeholder.com/150", info: "" });
-          localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
-          customIdx = customPlayers.length - 1;
-        }
-
-        playersDiv.innerHTML += `
-          <div class="card" onclick="showPlayerProfile('${p.name}')">
-            <div class="rank">#${i+1}</div>
-            <div class="info">
-              <h3>${p.name}</h3>
-              <div class="meta-small">Puntos: <b>${p.pts} pts</b></div>
-              <div class="meta-small">Absolute: <b>${p.countNormal}</b> | Impossible: <b>${p.countImp}</b> | Rateados: <b>${p.countReal}</b></div>
-            </div>
-            <div class="actions-right">
-              <button class="btn-edit" onclick="event.stopPropagation(); playClickSound(); requestEdit('player', ${customIdx});">✏️ Editar</button>
-            </div>
-          </div>
-        `;
-      });
-
-      // Pestaña Creadores Render
-      const creatorsDiv = document.getElementById('creators-list');
-      creatorsDiv.innerHTML = '';
-
-      let creatorMap = {};
-      levels.forEach((l, idx) => {
-        const cName = l.author.trim();
-        if(!creatorMap[cName]) creatorMap[cName] = { count: 0, highestRank: idx + 1 };
-        creatorMap[cName].count++;
-        if((idx + 1) < creatorMap[cName].highestRank) creatorMap[cName].highestRank = idx + 1;
-      });
-
-      const creatorList = Object.keys(creatorMap).map(name => ({
-        name,
-        count: creatorMap[name].count,
-        highestRank: creatorMap[name].highestRank
-      })).sort((a, b) => a.highestRank - b.highestRank);
-
-      creatorList.filter(c => c.name.toLowerCase().includes(qName)).forEach((c, i) => {
-        creatorsDiv.innerHTML += `
-          <div class="card">
-            <div class="rank" style="color:var(--accent);">#${i+1}</div>
-            <div class="info">
-              <h3>${c.name}</h3>
-              <div class="meta-small">Niveles en Absolute: <b>${c.count}</b></div>
-              <div class="meta-small">Mejor Posición: <b>#${c.highestRank}</b></div>
-            </div>
-          </div>
-        `;
-      });
-
-      checkAchievementsProgress();
-      checkAutoBackup();
-    }
-
-    window.onload = () => {
-      loadSavedTheme();
-      initActiveUsersCounter();
       render();
     };
   </script>
