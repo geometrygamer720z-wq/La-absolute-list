@@ -336,7 +336,8 @@
         <button class="btn btn-cancel" onclick="playClickSound(); toggleMaintenanceMode()">🔒 Modo Mantenimiento</button>
         <button class="btn btn-cancel" onclick="playClickSound(); exportData()">💾 Exportar Backup</button>
         <button class="btn btn-cancel" onclick="playClickSound(); importData()">📥 Importar Backup</button>
-      </div>
+        <button class="btn btn-cancel" id="lang-toggle-btn" onclick="playClickSound(); toggleLanguage()">🌐 Cambiar a English</button>
+       </div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="playClickSound(); closeModal('modal-menu')">Cerrar</button></div>
     </div>
   </div>
@@ -2445,6 +2446,23 @@
       input.click();
       closeModal('modal-menu');
     }
+let currentLang = localStorage.getItem('gd_absolute_lang') || 'es';
+
+function toggleLanguage() {
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  localStorage.setItem('gd_absolute_lang', currentLang);
+  updateLangButton();
+}
+function updateLangButton() {
+  const btn = document.getElementById('lang-toggle-btn');
+  if (!btn) return;
+  
+  if (currentLang === 'es') {
+    btn.innerText = "🌐 Cambiar a English";
+  } else {
+    btn.innerText = "🌐 Switch to Español";
+  }
+}  
 
     window.onload = function() {
       loadSavedTheme();
@@ -2453,6 +2471,7 @@
 
       updateIdeasCountBadge();
       render();
+      updateLangButton();
     };
   </script>
 </body>
