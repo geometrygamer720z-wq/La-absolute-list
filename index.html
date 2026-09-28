@@ -38,6 +38,28 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* PANTALLA DE CARGA INICIAL */
+    #initial-loader {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg); z-index: 99999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease;
+    }
+    .loader-title {
+      font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; font-size: 1.6rem; text-transform: uppercase; color: #fff; margin-bottom: 15px; letter-spacing: 2px;
+    }
+    .loader-dots span {
+      animation: blinkDots 1.4s infinite both; font-size: 1.5rem; color: var(--accent);
+    }
+    .loader-dots span:nth-child(2) { animation-delay: .2s; }
+    .loader-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes blinkDots { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
+
+    .loader-bar-container {
+      width: 240px; height: 6px; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--card-border); margin-top: 20px; overflow: hidden;
+    }
+    .loader-bar-fill {
+      height: 100%; width: 0%; background: var(--accent); transition: width 0.05s linear; box-shadow: 0 0 10px var(--accent);
+    }
+
     #maintenance-banner {
       background: #ff4757; color: #fff; text-align: center; font-size: 0.75rem; font-weight: bold; padding: 5px; display: none; z-index: 1000; position: relative;
     }
@@ -95,10 +117,10 @@
       flex: 1; padding: 10px 15px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; color: #fff; font-size: 0.85rem; outline: none; 
     }
     .autocomplete-dropdown {
-      position: absolute; top: 45px; left: 15px; right: 85px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; z-index: 50; max-height: 120px; overflow-y: auto; display: none;
+      position: absolute; top: 45px; left: 15px; right: 85px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; z-index: 50; max-height: 160px; overflow-y: auto; display: none;
     }
     .autocomplete-item {
-      padding: 8px 12px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim);
+      padding: 8px 12px; font-size: 0.8rem; cursor: pointer; color: var(--text-dim); display: flex; justify-content: space-between; align-items: center;
     }
     .autocomplete-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
 
@@ -163,6 +185,12 @@
 
     .fab { position: fixed; bottom: 20px; right: 20px; width: 58px; height: 58px; background: var(--card-bg); color: white; border-radius: 50%; border: 1px solid var(--accent); font-size: 1.8rem; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 90; }
     body.admin-mode .fab { display: flex; }
+
+    /* BOTÓN FLOTANTE IR ARRIBA */
+    .scroll-top-btn {
+      position: fixed; bottom: 90px; right: 20px; width: 45px; height: 45px; background: var(--card-bg); color: var(--accent); border-radius: 50%; border: 1px solid var(--card-border); font-size: 1.2rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 88; transition: transform 0.2s;
+    }
+    .scroll-top-btn:hover { transform: scale(1.1); background: var(--card-border); }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); justify-content: center; align-items: center; z-index: 100; padding: 20px; }
     .modal-content { background: var(--card-bg); width: 100%; max-width: 450px; padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); max-height: 90vh; overflow-y: auto; }
@@ -243,6 +271,15 @@
 </head>
 <body>
 
+  <!-- PANTALLA DE CARGA INICIAL (3 SEGUNDOS) -->
+  <div id="initial-loader">
+    <div class="loader-title">Cargando Absolute List</div>
+    <div class="loader-dots"><span>.</span><span>.</span><span>.</span></div>
+    <div class="loader-bar-container">
+      <div class="loader-bar-fill" id="loader-progress-fill"></div>
+    </div>
+  </div>
+
   <div id="maintenance-banner">⚠️ MODO MANTENIMIENTO ACTIVO ⚠️</div>
   <div id="particles-container"></div>
   
@@ -310,6 +347,7 @@
   </div>
 
   <button class="fab" onclick="playClickSound(); startAddProcess()">+</button>
+  <button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()">⬆️</button>
 
   <!-- Modal Menú "•••" -->
   <div id="modal-menu" class="modal">
@@ -322,6 +360,7 @@
         <button class="btn btn-cancel" onclick="playClickSound(); openDiscordMenu()">👾 Discord (Opciones)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openThemeSelectorModal()">🎨 Cambiar Tema (Estilo)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openCustomThemeModal()">🎨 Personalizar Colores & Partículas</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); openSoundSelectorModal()">🔊 Sonido de Clic (<span id="sound-mode-label">Clásico</span>)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openPointsCalculator()">🧮 Calculadora de Puntos</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showAchievementsModal()">🏆 Logros (100)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showActivityFeed()">📊 Activity Feed</button>
@@ -333,6 +372,23 @@
         <button class="btn btn-cancel" onclick="playClickSound(); importData()">📥 Importar Backup</button>
       </div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="playClickSound(); closeModal('modal-menu')">Cerrar</button></div>
+    </div>
+  </div>
+
+  <!-- Modal Selector de Sonido de Clic -->
+  <div id="modal-sound-select" class="modal">
+    <div class="modal-content">
+      <h2>🔊 Sonido de Clic</h2>
+      <div class="form-group">
+        <label>Elige el tipo de sonido:</label>
+        <select id="sound-selector-element" style="background:#0d0f12; color:#fff; padding:10px; border-radius:6px; width:100%;" onchange="changeSoundMode(this.value)">
+          <option value="classic">Clásico (Sinoide)</option>
+          <option value="retro">Retro 8-bit (Cuadrado)</option>
+          <option value="subtle">Sutil (Suave)</option>
+          <option value="off">Silenciado (Sin sonido)</option>
+        </select>
+      </div>
+      <div class="modal-actions"><button class="btn btn-submit" onclick="closeModal('modal-sound-select')">Aceptar</button></div>
     </div>
   </div>
 
@@ -429,7 +485,7 @@
     </div>
   </div>
 
-  <!-- Modal Admin Universal de Edición / Borrado -->
+  <!-- Modal Admin Autenticación Única -->
   <div id="modal-edit-pass" class="modal">
     <div class="modal-content">
       <h2 id="modal-auth-title">Contraseña de Admin</h2>
@@ -440,6 +496,18 @@
           <button type="submit" class="btn btn-submit">Verificar</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal Confirmación de Eliminación -->
+  <div id="modal-confirm-delete" class="modal">
+    <div class="modal-content" style="text-align: center;">
+      <h2 style="color: #ff6b6b; margin-bottom: 10px;">⚠️ Confirmar Eliminación</h2>
+      <p id="delete-confirm-text" style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 20px;">¿Estás seguro de que deseas eliminar este elemento?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-cancel" onclick="closeModal('modal-confirm-delete')">Cancelar</button>
+        <button type="button" class="btn btn-submit" style="background: #ed4245; color: #fff;" onclick="executeConfirmedDelete()">Eliminar</button>
+      </div>
     </div>
   </div>
 
@@ -714,7 +782,6 @@
         </div>
         <div class="form-group"><label>Récord (%)</label><input type="number" id="real-gold-percent" min="1" max="100" value="100" required></div>
         
-        <!-- Sección de Récords de los Demás (Sin Límite) -->
         <div class="form-group" style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px dashed var(--card-border);">
           <label style="color: var(--accent); font-weight: bold; margin-bottom: 8px;">🏆 Récords de los demás:</label>
           <div id="other-records-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;"></div>
@@ -819,6 +886,7 @@
     let selectedDetailLevelId = null;
     let currentPenaltyPercent = 0;
     let isAdminModeActive = false;
+    let soundMode = localStorage.getItem('gd_absolute_sound_mode') || 'classic';
 
     let levels = [];
     let impossibleLevels = [];
@@ -845,21 +913,87 @@
       extreme: 'https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png'
     };
 
+    function initLoaderScreen() {
+      const fill = document.getElementById('loader-progress-fill');
+      const loader = document.getElementById('initial-loader');
+      if(!fill || !loader) return;
+
+      let startTime = performance.now();
+      let duration = 3000;
+
+      function step(currentTime) {
+        let elapsed = currentTime - startTime;
+        let progress = Math.min((elapsed / duration) * 100, 100);
+        fill.style.width = progress + '%';
+
+        if(progress < 100) {
+          requestAnimationFrame(step);
+        } else {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 500);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
     function playClickSound() {
+      if(soundMode === 'off') return;
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(580, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(320, ctx.currentTime + 0.04);
-        gain.gain.setValueAtTime(0.03, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.04);
+
+        if(soundMode === 'classic') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(580, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(320, ctx.currentTime + 0.04);
+          gain.gain.setValueAtTime(0.03, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.04);
+        } else if(soundMode === 'retro') {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(440, ctx.currentTime);
+          osc.frequency.setValueAtTime(880, ctx.currentTime + 0.02);
+          gain.gain.setValueAtTime(0.02, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.04);
+        } else if(soundMode === 'subtle') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(300, ctx.currentTime);
+          gain.gain.setValueAtTime(0.015, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.03);
+        }
+
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start();
         osc.stop(ctx.currentTime + 0.04);
       } catch(e) {}
+    }
+
+    function openSoundSelectorModal() {
+      closeModal('modal-menu');
+      const sel = document.getElementById('sound-selector-element');
+      if(sel) sel.value = soundMode;
+      openModal('modal-sound-select');
+    }
+
+    function changeSoundMode(mode) {
+      soundMode = mode;
+      localStorage.setItem('gd_absolute_sound_mode', mode);
+      const label = document.getElementById('sound-mode-label');
+      if(label) label.innerText = mode === 'classic' ? 'Clásico' : mode === 'retro' ? 'Retro 8-bit' : mode === 'subtle' ? 'Sutil' : 'Silenciado';
+      playClickSound();
+    }
+
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scrollTopBtn');
+      if(!btn) return;
+      if(window.scrollY > 300) btn.style.display = 'flex';
+      else btn.style.display = 'none';
+    });
+
+    function scrollToTop() {
+      playClickSound();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function initActiveUsersCounter() {
@@ -1063,7 +1197,7 @@
     }
 
     function startAddProcess() { 
-      if (localStorage.getItem('gd_absolute_maintenance') === 'true') {
+      if (!isAdminModeActive && localStorage.getItem('gd_absolute_maintenance') === 'true') {
         pendingActionData = { type: 'add_check', action: 'verify' };
         document.getElementById('modal-auth-title').innerText = "Mantenimiento Activo (Clave Admin)";
         document.getElementById('edit-pass-input').value = '';
@@ -1104,7 +1238,6 @@
       else alert("Selecciona una pestaña válida para añadir elementos.");
     }
 
-    // --- FUNCIONES DE BÚSQUEDA AUTOMÁTICA (YOUTUBE Y LEVEL SEARCH) ---
     function searchYouTubeForLevel() {
       const title = document.getElementById('level-name').value.trim();
       if(!title) return alert("Escribe primero el nombre del nivel.");
@@ -1160,18 +1293,42 @@
       openModal('modal-edit-pass');
     }
 
+    // --- EDICIÓN DIRECTA EN MODO ADMIN (SIN CONTRASEÑA ADICIONAL) ---
     function requestEdit(type, idx) {
-      pendingActionData = { type, action: 'edit', index: idx };
-      document.getElementById('modal-auth-title').innerText = "Contraseña de Admin (Editar)";
-      document.getElementById('edit-pass-input').value = '';
-      openModal('modal-edit-pass');
+      if (!isAdminModeActive) {
+        alert("Activa el modo admin primero.");
+        return;
+      }
+      if(type === 'level') openLevelEditor(idx);
+      else if(type === 'impossible') openImpossibleEditor(idx);
+      else if(type === 'real') openRealEditor(idx);
+      else if(type === 'player') openPlayerEditor(idx);
     }
 
+    // --- ELIMINACIÓN CON VENTANA DE CONFIRMACIÓN ---
     function requestDelete(type, idx) {
+      if (!isAdminModeActive) {
+        alert("Activa el modo admin primero.");
+        return;
+      }
       pendingActionData = { type, action: 'delete', index: idx };
-      document.getElementById('modal-auth-title').innerText = "Contraseña de Admin (Borrar)";
-      document.getElementById('edit-pass-input').value = '';
-      openModal('modal-edit-pass');
+      document.getElementById('delete-confirm-text').innerText = `¿Estás seguro de que deseas eliminar este elemento de la lista?`;
+      openModal('modal-confirm-delete');
+    }
+
+    function executeConfirmedDelete() {
+      closeModal('modal-confirm-delete');
+      if(!pendingActionData) return;
+      const { type, index } = pendingActionData;
+
+      if(type === 'level') { levels.splice(index, 1); localStorage.setItem('gd_absolute_levels', JSON.stringify(levels)); }
+      else if(type === 'impossible') { impossibleLevels.splice(index, 1); localStorage.setItem('gd_absolute_impossible', JSON.stringify(impossibleLevels)); }
+      else if(type === 'real') { realLevels.splice(index, 1); localStorage.setItem('gd_absolute_real', JSON.stringify(realLevels)); }
+      else if(type === 'player') { customPlayers.splice(index, 1); localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers)); }
+      
+      render();
+      alert("¡Elemento eliminado correctamente!");
+      pendingActionData = null;
     }
 
     function confirmUniversalPassword(e) {
@@ -1208,25 +1365,6 @@
       if(pendingActionData.type === 'add_check') {
         openAddModalForCurrentTab();
         return;
-      }
-
-      const { type, action, index } = pendingActionData;
-
-      if(action === 'delete') {
-        if(confirm("¿Estás seguro de eliminar este elemento?")) {
-          if(type === 'level') levels.splice(index, 1), localStorage.setItem('gd_absolute_levels', JSON.stringify(levels));
-          else if(type === 'impossible') impossibleLevels.splice(index, 1), localStorage.setItem('gd_absolute_impossible', JSON.stringify(impossibleLevels));
-          else if(type === 'real') realLevels.splice(index, 1), localStorage.setItem('gd_absolute_real', JSON.stringify(realLevels));
-          else if(type === 'player') customPlayers.splice(index, 1), localStorage.setItem('gd_absolute_players', JSON.stringify(customPlayers));
-          render();
-          alert("¡Elemento eliminado correctamente!");
-        }
-      } else if(action === 'edit') {
-        if(type === 'level') openLevelEditor(index);
-        else if(type === 'impossible') openImpossibleEditor(index);
-        else if(type === 'real') openRealEditor(index);
-        else if(type === 'player') openPlayerEditor(index);
-        else if(type === 'credits') openModal('modal-edit-credits');
       }
     }
 
@@ -1702,8 +1840,8 @@
       const selectedCountryFilter = countrySelect ? countrySelect.value : 'all';
 
       let playerMap = {};
-      customPlayers.forEach(cp => {
-        playerMap[cp.name] = { name: cp.name, img: cp.img || 'https://via.placeholder.com/150', info: cp.info || '', country: cp.country || 'Costa Rica', bestPortal: cp.bestPortal || 'Wave', levels: [], impossible: [], real: [] };
+      customPlayers.forEach((cp, index) => {
+        playerMap[cp.name] = { originalIdx: index, name: cp.name, img: cp.img || 'https://via.placeholder.com/150', info: cp.info || '', country: cp.country || 'Costa Rica', bestPortal: cp.bestPortal || 'Wave', levels: [], impossible: [], real: [] };
       });
 
       levels.forEach(l => {
@@ -1711,7 +1849,8 @@
           l.verifier.split(',').forEach(v => {
             let name = v.trim();
             if(!name) return;
-            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
+            let existingIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === name.toLowerCase());
+            if(!playerMap[name]) playerMap[name] = { originalIdx: existingIdx, name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
             playerMap[name].levels.push(l);
           });
         }
@@ -1722,7 +1861,8 @@
           l.verifier.split(',').forEach(v => {
             let name = v.trim();
             if(!name) return;
-            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
+            let existingIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === name.toLowerCase());
+            if(!playerMap[name]) playerMap[name] = { originalIdx: existingIdx, name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
             playerMap[name].impossible.push(l);
           });
         }
@@ -1732,7 +1872,8 @@
         if(rl.goldPlayer) {
           let name = rl.goldPlayer.trim();
           if(name) {
-            if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
+            let existingIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === name.toLowerCase());
+            if(!playerMap[name]) playerMap[name] = { originalIdx: existingIdx, name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
             playerMap[name].real.push(rl);
           }
         }
@@ -1740,7 +1881,8 @@
           rl.otherRecords.forEach(rec => {
             let name = rec.player.trim();
             if(name) {
-              if(!playerMap[name]) playerMap[name] = { name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
+              let existingIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === name.toLowerCase());
+              if(!playerMap[name]) playerMap[name] = { originalIdx: existingIdx, name, img: 'https://via.placeholder.com/150', info: '', country: 'Costa Rica', bestPortal: 'Wave', levels: [], impossible: [], real: [] };
               playerMap[name].real.push({ ...rl, goldPercent: rec.percent });
             }
           });
@@ -1768,7 +1910,7 @@
 
       playersArray.forEach((p, idx) => {
         let rankBadge = idx === 0 ? '👑' : `#${idx + 1}`;
-        let originalIdx = customPlayers.findIndex(cp => cp.name.toLowerCase() === p.name.toLowerCase());
+        let originalIdx = p.originalIdx !== undefined && p.originalIdx !== -1 ? p.originalIdx : customPlayers.findIndex(cp => cp.name.toLowerCase() === p.name.toLowerCase());
 
         listContainer.innerHTML += `
           <div class="card ${idx === 0 ? 'top-gold' : ''}" onclick="showPlayerProfile('${p.name}')">
@@ -1979,20 +2121,36 @@
     function handleSearchInput(val) {
       const dropdown = document.getElementById('autocomplete-list');
       if(!dropdown) return;
-      if(!val || val.length < 2) { dropdown.style.display = 'none'; render(); return; }
+
+      if(!val || val.length === 0) {
+        let history = JSON.parse(localStorage.getItem('gd_absolute_search_history')) || [];
+        if(history.length === 0) { dropdown.style.display = 'none'; render(); return; }
+
+        dropdown.innerHTML = '<div style="padding:6px 12px; font-size:0.7rem; color:var(--text-dim); border-bottom:1px solid var(--card-border);">🕒 Búsquedas recientes:</div>';
+        history.slice(-3).reverse().forEach(term => {
+          dropdown.innerHTML += `<div class="autocomplete-item" onclick="selectAutocomplete('${term}')"><span>${term}</span><span style="color:var(--accent);">Reciente</span></div>`;
+        });
+        dropdown.style.display = 'block';
+        render();
+        return;
+      }
 
       let matches = [];
       levels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
       impossibleLevels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
       realLevels.forEach(l => { if(l.name.toLowerCase().includes(val.toLowerCase())) matches.push(l.name); });
 
-      if(matches.length === 0) { dropdown.style.display = 'none'; render(); return; }
-
       dropdown.innerHTML = '';
-      matches.slice(0, 5).forEach(m => {
-        dropdown.innerHTML += `<div class="autocomplete-item" onclick="selectAutocomplete('${m}')">${m}</div>`;
-      });
-      dropdown.style.display = 'block';
+      if(matches.length > 0) {
+        dropdown.innerHTML += `<div style="padding:6px 12px; font-size:0.7rem; color:var(--text-dim); border-bottom:1px solid var(--card-border);">🔥 Coincidencias populares:</div>`;
+        matches.slice(0, 5).forEach(m => {
+          dropdown.innerHTML += `<div class="autocomplete-item" onclick="selectAutocomplete('${m}')"><span>${m}</span></div>`;
+        });
+        dropdown.style.display = 'block';
+      } else {
+        dropdown.innerHTML = '<div style="padding:10px; font-size:0.75rem; color:var(--text-dim); text-align:center;">No hay resultados populares</div>';
+        dropdown.style.display = 'block';
+      }
       render();
     }
 
@@ -2001,6 +2159,12 @@
       const dropdown = document.getElementById('autocomplete-list');
       if(searchBar) searchBar.value = name;
       if(dropdown) dropdown.style.display = 'none';
+
+      let history = JSON.parse(localStorage.getItem('gd_absolute_search_history')) || [];
+      if(!history.includes(name)) {
+        history.push(name);
+        localStorage.setItem('gd_absolute_search_history', JSON.stringify(history.slice(-10)));
+      }
       render();
     }
 
@@ -2271,6 +2435,7 @@
     }
 
     window.onload = function() {
+      initLoaderScreen();
       loadSavedTheme();
       initActiveUsersCounter();
       checkAutoBackup();
