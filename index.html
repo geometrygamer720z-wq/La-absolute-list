@@ -171,6 +171,10 @@
     .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: var(--text-dim); }
     .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--card-border); background: #0d0f12; color: white; outline: none; font-size: 0.85rem; }
 
+    .input-with-action { display: flex; gap: 6px; }
+    .btn-input-action { background: var(--card-border); color: var(--accent); border: 1px solid var(--card-border); padding: 0 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-weight: bold; white-space: nowrap; }
+    .btn-input-action:hover { background: var(--accent); color: #000; }
+
     .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-submit { background: var(--accent); color: #000; }
@@ -594,11 +598,23 @@
             <option value="cube">Cube</option>
           </select>
         </div>
-        <div class="form-group"><label>Link Video YouTube</label><input type="url" id="level-video-url"></div>
+        <div class="form-group">
+          <label>Link Video YouTube</label>
+          <div class="input-with-action">
+            <input type="url" id="level-video-url" placeholder="https://...">
+            <button type="button" class="btn-input-action" onclick="searchYouTubeForLevel()">🔍 Buscar YouTube</button>
+          </div>
+        </div>
         <div class="form-group"><label>Imagen URL</label><input type="text" id="level-img-url"><input type="file" id="level-file" accept="image/*" style="margin-top:5px;"></div>
         <div class="form-group"><label>Nombre Canción</label><input type="text" id="level-song-name"></div>
         <div class="form-group"><label>ID Canción</label><input type="text" id="level-song-id"></div>
-        <div class="form-group"><label>ID GD</label><input type="text" id="level-gd-id"></div>
+        <div class="form-group">
+          <label>ID GD</label>
+          <div class="input-with-action">
+            <input type="text" id="level-gd-id" placeholder="Ej: 12345678">
+            <button type="button" class="btn-input-action" onclick="searchLevelID()">🔍 Buscar ID</button>
+          </div>
+        </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-cancel" onclick="closeModal('modal-add')">Cancelar</button>
           <button type="submit" class="btn btn-submit">Guardar</button>
@@ -636,9 +652,21 @@
             <option value="Todos los portales">Todos los portales</option>
           </select>
         </div>
-        <div class="form-group"><label>Link Video YouTube</label><input type="url" id="impossible-video-url"></div>
+        <div class="form-group">
+          <label>Link Video YouTube</label>
+          <div class="input-with-action">
+            <input type="url" id="impossible-video-url" placeholder="https://...">
+            <button type="button" class="btn-input-action" onclick="searchYouTubeForImpossible()">🔍 Buscar YouTube</button>
+          </div>
+        </div>
         <div class="form-group"><label>Imagen URL</label><input type="text" id="impossible-img-url"></div>
-        <div class="form-group"><label>ID GD</label><input type="text" id="impossible-gd-id"></div>
+        <div class="form-group">
+          <label>ID GD</label>
+          <div class="input-with-action">
+            <input type="text" id="impossible-gd-id" placeholder="Ej: 12345678">
+            <button type="button" class="btn-input-action" onclick="searchImpossibleLevelID()">🔍 Buscar ID</button>
+          </div>
+        </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-cancel" onclick="closeModal('modal-add-impossible')">Cancelar</button>
           <button type="submit" class="btn btn-submit">Guardar</button>
@@ -693,8 +721,20 @@
           <button type="button" class="btn btn-cancel" style="padding: 6px; font-size: 0.75rem;" onclick="addOtherRecordInput('', '', 'PC')">+ Añadir Récord</button>
         </div>
 
-        <div class="form-group"><label>Link Video YouTube</label><input type="url" id="real-video-url"></div>
-        <div class="form-group"><label>ID GD Oficial</label><input type="text" id="real-gd-id"></div>
+        <div class="form-group">
+          <label>Link Video YouTube</label>
+          <div class="input-with-action">
+            <input type="url" id="real-video-url" placeholder="https://...">
+            <button type="button" class="btn-input-action" onclick="searchYouTubeForReal()">🔍 Buscar YouTube</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>ID GD Oficial</label>
+          <div class="input-with-action">
+            <input type="text" id="real-gd-id" placeholder="Ej: 12345678">
+            <button type="button" class="btn-input-action" onclick="searchRealLevelID()">🔍 Buscar ID</button>
+          </div>
+        </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-cancel" onclick="closeModal('modal-add-real')">Cancelar</button>
           <button type="submit" class="btn btn-submit">Guardar</button>
@@ -1062,6 +1102,43 @@
         openModal('modal-add-player');
       }
       else alert("Selecciona una pestaña válida para añadir elementos.");
+    }
+
+    // --- FUNCIONES DE BÚSQUEDA AUTOMÁTICA (YOUTUBE Y LEVEL SEARCH) ---
+    function searchYouTubeForLevel() {
+      const title = document.getElementById('level-name').value.trim();
+      if(!title) return alert("Escribe primero el nombre del nivel.");
+      window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(title + " GD")}`, '_blank');
+    }
+
+    function searchLevelID() {
+      const title = document.getElementById('level-name').value.trim();
+      if(!title) return alert("Escribe primero el nombre del nivel.");
+      window.open(`https://gdbrowser.com/search/${encodeURIComponent(title)}`, '_blank');
+    }
+
+    function searchYouTubeForImpossible() {
+      const title = document.getElementById('impossible-name').value.trim();
+      if(!title) return alert("Escribe primero el nombre del nivel.");
+      window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(title + " GD")}`, '_blank');
+    }
+
+    function searchImpossibleLevelID() {
+      const title = document.getElementById('impossible-name').value.trim();
+      if(!title) return alert("Escribe primero el nombre del nivel.");
+      window.open(`https://gdbrowser.com/search/${encodeURIComponent(title)}`, '_blank');
+    }
+
+    function searchYouTubeForReal() {
+      const title = document.getElementById('real-name').value.trim();
+      if(!title) return alert("Escribe primero el nombre del nivel.");
+      window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(title + " GD")}`, '_blank');
+    }
+
+    function searchRealLevelID() {
+      const title = document.getElementById('real-name').value.trim();
+      if(!title) return alert("Escribe primero el nombre del nivel.");
+      window.open(`https://gdbrowser.com/search/${encodeURIComponent(title)}`, '_blank');
     }
 
     function requestAdminMode() {
