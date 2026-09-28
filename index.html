@@ -38,7 +38,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* PANTALLA DE CARGA INICIAL */
+    /* PANTALLA DE CARGA FALSA (3 SEGUNDOS) */
     #initial-loader {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg); z-index: 99999;
       display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.4s ease;
@@ -271,7 +271,7 @@
 </head>
 <body>
 
-  <!-- PANTALLA DE CARGA INICIAL (3 SEGUNDOS EXACTOS) -->
+  <!-- PANTALLA DE CARGA FALSA (3 SEGUNDOS EXACTOS) -->
   <div id="initial-loader">
     <div class="loader-title">Cargando Absolute List</div>
     <div class="loader-dots"><span>.</span><span>.</span><span>.</span></div>
@@ -921,7 +921,7 @@
       if(!fill || !loader) return;
 
       let startTime = performance.now();
-      let duration = 3000; // Exactamente 3 segundos
+      let duration = 3000; // 3 segundos exactos de animación falsa
 
       function step(currentTime) {
         let elapsed = currentTime - startTime;
@@ -1568,7 +1568,7 @@
     }
 
     function clearAllIdeas() {
-      if(confirm("¿Seguro que deseas borrar todas las ideas?")) {
+      if(confirm("¿Deseas borrar todas las ideas?")) {
         communityIdeas = [];
         localStorage.removeItem('gd_absolute_ideas');
         updateIdeasCountBadge();
