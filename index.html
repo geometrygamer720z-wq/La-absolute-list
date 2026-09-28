@@ -38,28 +38,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* PANTALLA DE CARGA FALSA (3 SEGUNDOS) */
-    #initial-loader {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg); z-index: 99999;
-      display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.4s ease;
-    }
-    .loader-title {
-      font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; font-size: 1.6rem; text-transform: uppercase; color: #fff; margin-bottom: 15px; letter-spacing: 2px;
-    }
-    .loader-dots span {
-      animation: blinkDots 1.4s infinite both; font-size: 1.5rem; color: var(--accent);
-    }
-    .loader-dots span:nth-child(2) { animation-delay: .2s; }
-    .loader-dots span:nth-child(3) { animation-delay: .4s; }
-    @keyframes blinkDots { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
-
-    .loader-bar-container {
-      width: 240px; height: 6px; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--card-border); margin-top: 20px; overflow: hidden;
-    }
-    .loader-bar-fill {
-      height: 100%; width: 0%; background: var(--accent); transition: width 0.05s linear; box-shadow: 0 0 10px var(--accent);
-    }
-
     #maintenance-banner {
       background: #ff4757; color: #fff; text-align: center; font-size: 0.75rem; font-weight: bold; padding: 5px; display: none; z-index: 1000; position: relative;
     }
@@ -271,16 +249,6 @@
 </head>
 <body>
 
-  <!-- PANTALLA DE CARGA FALSA (3 SEGUNDOS EXACTOS) -->
-  <div id="initial-loader">
-    <div class="loader-title">Cargando Absolute List</div>
-    <div class="loader-dots"><span>.</span><span>.</span><span>.</span></div>
-    <div class="loader-bar-container">
-      <div class="loader-bar-fill" id="loader-progress-fill"></div>
-    </div>
-    <div id="loader-percent-text" style="font-size: 0.8rem; color: var(--text-dim); margin-top: 8px; font-weight: bold;">0%</div>
-  </div>
-
   <div id="maintenance-banner">⚠️ MODO MANTENIMIENTO ACTIVO ⚠️</div>
   <div id="particles-container"></div>
   
@@ -358,11 +326,12 @@
         <button class="btn btn-submit" id="admin-mode-toggle-btn" onclick="playClickSound(); requestAdminMode()">🔓 Modo Admin</button>
         <button class="btn btn-cancel" id="admin-ideas-btn" style="display:none; background:rgba(0,210,255,0.2); border:1px solid var(--accent);" onclick="playClickSound(); openAdminIdeasModal()">💡 Ideas de la comunidad (<span id="ideas-count-badge">0</span>)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openCommunityIdeaModal()">💬 Añadir idea a la lista</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); openShopModal()">🛒 Tienda de Absolute Coins</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openDiscordMenu()">👾 Discord (Opciones)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openThemeSelectorModal()">🎨 Cambiar Tema (Estilo)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openCustomThemeModal()">🎨 Personalizar Colores & Partículas</button>
         <button class="btn btn-cancel" onclick="playClickSound(); openSoundSelectorModal()">🔊 Sonido de Clic (<span id="sound-mode-label">Clásico</span>)</button>
-        <button class="btn btn-cancel" onclick="playClickSound(); openPointsCalculator()">🧮 Calculadora de Puntos</button>
+        <button class="btn btn-cancel" onclick="playClickSound(); openPointsCalculator()">🧮 Calculadora de Absolute Coins</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showAchievementsModal()">🏆 Logros (100)</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showActivityFeed()">📊 Activity Feed</button>
         <button class="btn btn-cancel" onclick="playClickSound(); showLevelsFeed()">📜 Levels Feed</button>
@@ -373,6 +342,29 @@
         <button class="btn btn-cancel" onclick="playClickSound(); importData()">📥 Importar Backup</button>
       </div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="playClickSound(); closeModal('modal-menu')">Cerrar</button></div>
+    </div>
+  </div>
+
+  <!-- Modal Tienda de Absolute Coins -->
+  <div id="modal-shop" class="modal">
+    <div class="modal-content">
+      <h2>🛒 Tienda de Absolute Coins</h2>
+      <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 15px;">Gasta tus monedas ganadas completando niveles en la lista:</p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="feed-item" style="display:flex; justify-content:space-between; align-items:center;">
+          <div><b>Efecto Estelar Sparkle</b><br><span style="font-size:0.7rem; color:var(--text-dim);">Partículas especiales de fondo</span></div>
+          <button class="btn btn-submit" style="padding: 6px 12px; font-size: 0.75rem;" onclick="buyShopItem('sparkle', 5000)">5,000 🪙</button>
+        </div>
+        <div class="feed-item" style="display:flex; justify-content:space-between; align-items:center;">
+          <div><b>Título VIP en Perfil</b><br><span style="font-size:0.7rem; color:var(--text-dim);">Insignia dorada exclusiva</span></div>
+          <button class="btn btn-submit" style="padding: 6px 12px; font-size: 0.75rem;" onclick="buyShopItem('vip', 12000)">12,000 🪙</button>
+        </div>
+        <div class="feed-item" style="display:flex; justify-content:space-between; align-items:center;">
+          <div><b>Color Neon Legendario</b><br><span style="font-size:0.7rem; color:var(--text-dim);">Desbloquea acentos visuales únicos</span></div>
+          <button class="btn btn-submit" style="padding: 6px 12px; font-size: 0.75rem;" onclick="buyShopItem('neon', 20000)">20,000 🪙</button>
+        </div>
+      </div>
+      <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="closeModal('modal-shop')">Cerrar</button></div>
     </div>
   </div>
 
@@ -526,23 +518,23 @@
     </div>
   </div>
 
-  <!-- Modal Calculadora de Puntos -->
+  <!-- Modal Calculadora de Absolute Coins -->
   <div id="modal-calc" class="modal">
     <div class="modal-content">
-      <h2>🧮 Calculadora de Puntos</h2>
+      <h2>🧮 Calculadora de Absolute Coins</h2>
       <div class="form-group">
-        <label>Simular Puntos:</label>
-        <select id="calc-diff" class="form-group" style="background:#0d0f12; color:#fff; padding:8px; width:100%; border-radius:6px;" onchange="calculateSimulatedPoints()">
-          <option value="top1">Absolute Top 1 (400 pts)</option>
-          <option value="top5">Absolute Top 2-5 (300 pts)</option>
-          <option value="top10">Absolute Top 6-10 (200 pts)</option>
-          <option value="top100">Absolute Top 11-100 (100 pts)</option>
-          <option value="extreme">Top Real Extreme (500 pts)</option>
-          <option value="insane">Top Real Insane (300 pts)</option>
+        <label>Simular Rango / Nivel:</label>
+        <select id="calc-diff" class="form-group" style="background:#0d0f12; color:#fff; padding:8px; width:100%; border-radius:6px;" onchange="calculateSimulatedCoins()">
+          <option value="top1">Absolute Top 1 (10,000 coins)</option>
+          <option value="top2">Absolute Top 2 (8,000 coins)</option>
+          <option value="top3">Absolute Top 3 (5,000 coins)</option>
+          <option value="top4">Absolute Top 4+ (1,000 coins)</option>
+          <option value="extreme">Top Real Extreme (10,000 coins)</option>
+          <option value="insane">Top Real Insane (5,000 coins)</option>
         </select>
       </div>
-      <div class="form-group"><label>Porcentaje:</label><input type="number" id="calc-pct" min="1" max="100" value="100" oninput="calculateSimulatedPoints()"></div>
-      <div id="calc-result" style="margin-top:15px; font-size:1.1rem; font-weight:bold; color:var(--accent); text-align:center;">Resultado: 0 pts</div>
+      <div class="form-group"><label>Porcentaje completado:</label><input type="number" id="calc-pct" min="1" max="100" value="100" oninput="calculateSimulatedCoins()"></div>
+      <div id="calc-result" style="margin-top:15px; font-size:1.1rem; font-weight:bold; color:var(--accent); text-align:center;">Resultado: 0 🪙</div>
       <div class="modal-actions" style="margin-top:15px;"><button class="btn btn-submit" onclick="closeModal('modal-calc')">Cerrar</button></div>
     </div>
   </div>
@@ -914,34 +906,6 @@
       extreme: 'https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png'
     };
 
-    function initLoaderScreen() {
-      const fill = document.getElementById('loader-progress-fill');
-      const percentText = document.getElementById('loader-percent-text');
-      const loader = document.getElementById('initial-loader');
-      if(!fill || !loader) return;
-
-      let startTime = performance.now();
-      let duration = 3000; // 3 segundos exactos de animación falsa
-
-      function step(currentTime) {
-        let elapsed = currentTime - startTime;
-        let progress = Math.min((elapsed / duration) * 100, 100);
-        
-        fill.style.width = progress + '%';
-        if(percentText) percentText.innerText = Math.floor(progress) + '%';
-
-        if(progress < 100) {
-          requestAnimationFrame(step);
-        } else {
-          loader.style.opacity = '0';
-          setTimeout(() => {
-            loader.style.display = 'none';
-          }, 400);
-        }
-      }
-      requestAnimationFrame(step);
-    }
-
     function playClickSound() {
       if(soundMode === 'off') return;
       try {
@@ -1109,6 +1073,12 @@
 
     function openThemeSelectorModal() { closeModal('modal-menu'); openModal('modal-theme-select'); }
     function openCustomThemeModal() { closeModal('modal-menu'); openModal('modal-custom-theme'); }
+    function openShopModal() { closeModal('modal-menu'); openModal('modal-shop'); }
+
+    function buyShopItem(itemKey, cost) {
+      alert(`¡Artículo adquirido con éxito! Se han descontado ${cost} Absolute Coins de tu progreso acumulado.`);
+      closeModal('modal-shop');
+    }
 
     function applyCustomTheme() {
       const bg = document.getElementById('theme-bg-input').value;
@@ -1649,10 +1619,10 @@
     function openPointsCalculator() {
       closeModal('modal-menu');
       openModal('modal-calc');
-      calculateSimulatedPoints();
+      calculateSimulatedCoins();
     }
 
-    function calculateSimulatedPoints() {
+    function calculateSimulatedCoins() {
       const diffElem = document.getElementById('calc-diff');
       const pctElem = document.getElementById('calc-pct');
       const resElem = document.getElementById('calc-result');
@@ -1660,9 +1630,9 @@
 
       const diff = diffElem.value;
       const pct = parseFloat(pctElem.value) || 100;
-      let base = diff === 'top1' ? 400 : diff === 'top5' ? 300 : diff === 'top10' ? 200 : diff === 'top100' ? 100 : diff === 'extreme' ? 500 : 300;
-      const res = Math.round((base * (pct / 100)) * 10) / 10;
-      resElem.innerText = `Resultado: ${res} pts (${pct}%)`;
+      let baseCoins = diff === 'top1' ? 10000 : diff === 'top2' ? 8000 : diff === 'top3' ? 5000 : diff === 'top4' ? 1000 : diff === 'extreme' ? 10000 : 5000;
+      const res = Math.round((baseCoins * (pct / 100)) * 10) / 10;
+      resElem.innerText = `Resultado: ${res.toLocaleString()} 🪙 (${pct}%)`;
     }
 
     function showAchievementsModal() {
@@ -1752,19 +1722,28 @@
     function getYouTubeEmbedUrl(url) { const id = getYouTubeId(url); return id ? `https://www.youtube.com/embed/${id}` : null; }
     function getYouTubeThumbnail(url) { const id = getYouTubeId(url); return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null; }
 
-    function calculatePlayerPoints(playerLevels, playerImpossible, playerRealLevels) {
-      let total = 0;
+    function calculatePlayerCoins(playerLevels, playerImpossible, playerRealLevels) {
+      let totalCoins = 0;
+      
       playerLevels.forEach(l => {
         const rank = levels.indexOf(l) + 1;
-        let basePoints = rank === 1 ? 400 : rank <= 5 ? 300 : rank <= 10 ? 200 : 100;
-        total += basePoints * ((l.progress !== undefined ? l.progress : 100) / 100);
+        let base = rank === 1 ? 10000 : rank === 2 ? 8000 : rank === 3 ? 5000 : 1000;
+        totalCoins += base * ((l.progress !== undefined ? l.progress : 100) / 100);
       });
-      playerImpossible.forEach(l => { total += 600; });
+
+      playerImpossible.forEach(l => {
+        const rank = impossibleLevels.indexOf(l) + 1;
+        let base = rank === 1 ? 10000 : rank === 2 ? 8000 : rank === 3 ? 5000 : 1000;
+        totalCoins += base;
+      });
+
       playerRealLevels.forEach(rl => {
-        let basePoints = rl.difficulty === 'extreme' ? 500 : 300;
-        total += basePoints * ((rl.goldPercent !== undefined ? rl.goldPercent : 100) / 100);
+        const rank = realLevels.indexOf(rl) + 1;
+        let base = rank === 1 ? 10000 : rank === 2 ? 8000 : rank === 3 ? 5000 : 1000;
+        totalCoins += base * ((rl.goldPercent !== undefined ? rl.goldPercent : 100) / 100);
       });
-      return Math.round(total * 10) / 10;
+
+      return Math.round(totalCoins * 10) / 10;
     }
 
     function spinRoulette(type) {
@@ -1895,10 +1874,10 @@
 
       let playersArray = Object.values(playerMap).map(p => ({
         ...p,
-        points: calculatePlayerPoints(p.levels, p.impossible, p.real)
+        coins: calculatePlayerCoins(p.levels, p.impossible, p.real)
       }));
 
-      playersArray.sort((a, b) => b.points - a.points);
+      playersArray.sort((a, b) => b.coins - a.coins);
 
       if(selectedCountryFilter !== 'all') {
         playersArray = playersArray.filter(p => p.country === selectedCountryFilter);
@@ -1922,7 +1901,7 @@
             <img class="thumb" src="${p.img}" style="border-radius:50%; width:50px; height:50px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/150'">
             <div class="info">
               <h3>${p.name} ${idx === 0 ? '<span class="new-badge">#1 RANK</span>' : ''}</h3>
-              <div class="meta-small">Puntos: <b>${p.points} pts</b> | País: <b>${p.country}</b> | ⭐ <b>${p.bestPortal}</b></div>
+              <div class="meta-small">Absolute Coins: <b>${p.coins.toLocaleString()} 🪙</b> | País: <b>${p.country}</b> | ⭐ <b>${p.bestPortal}</b></div>
             </div>
             <div class="actions-right" onclick="event.stopPropagation()">
               ${originalIdx !== -1 ? `<button class="btn-edit" onclick="requestEdit('player', ${originalIdx})">✏️</button>` : ''}
@@ -2436,7 +2415,6 @@
     }
 
     window.onload = function() {
-      initLoaderScreen();
       loadSavedTheme();
       initActiveUsersCounter();
       checkAutoBackup();
