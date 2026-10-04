@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Absolute List</title>
+    <title id="page-title">The Absolute List</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
         
@@ -64,7 +64,6 @@
             margin-top: 1rem;
         }
         
-        /* === MENÚ CON VIDA === */
         .menu-container {
             position: fixed;
             top: 2rem;
@@ -122,7 +121,6 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            position: relative;
         }
         
         .menu-item:hover {
@@ -454,129 +452,123 @@
         <p class="subtitle" id="main-subtitle">Los Absolute Levels</p>
     </div>
 
-    <!-- BOTÓN 3 PUNTOS CORREGIDO -->
     <div class="menu-container">
         <button class="menu-btn" id="menuBtn">⋮</button>
         <div class="menu-dropdown" id="menuDropdown">
-            <div class="menu-item" id="adminBtn">🔐 Modo Admin</div>
+            <div class="menu-item" id="adminBtn">🔐 <span id="adminBtnText">Modo Admin</span></div>
             <div class="menu-item" id="discordBtn">💬 Discord</div>
             <div class="menu-item hidden" id="editDiscordBtn">✏️ Editar Discord</div>
             <div class="menu-item hidden" id="logBtn">📋 Registro</div>
             <div class="divider"></div>
-            <div class="menu-item" id="switchAbsolute">⭐ Absolute Levels</div>
-            <div class="menu-item" id="switchProgress">🚧 Niveles en Progreso</div>
+            <div class="menu-item" id="switchAbsolute">⭐ <span id="switchAbsoluteText">Absolute Levels</span></div>
+            <div class="menu-item" id="switchProgress">🚧 <span id="switchProgressText">Niveles en Progreso</span></div>
             <div class="divider"></div>
-            <div class="menu-item" id="langBtn">🌐 Cambiar Idioma</div>
+            <div class="menu-item" id="langBtn">🌐 <span id="langBtnText">Cambiar a Inglés</span></div>
         </div>
     </div>
 
-    <!-- Menú Discord -->
     <div class="modal" id="discordMenuModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('discordMenuModal')">&times;</button>
             <h3 class="modal-title">💬 Discord</h3>
-            <button onclick="openDiscordLink()" class="add-btn" style="width:100%; margin:0.5rem 0;">✅ Entrar al Discord</button>
-            <button onclick="reportExpiredLink()" class="warning" style="width:100%; margin:0.5rem 0;">⚠️ Enlace expirado</button>
+            <button onclick="openDiscordLink()" class="add-btn" style="width:100%; margin:0.5rem 0;">✅ <span id="enterDiscordText">Entrar al Discord</span></button>
+            <button onclick="reportExpiredLink()" class="warning" style="width:100%; margin:0.5rem 0;">⚠️ <span id="expiredLinkText">Enlace expirado</span></button>
         </div>
     </div>
 
     <div class="category">
         <h2 class="category-title" id="cat-title">⭐ Los Absolute Levels</h2>
-        <button class="add-btn hidden" id="addLevelBtn">➕ Añadir Nuevo Nivel</button>
+        <button class="add-btn hidden" id="addLevelBtn">➕ <span id="addLevelText">Añadir Nuevo Nivel</span></button>
         <div class="levels-grid" id="levelsContainer"></div>
     </div>
 
-    <!-- MODAL Contraseña -->
     <div class="modal" id="passwordModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('passwordModal')">&times;</button>
-            <h3 class="modal-title">🔐 Modo Admin</h3>
-            <label>Contraseña:</label>
+            <h3 class="modal-title" id="passTitle">🔐 Modo Admin</h3>
+            <label id="passLabel">Contraseña:</label>
             <input type="password" id="adminPass" placeholder="Escribe la contraseña">
-            <button onclick="checkPassword()">Entrar</button>
+            <button onclick="checkPassword()" id="passSubmit">Entrar</button>
         </div>
     </div>
 
-    <!-- MODAL Añadir/Editar Nivel ABSOLUTO → CON TOP -->
     <div class="modal" id="levelModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('levelModal')">&times;</button>
-            <h3 class="modal-title" id="level-form-title">➕ Añadir Nivel</h3>
+            <h3 class="modal-title" id="levelFormTitle">➕ Añadir Nivel</h3>
             
-            <label>Título del Nivel:</label>
+            <label id="lblName">Título del Nivel:</label>
             <input type="text" id="levelName" required>
             
-            <label>🏆 Posición / Top:</label>
+            <label id="lblTop">🏆 Posición / Top:</label>
             <select id="levelTop">
-                <option value="">— Ninguna —</option>
+                <option value="" id="optNone">— Ninguna —</option>
                 <option value="1">🥇 Top 1</option>
                 <option value="2">🥈 Top 2</option>
                 <option value="3">🥉 Top 3</option>
                 <option value="4">🏅 Top 4</option>
                 <option value="5">🏅 Top 5</option>
                 <option value="6">🏅 Top 6</option>
-                <option value="more">🏅 Top 7 o más</option>
+                <option value="more">🏅 Top 7+</option>
             </select>
             
-            <label>Autor:</label>
+            <label id="lblAuthor">Autor:</label>
             <input type="text" id="levelAuthor" required>
             
-            <label>¿Está verificado?</label>
+            <label id="lblVerified">¿Está verificado?</label>
             <select id="levelVerified" onchange="toggleVerifier()">
-                <option value="no">No</option>
-                <option value="yes">Sí</option>
+                <option value="no" id="optNo">No</option>
+                <option value="yes" id="optYes">Sí</option>
             </select>
             
             <div id="verifierRow" class="hidden">
-                <label>Nombre del verificador:</label>
+                <label id="lblVerifierName">Nombre del verificador:</label>
                 <input type="text" id="levelVerifier">
             </div>
             
-            <label>Foto (opcional):</label>
+            <label id="lblPhoto">Foto (opcional):</label>
             <input type="url" id="levelPhoto" placeholder="Enlace de imagen">
             <div class="file-input-row">
                 <input type="file" id="levelPhotoFile" accept="image/*" onchange="handleFileSelect(this, 'levelPhoto')">
             </div>
             
-            <label>Enlace de YouTube / ID:</label>
+            <label id="lblYT">Enlace de YouTube / ID:</label>
             <div class="input-row">
                 <input type="url" id="levelYt" placeholder="https://youtube.com/watch?v=... o ID">
-                <button type="button" class="search-btn secondary" onclick="searchGD()">🔍 Buscar ID</button>
+                <button type="button" class="search-btn secondary" onclick="searchGD()" id="searchGDText">🔍 Buscar ID</button>
             </div>
             
-            <h4 style="margin-top:1.8rem">Récords</h4>
+            <h4 style="margin-top:1.8rem" id="recordsTitle">Récords</h4>
             <div id="recordsList"></div>
-            <button class="secondary" onclick="addRecord()">+ Añadir Récord</button>
+            <button class="secondary" onclick="addRecord()" id="addRecordText">+ Añadir Récord</button>
             
             <input type="hidden" id="editingId">
-            <button onclick="saveLevel()">💾 Guardar Nivel</button>
+            <button onclick="saveLevel()" id="saveLevelText">💾 Guardar Nivel</button>
         </div>
     </div>
 
-    <!-- MODAL Nivel en Progreso → SIN TOP -->
     <div class="modal" id="progressModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('progressModal')">&times;</button>
-            <h3 class="modal-title">🚧 Nivel en Progreso</h3>
+            <h3 class="modal-title" id="progressFormTitle">🚧 Nivel en Progreso</h3>
             
-            <label>Nombre del Nivel:</label>
+            <label id="lblProgressName">Nombre del Nivel:</label>
             <input type="text" id="progressName" required>
             
-            <label>Autor:</label>
+            <label id="lblProgressAuthor">Autor:</label>
             <input type="text" id="progressAuthor" required>
             
-            <label>Foto (opcional):</label>
+            <label id="lblProgressPhoto">Foto (opcional):</label>
             <input type="url" id="progressPhoto" placeholder="Enlace de imagen">
             <div class="file-input-row">
                 <input type="file" id="progressPhotoFile" accept="image/*" onchange="handleFileSelect(this, 'progressPhoto')">
             </div>
             
             <input type="hidden" id="editingProgressId">
-            <button onclick="saveProgressLevel()">💾 Guardar</button>
+            <button onclick="saveProgressLevel()" id="saveProgressText">💾 Guardar</button>
         </div>
     </div>
 
-    <!-- MODAL Detalle -->
     <div class="modal" id="detailModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('detailModal')">&times;</button>
@@ -585,52 +577,50 @@
             <p class="detail-meta" id="detailMeta"></p>
             
             <div class="records-section" id="detailRecordsSection">
-                <h4 class="records-title">Récords</h4>
+                <h4 class="records-title" id="detailRecordsTitle">Récords</h4>
                 <div id="detailRecords"></div>
             </div>
             
             <div class="admin-actions hidden" id="detailAdminActions">
-                <button class="secondary" onclick="editCurrentLevel()">✏️ Editar</button>
-                <button class="danger" onclick="deleteCurrentLevel()">🗑️ Borrar</button>
+                <button class="secondary" onclick="editCurrentLevel()" id="editBtnText">✏️ Editar</button>
+                <button class="danger" onclick="deleteCurrentLevel()" id="deleteBtnText">🗑️ Borrar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL Editar Discord -->
     <div class="modal" id="discordModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('discordModal')">&times;</button>
-            <h3 class="modal-title">✏️ Enlace de Discord</h3>
-            <label>Enlace del servidor de Discord:</label>
+            <h3 class="modal-title" id="discordFormTitle">✏️ Enlace de Discord</h3>
+            <label id="lblDiscordLink">Enlace del servidor de Discord:</label>
             <input type="url" id="discordLink" placeholder="https://discord.gg/...">
-            <button onclick="saveDiscord()">💾 Guardar Enlace</button>
+            <button onclick="saveDiscord()" id="saveDiscordText">💾 Guardar Enlace</button>
         </div>
     </div>
 
-    <!-- MODAL Registro -->
     <div class="modal" id="logModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('logModal')">&times;</button>
-            <h3 class="modal-title">📋 Registro de Actividad</h3>
+            <h3 class="modal-title" id="logTitle">📋 Registro de Actividad</h3>
             
             <div class="log-section">
-                <h4 class="log-title">✅ Niveles Subidos</h4>
+                <h4 class="log-title" id="logAddedTitle">✅ Niveles Subidos</h4>
                 <div id="log-added"></div>
             </div>
             <div class="log-section">
-                <h4 class="log-title">✏️ Niveles Editados</h4>
+                <h4 class="log-title" id="logEditedTitle">✏️ Niveles Editados</h4>
                 <div id="log-edited"></div>
             </div>
             <div class="log-section">
-                <h4 class="log-title">🗑️ Niveles Eliminados</h4>
+                <h4 class="log-title" id="logDeletedTitle">🗑️ Niveles Eliminados</h4>
                 <div id="log-deleted"></div>
             </div>
             <div class="log-section">
-                <h4 class="log-title">⚠️ Avisos de Enlace Expirado</h4>
+                <h4 class="log-title" id="logExpiredTitle">⚠️ Avisos de Enlace Expirado</h4>
                 <div id="log-expired"></div>
             </div>
             
-            <button class="secondary" onclick="clearLogs()">🗑️ Limpiar Registro</button>
+            <button class="secondary" onclick="clearLogs()" id="clearLogsText">🗑️ Limpiar Registro</button>
         </div>
     </div>
 
@@ -643,24 +633,134 @@ let currentCategory = 'absolute';
 
 const T = {
     es: {
-        noRecords: 'Sin récords registrados',
-        noLogs: 'Sin registros',
-        expiredReported: '✅ Aviso enviado. Se ha registrado que el enlace está expirado.',
-        noLinkYet: 'El enlace aún no está configurado',
+        pageTitle: 'The Absolute List',
+        subtitle: 'Los Absolute Levels',
+        catAbsolute: '⭐ Los Absolute Levels',
+        catProgress: '🚧 Niveles en Progreso',
+        admin: '🔐 Modo Admin',
+        adminExit: '🚪 Salir Admin',
+        discord: '💬 Discord',
+        editDiscord: '✏️ Editar Discord',
+        logs: '📋 Registro',
+        langSwitch: '🌐 Cambiar a Inglés',
+        passTitle: '🔐 Modo Admin',
+        passLabel: 'Contraseña:',
+        passSubmit: 'Entrar',
         passWrong: 'Contraseña incorrecta',
+        addLevel: '➕ Añadir Nuevo Nivel',
+        addProgress: '➕ Añadir Nivel en Progreso',
+        editLevel: 'Editar Nivel',
+        name: 'Título del Nivel:',
+        top: '🏆 Posición / Top:',
+        author: 'Autor:',
+        verified: '¿Está verificado?',
+        no: 'No',
+        yes: 'Sí',
+        verifier: 'Nombre del verificador:',
+        photo: 'Foto (opcional):',
+        ytLink: 'Enlace de YouTube / ID:',
+        searchGD: '🔍 Buscar ID',
+        noTitle: '⚠️ Escribe primero el nombre del nivel para buscar',
+        records: 'Récords',
+        addRecord: '+ Añadir Récord',
+        save: '💾 Guardar Nivel',
+        saveProgress: '💾 Guardar',
+        recordsTitle: 'Récords',
+        complete: 'Completado',
+        edit: '✏️ Editar',
+        delete: '🗑️ Borrar',
+        discordTitle: '✏️ Enlace de Discord',
+        discordLabel: 'Enlace del servidor de Discord:',
+        saveDiscord: '💾 Guardar Enlace',
+        enterDiscord: '✅ Entrar al Discord',
+        expiredLink: '⚠️ Enlace expirado',
+        nameRecord: 'Nombre del jugador',
+        recordVal: 'Récord (ej: 100%, 0:45)',
+        isComplete: '¿Completado?',
         deleteConfirm: '¿Seguro que quieres borrar este nivel?',
         fillRequired: 'Debes poner enlace de YouTube',
-        noTitle: '⚠️ Escribe primero el nombre del nivel para buscar'
+        noRecords: 'Sin récords registrados',
+        noLinkYet: 'El enlace aún no está configurado',
+        expiredReported: '✅ Aviso enviado. Se ha registrado que el enlace está expirado.',
+        linkExpiredLog: 'Enlace de Discord reportado como expirado',
+        addedLog: 'subido',
+        editedLog: 'editado',
+        deletedLog: 'eliminado',
+        noLogs: 'Sin registros',
+        clearLogs: '🗑️ Limpiar Registro',
+        logTitle: '📋 Registro de Actividad',
+        logAddedTitle: '✅ Niveles Subidos',
+        logEditedTitle: '✏️ Niveles Editados',
+        logDeletedTitle: '🗑️ Niveles Eliminados',
+        logExpiredTitle: '⚠️ Avisos de Enlace Expirado',
+        by: 'Por',
+        verifiedBy: 'Verificado por',
+        authorLabel: 'Autor:'
     },
     en: {
-        noRecords: 'No records yet',
-        noLogs: 'No records',
-        expiredReported: '✅ Report sent. The expired link has been logged.',
-        noLinkYet: 'Link not set yet',
+        pageTitle: 'The Absolute List',
+        subtitle: 'The Absolute Levels',
+        catAbsolute: '⭐ The Absolute Levels',
+        catProgress: '🚧 Levels in Progress',
+        admin: '🔐 Admin Mode',
+        adminExit: '🚪 Exit Admin',
+        discord: '💬 Discord',
+        editDiscord: '✏️ Edit Discord',
+        logs: '📋 Activity Log',
+        langSwitch: '🌐 Switch to Spanish',
+        passTitle: '🔐 Admin Mode',
+        passLabel: 'Password:',
+        passSubmit: 'Enter',
         passWrong: 'Incorrect password',
+        addLevel: '+ Add New Level',
+        addProgress: '+ Add Level in Progress',
+        editLevel: 'Edit Level',
+        name: 'Level Title:',
+        top: '🏆 Position / Top:',
+        author: 'Author:',
+        verified: 'Verified?',
+        no: 'No',
+        yes: 'Yes',
+        verifier: 'Verifier Name:',
+        photo: 'Photo (optional):',
+        ytLink: 'YouTube Link / ID:',
+        searchGD: '🔍 Search ID',
+        noTitle: '⚠️ Write the level name first before searching',
+        records: 'Records',
+        addRecord: '+ Add Record',
+        save: '💾 Save Level',
+        saveProgress: '💾 Save',
+        recordsTitle: 'Records',
+        complete: 'Completed',
+        edit: '✏️ Edit',
+        delete: '🗑️ Delete',
+        discordTitle: '✏️ Discord Link',
+        discordLabel: 'Discord Server Link:',
+        saveDiscord: '💾 Save Link',
+        enterDiscord: '✅ Enter Discord',
+        expiredLink: '⚠️ Link Expired',
+        nameRecord: 'Player Name',
+        recordVal: 'Record (e.g. 100%, 0:45)',
+        isComplete: 'Completed?',
         deleteConfirm: 'Are you sure you want to delete this level?',
         fillRequired: 'YouTube link is required',
-        noTitle: '⚠️ Write the level name first before searching'
+        noRecords: 'No records yet',
+        noLinkYet: 'Link not set yet',
+        expiredReported: '✅ Report sent. The expired link has been logged.',
+        linkExpiredLog: 'Discord link reported as expired',
+        addedLog: 'uploaded',
+        editedLog: 'edited',
+        deletedLog: 'deleted',
+        noLogs: 'No records',
+        clearLogs: '🗑️ Clear Log',
+        logTitle: '📋 Activity Log',
+        logAddedTitle: '✅ Levels Uploaded',
+        logEditedTitle: '✏️ Levels Edited',
+        logDeletedTitle: '🗑️ Levels Deleted',
+        logExpiredTitle: '⚠️ Expired Link Reports',
+        by: 'By',
+        verifiedBy: 'Verified by',
+        authorLabel: 'Author:'
     }
 };
 
@@ -672,7 +772,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addLevelBtn').addEventListener('click', openAddLevel);
 });
 
-// ✅ MENÚ CORREGIDO
+function handleFileSelect(input, targetId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => document.getElementById(targetId).value = e.target.result;
+    reader.readAsDataURL(file);
+}
+
 function setupMenu() {
     const menuBtn = document.getElementById('menuBtn');
     const dropdown = document.getElementById('menuDropdown');
@@ -685,7 +792,6 @@ function setupMenu() {
     document.addEventListener('click', () => dropdown.classList.remove('show'));
     dropdown.addEventListener('click', (e) => e.stopPropagation());
     
-    // Botones del menú
     document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
     document.getElementById('discordBtn').onclick = () => openModal('discordMenuModal');
     document.getElementById('editDiscordBtn').onclick = () => {
@@ -696,14 +802,6 @@ function setupMenu() {
     document.getElementById('langBtn').onclick = toggleLang;
     document.getElementById('switchAbsolute').onclick = () => switchCategory('absolute');
     document.getElementById('switchProgress').onclick = () => switchCategory('progress');
-}
-
-function handleFileSelect(input, targetId) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => document.getElementById(targetId).value = e.target.result;
-    reader.readAsDataURL(file);
 }
 
 function openModal(id) { document.getElementById(id).classList.add('show'); }
@@ -722,11 +820,14 @@ function renderLogs() {
     ['added','edited','deleted','expired'].forEach(type => {
         const c = document.getElementById(`log-${type}`);
         const items = logs.filter(l => l.type === type);
-        c.innerHTML = items.length ? items.map(l => `<div class="log-item ${l.type==='expired'?'warning':l.type==='deleted'?'danger':'success'}">${escapeHtml(l.message)}<div class="timestamp">${l.time}</div></div>`).join('') : `<p style="color:var(--text-muted);padding:0.5rem;">${t.noLogs}</p>`;
+        c.innerHTML = items.length 
+            ? items.map(l => `<div class="log-item ${l.type==='expired'?'warning':l.type==='deleted'?'danger':'success'}">${escapeHtml(l.message)}<div class="timestamp">${l.time}</div></div>`).join('') 
+            : `<p style="color:var(--text-muted);padding:0.5rem;">${t.noLogs}</p>`;
     });
 }
 
 function clearLogs() {
+    const t = T[lang];
     if (confirm(lang==='es'?'¿Borrar todo el registro?':'Clear all logs?')) {
         localStorage.removeItem('activityLogs');
         renderLogs();
@@ -734,15 +835,17 @@ function clearLogs() {
 }
 
 function reportExpiredLink() {
-    addLog('expired', lang==='es'?'Enlace de Discord reportado como expirado':'Discord link reported as expired');
-    alert(T[lang].expiredReported);
+    const t = T[lang];
+    addLog('expired', t.linkExpiredLog);
+    alert(t.expiredReported);
     closeModal('discordMenuModal');
 }
 
 function openDiscordLink() {
+    const t = T[lang];
     const link = localStorage.getItem('discordLink');
     if (link) { window.open(link,'_blank'); closeModal('discordMenuModal'); }
-    else alert(T[lang].noLinkYet);
+    else alert(t.noLinkYet);
 }
 
 function switchCategory(cat) {
@@ -752,40 +855,115 @@ function switchCategory(cat) {
     updateAdminUI();
 }
 
+// ✅ FUNCIÓN DE TRADUCCIÓN CORREGIDA
 function applyLang() {
+    const t = T[lang];
+    
+    // Títulos generales
+    document.getElementById('page-title').textContent = t.pageTitle;
+    document.getElementById('main-title').textContent = t.pageTitle;
+    document.getElementById('main-subtitle').textContent = t.subtitle;
+    
+    // Menú
+    document.getElementById('adminBtnText').textContent = isAdmin ? t.adminExit : t.admin;
+    document.getElementById('switchAbsoluteText').textContent = t.catAbsolute.replace('⭐ ', '');
+    document.getElementById('switchProgressText').textContent = t.catProgress.replace('🚧 ', '');
+    document.getElementById('langBtnText').textContent = t.langSwitch;
+    
+    // Categoría
     updateCatTitle();
-    updateAdminUI();
+    
+    // Botones
+    document.getElementById('addLevelText').textContent = currentCategory==='absolute' ? t.addLevel : t.addProgress;
+    
+    // Modales - Discord
+    document.getElementById('enterDiscordText').textContent = t.enterDiscord;
+    document.getElementById('expiredLinkText').textContent = t.expiredLink;
+    
+    // Modales - Contraseña
+    document.getElementById('passTitle').textContent = t.passTitle;
+    document.getElementById('passLabel').textContent = t.passLabel;
+    document.getElementById('passSubmit').textContent = t.passSubmit;
+    
+    // Modales - Nivel Absoluto
+    document.getElementById('levelFormTitle').textContent = t.addLevel;
+    document.getElementById('lblName').textContent = t.name;
+    document.getElementById('lblTop').textContent = t.top;
+    document.getElementById('lblAuthor').textContent = t.author;
+    document.getElementById('lblVerified').textContent = t.verified;
+    document.getElementById('optNo').textContent = t.no;
+    document.getElementById('optYes').textContent = t.yes;
+    document.getElementById('lblVerifierName').textContent = t.verifier;
+    document.getElementById('lblPhoto').textContent = t.photo;
+    document.getElementById('lblYT').textContent = t.ytLink;
+    document.getElementById('searchGDText').textContent = t.searchGD;
+    document.getElementById('recordsTitle').textContent = t.records;
+    document.getElementById('addRecordText').textContent = t.addRecord;
+    document.getElementById('saveLevelText').textContent = t.save;
+    
+    // Modales - Progreso
+    document.getElementById('progressFormTitle').textContent = t.catProgress.replace('🚧 ', '');
+    document.getElementById('lblProgressName').textContent = t.name;
+    document.getElementById('lblProgressAuthor').textContent = t.author;
+    document.getElementById('lblProgressPhoto').textContent = t.photo;
+    document.getElementById('saveProgressText').textContent = t.saveProgress;
+    
+    // Modales - Detalle
+    document.getElementById('detailRecordsTitle').textContent = t.recordsTitle;
+    document.getElementById('editBtnText').textContent = t.edit;
+    document.getElementById('deleteBtnText').textContent = t.delete;
+    
+    // Modales - Editar Discord
+    document.getElementById('discordFormTitle').textContent = t.discordTitle;
+    document.getElementById('lblDiscordLink').textContent = t.discordLabel;
+    document.getElementById('saveDiscordText').textContent = t.saveDiscord;
+    document.getElementById('editDiscordBtn').innerHTML = `✏️ ${t.editDiscord}`;
+    
+    // Modales - Registro
+    document.getElementById('logBtn').innerHTML = `📋 ${t.logs}`;
+    document.getElementById('logTitle').textContent = t.logTitle;
+    document.getElementById('logAddedTitle').textContent = t.logAddedTitle;
+    document.getElementById('logEditedTitle').textContent = t.logEditedTitle;
+    document.getElementById('logDeletedTitle').textContent = t.logDeletedTitle;
+    document.getElementById('logExpiredTitle').textContent = t.logExpiredTitle;
+    document.getElementById('clearLogsText').textContent = t.clearLogs;
 }
 
 function updateCatTitle() {
-    document.getElementById('cat-title').innerHTML = currentCategory==='absolute'?'⭐ Los Absolute Levels':'🚧 Niveles en Progreso';
+    const t = T[lang];
+    document.getElementById('cat-title').textContent = currentCategory==='absolute' ? t.catAbsolute : t.catProgress;
 }
 
 function toggleLang() {
-    lang = lang==='es'?'en':'es';
+    lang = lang === 'es' ? 'en' : 'es';
     localStorage.setItem('listLang', lang);
     applyLang();
-    renderLevels();
+    // ⚠️ NO llamar renderLevels() aquí para no tocar los nombres de los niveles
 }
 
 function checkPassword() {
+    const t = T[lang];
     if (document.getElementById('adminPass').value === '6767XDXD') {
         isAdmin = true;
         closeModal('passwordModal');
         updateAdminUI();
         document.getElementById('adminPass').value = '';
-    } else alert(T[lang].passWrong);
+    } else alert(t.passWrong);
 }
 
 function updateAdminUI() {
     document.getElementById('editDiscordBtn').classList.toggle('hidden', !isAdmin);
     document.getElementById('logBtn').classList.toggle('hidden', !isAdmin);
     document.getElementById('addLevelBtn').classList.toggle('hidden', !isAdmin);
+    // Actualizar texto del botón de admin
+    document.getElementById('adminBtnText').textContent = isAdmin ? T[lang].adminExit : T[lang].admin;
+    document.getElementById('addLevelText').textContent = currentCategory==='absolute' ? T[lang].addLevel : T[lang].addProgress;
 }
 
 function searchGD() {
+    const t = T[lang];
     const name = document.getElementById('levelName').value.trim();
-    if (!name) return alert(T[lang].noTitle);
+    if (!name) return alert(t.noTitle);
     window.open(`https://gdbrowser.com/search?query=${encodeURIComponent(name)}`,'_blank');
 }
 
@@ -817,6 +995,8 @@ function renderLevels() {
     updateCatTitle();
     const c = document.getElementById('levelsContainer');
     c.innerHTML = '';
+    const t = T[lang];
+    
     if (currentCategory==='absolute') {
         getLevels().forEach(l => {
             const thumb = l.photo || getYtThumb(l.ytLink) || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
@@ -843,6 +1023,7 @@ function openAddLevel() {
         document.getElementById('levelPhotoFile').value = '';
         document.getElementById('levelYt').value = '';
         document.getElementById('verifierRow').classList.add('hidden');
+        document.getElementById('levelFormTitle').textContent = T[lang].addLevel;
         renderRecordsForm();
         openModal('levelModal');
     } else {
@@ -870,117 +1051,6 @@ function removeRecord(i) {
 }
 
 function renderRecordsForm() {
+    const t = T[lang];
     const c = document.getElementById('recordsList');
-    c.innerHTML = recordEntries.map((r,i) => `<div class="record-form-row"><button class="close-btn" style="margin-top:0" onclick="removeRecord(${i})">&times;</button><label>Nombre del jugador</label><input type="text" value="${escapeHtml(r.name)}" onchange="recordEntries[${i}].name=this.value"><label>Récord</label><input type="text" value="${escapeHtml(r.record)}" onchange="recordEntries[${i}].record=this.value"><label style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:0.5rem;"><input type="checkbox" ${r.complete?'checked':''} onchange="recordEntries[${i}].complete=this.checked"> Completado</label></div>`).join('');
-}
-
-function saveLevel() {
-    const yt = document.getElementById('levelYt').value.trim();
-    if (!yt) return alert(T[lang].fillRequired);
-    const id = document.getElementById('editingId').value || Date.now().toString();
-    const data = {
-        id,
-        name: document.getElementById('levelName').value.trim(),
-        top: document.getElementById('levelTop').value,
-        author: document.getElementById('levelAuthor').value.trim(),
-        verified: document.getElementById('levelVerified').value,
-        verifier: document.getElementById('levelVerifier').value.trim(),
-        photo: document.getElementById('levelPhoto').value.trim(),
-        ytLink: yt,
-        records: [...recordEntries]
-    };
-    let levels = getLevels();
-    const idx = levels.findIndex(l => l.id===id);
-    if (idx<0) { levels.push(data); addLog('added', `"${data.name}" subido`); }
-    else { levels[idx] = data; addLog('edited', `"${data.name}" editado`); }
-    saveLevels(levels);
-    closeModal('levelModal');
-    renderLevels();
-}
-
-function saveProgressLevel() {
-    const id = document.getElementById('editingProgressId').value || Date.now().toString();
-    const data = {
-        id,
-        name: document.getElementById('progressName').value.trim(),
-        author: document.getElementById('progressAuthor').value.trim(),
-        photo: document.getElementById('progressPhoto').value.trim()
-    };
-    let levels = getProgressLevels();
-    const idx = levels.findIndex(l => l.id===id);
-    if (idx<0) { levels.push(data); addLog('added', `"${data.name}" subido`); }
-    else { levels[idx] = data; addLog('edited', `"${data.name}" editado`); }
-    saveProgressLevels(levels);
-    closeModal('progressModal');
-    renderLevels();
-}
-
-function openDetail(id, cat) {
-    currentDetailId = id;
-    let level, thumb, meta;
-    if (cat==='absolute') {
-        level = getLevels().find(l => l.id===id);
-        thumb = level.photo || getYtThumb(level.ytLink) || '';
-        meta = `Por ${level.author}` + (level.verified==='yes'?` | Verificado por ${level.verifier}`:'');
-        document.getElementById('detailRecordsSection').style.display = 'block';
-        document.getElementById('detailRecords').innerHTML = level.records?.length ? level.records.map(r => `<div class="record-item ${r.complete?'record-complete':''}"><strong>${escapeHtml(r.name)}</strong> — ${escapeHtml(r.record)} ${r.complete?'✅ Completado':''}</div>`).join('') : `<p style="color:var(--text-muted)">${T[lang].noRecords}</p>`;
-    } else {
-        level = getProgressLevels().find(l => l.id===id);
-        thumb = level.photo || '';
-        meta = `Autor: ${level.author}`;
-        document.getElementById('detailRecordsSection').style.display = 'none';
-    }
-    document.getElementById('detailImg').src = thumb;
-    document.getElementById('detailName').innerHTML = getTopBadge(level.top) + escapeHtml(level.name);
-    document.getElementById('detailMeta').textContent = meta;
-    document.getElementById('detailAdminActions').classList.toggle('hidden', !isAdmin);
-    openModal('detailModal');
-}
-
-function editCurrentLevel() {
-    closeModal('detailModal');
-    if (currentCategory==='absolute') {
-        const l = getLevels().find(x => x.id===currentDetailId);
-        document.getElementById('editingId').value = l.id;
-        document.getElementById('levelName').value = l.name;
-        document.getElementById('levelTop').value = l.top || '';
-        document.getElementById('levelAuthor').value = l.author;
-        document.getElementById('levelVerified').value = l.verified;
-        document.getElementById('levelVerifier').value = l.verifier || '';
-        document.getElementById('levelPhoto').value = l.photo || '';
-        document.getElementById('levelPhotoFile').value = '';
-        document.getElementById('levelYt').value = l.ytLink;
-        document.getElementById('verifierRow').classList.toggle('hidden', l.verified!=='yes');
-        recordEntries = l.records ? [...l.records] : [];
-        renderRecordsForm();
-        openModal('levelModal');
-    } else {
-        const l = getProgressLevels().find(x => x.id===currentDetailId);
-        document.getElementById('editingProgressId').value = l.id;
-        document.getElementById('progressName').value = l.name;
-        document.getElementById('progressAuthor').value = l.author;
-        document.getElementById('progressPhoto').value = l.photo || '';
-        document.getElementById('progressPhotoFile').value = '';
-        openModal('progressModal');
-    }
-}
-
-function deleteCurrentLevel() {
-    if (!confirm(T[lang].deleteConfirm)) return;
-    if (currentCategory==='absolute') {
-        const l = getLevels();
-        const name = l.find(x => x.id===currentDetailId)?.name;
-        saveLevels(l.filter(x => x.id!==currentDetailId));
-        addLog('deleted', `"${name}" eliminado`);
-    } else {
-        const l = getProgressLevels();
-        const name = l.find(x => x.id===currentDetailId)?.name;
-        saveProgressLevels(l.filter(x => x.id!==currentDetailId));
-        addLog('deleted', `"${name}" eliminado`);
-    }
-    closeModal('detailModal');
-    renderLevels();
-}
-</script>
-</body>
-</html>
+    c.innerHTML = recordEntries.map((r,i) => `<div class="record-form-row"><button class="close-btn" style="margin-top:0" onclick="removeRecord(${i})">&times;</button><label>${t.name
