@@ -7,7 +7,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
         
-        /* Fondo oscuro elegante */
         :root {
             --bg: #121218;
             --bg-card: #1a1a22;
@@ -32,7 +31,6 @@
             min-height: 100vh;
         }
         
-        /* Título con efecto neón expandido */
         .title-container {
             text-align: center;
             margin: 2rem 0 3rem;
@@ -61,7 +59,6 @@
             margin-top: 1rem;
         }
         
-        /* Menú */
         .menu-container {
             position: fixed;
             top: 2rem;
@@ -127,7 +124,6 @@
             margin: 0.3rem 0;
         }
         
-        /* Categoría y tarjetas */
         .category { margin-bottom: 3rem; }
         
         .category-title {
@@ -191,7 +187,6 @@
             font-weight: 600;
         }
         
-        /* Botones */
         .add-btn {
             background: linear-gradient(135deg, var(--accent), #4f46e5);
             border: none;
@@ -210,7 +205,20 @@
             box-shadow: 0 0 25px var(--accent-glow);
         }
         
-        /* Modales */
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .input-row input { flex: 1; margin: 0; }
+        .search-btn {
+            width: auto;
+            margin: 0;
+            padding: 0.9rem 1rem;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+        
         .modal {
             position: fixed;
             inset: 0;
@@ -317,7 +325,6 @@
         
         button.danger { background: #dc2626; }
         
-        /* Detalle nivel */
         .detail-thumbnail {
             width: 100%;
             height: 280px;
@@ -387,7 +394,6 @@
         <p class="subtitle" id="main-subtitle">Los Absolute Levels</p>
     </div>
 
-    <!-- Menú de tres puntos -->
     <div class="menu-container">
         <button class="menu-btn" id="menuBtn">⋮</button>
         <div class="menu-dropdown" id="menuDropdown">
@@ -395,14 +401,17 @@
             <div class="menu-item" id="discordBtn">💬 Discord</div>
             <div class="menu-item hidden" id="editDiscordBtn">✏️ Editar Discord</div>
             <div class="divider"></div>
+            <!-- ✅ Nuevo: Cambiar categoría -->
+            <div class="menu-item" id="switchAbsolute">⭐ Absolute Levels</div>
+            <div class="menu-item" id="switchProgress">🚧 Niveles en Progreso</div>
+            <div class="divider"></div>
             <div class="menu-item" id="langBtn">🌐 Cambiar Idioma</div>
         </div>
     </div>
 
-    <!-- Categoría -->
+    <!-- Categoría ACTIVA (cambia dinámicamente) -->
     <div class="category">
         <h2 class="category-title" id="cat-title">Los Absolute Levels</h2>
-        <!-- ✅ CORREGIDO: Quité el estilo en línea que chocaba con la clase .hidden -->
         <button class="add-btn hidden" id="addLevelBtn">➕ Añadir Nuevo Nivel</button>
         <div class="levels-grid" id="levelsContainer"></div>
     </div>
@@ -418,7 +427,7 @@
         </div>
     </div>
 
-    <!-- MODAL: Añadir/Editar Nivel -->
+    <!-- MODAL: Añadir/Editar Nivel ABSOLUTO (con YouTube + Buscar ID) -->
     <div class="modal" id="levelModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('levelModal')">&times;</button>
@@ -444,8 +453,12 @@
             <label id="lbl-photo">Enlace de foto (opcional):</label>
             <input type="url" id="levelPhoto" placeholder="https://...">
             
-            <label id="lbl-yt">Enlace de YouTube (obligatorio si no hay foto):</label>
-            <input type="url" id="levelYt" placeholder="https://youtube.com/watch?v=...">
+            <!-- ✅ Campo YouTube + Botón Buscar ID -->
+            <label id="lbl-yt">Enlace de YouTube / ID:</label>
+            <div class="input-row">
+                <input type="url" id="levelYt" placeholder="https://youtube.com/watch?v=... o ID">
+                <button type="button" class="search-btn secondary" onclick="searchGD()">🔍 Buscar ID</button>
+            </div>
             
             <h4 style="margin-top:1.8rem" id="lbl-records">Récords</h4>
             <div id="recordsList"></div>
@@ -453,6 +466,26 @@
             
             <input type="hidden" id="editingId">
             <button onclick="saveLevel()" id="btn-save-level">Guardar Nivel</button>
+        </div>
+    </div>
+
+    <!-- ✅ MODAL: Añadir/Editar Nivel EN PROGRESO (SIN YouTube ni ID) -->
+    <div class="modal" id="progressModal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeModal('progressModal')">&times;</button>
+            <h3 class="modal-title" id="progress-form-title">Nivel en Progreso</h3>
+            
+            <label>Nombre del Nivel:</label>
+            <input type="text" id="progressName" required>
+            
+            <label>Autor:</label>
+            <input type="text" id="progressAuthor" required>
+            
+            <label>Foto (opcional):</label>
+            <input type="url" id="progressPhoto" placeholder="https://...">
+            
+            <input type="hidden" id="editingProgressId">
+            <button onclick="saveProgressLevel()">Guardar</button>
         </div>
     </div>
 
@@ -464,14 +497,14 @@
             <h2 class="detail-name" id="detailName"></h2>
             <p class="detail-meta" id="detailMeta"></p>
             
-            <div class="records-section">
+            <div class="records-section" id="detailRecordsSection">
                 <h4 class="records-title" id="lbl-records-list">Récords</h4>
                 <div id="detailRecords"></div>
             </div>
             
             <div class="admin-actions hidden" id="detailAdminActions">
-                <button class="secondary" id="btn-edit-level" onclick="editCurrentLevel()">✏️ Editar Nivel</button>
-                <button class="danger" id="btn-delete-level" onclick="deleteCurrentLevel()">🗑️ Borrar Nivel</button>
+                <button class="secondary" id="btn-edit-level" onclick="editCurrentLevel()">✏️ Editar</button>
+                <button class="danger" id="btn-delete-level" onclick="deleteCurrentLevel()">🗑️ Borrar</button>
             </div>
         </div>
     </div>
@@ -488,18 +521,18 @@
     </div>
 
 <script>
-// Estado global
 let isAdmin = false;
 let lang = localStorage.getItem('listLang') || 'es';
 let currentDetailId = null;
 let recordEntries = [];
+let currentCategory = 'absolute'; // ✅ 'absolute' o 'progress'
 
-// Traducciones
 const T = {
     es: {
         title: 'The Absolute List',
         subtitle: 'Los Absolute Levels',
-        catTitle: 'Los Absolute Levels',
+        catAbsolute: '⭐ Los Absolute Levels',
+        catProgress: '🚧 Niveles en Progreso',
         admin: '🔐 Modo Admin',
         discord: '💬 Discord',
         editDiscord: '✏️ Editar Discord',
@@ -509,6 +542,7 @@ const T = {
         passSubmit: 'Entrar',
         passWrong: 'Contraseña incorrecta',
         addLevel: '+ Añadir Nuevo Nivel',
+        addProgress: '+ Añadir Nivel en Progreso',
         editLevel: 'Editar Nivel',
         name: 'Título del Nivel:',
         author: 'Autor:',
@@ -517,7 +551,9 @@ const T = {
         yes: 'Sí',
         verifier: 'Nombre del verificador:',
         photo: 'Enlace de foto (opcional):',
-        ytLink: 'Enlace de YouTube (obligatorio si no hay foto):',
+        ytLink: 'Enlace de YouTube / ID:',
+        searchGD: '🔍 Buscar ID',
+        noTitle: '⚠️ Escribe primero el nombre del nivel para buscar',
         records: 'Récords',
         addRecord: '+ Añadir Récord',
         save: 'Guardar Nivel',
@@ -533,13 +569,15 @@ const T = {
         recordVal: 'Récord (ej: 100%, 0:45)',
         isComplete: '¿Lo completó?',
         deleteConfirm: '¿Seguro que quieres borrar este nivel?',
-        fillRequired: 'Debes poner foto o enlace de YouTube',
-        noRecords: 'Sin récords registrados'
+        fillRequired: 'Debes poner enlace de YouTube',
+        noRecords: 'Sin récords registrados',
+        noYtNeeded: '(No requiere enlace de YouTube)'
     },
     en: {
         title: 'The Absolute List',
         subtitle: 'The Absolute Levels',
-        catTitle: 'The Absolute Levels',
+        catAbsolute: '⭐ The Absolute Levels',
+        catProgress: '🚧 Levels in Progress',
         admin: '🔐 Admin Mode',
         discord: '💬 Discord',
         editDiscord: '✏️ Edit Discord',
@@ -549,6 +587,7 @@ const T = {
         passSubmit: 'Enter',
         passWrong: 'Incorrect password',
         addLevel: '+ Add New Level',
+        addProgress: '+ Add Level in Progress',
         editLevel: 'Edit Level',
         name: 'Level Title:',
         author: 'Author:',
@@ -557,7 +596,9 @@ const T = {
         yes: 'Yes',
         verifier: 'Verifier Name:',
         photo: 'Photo link (optional):',
-        ytLink: 'YouTube link (required if no photo):',
+        ytLink: 'YouTube Link / ID:',
+        searchGD: '🔍 Search ID',
+        noTitle: '⚠️ Write the level name first before searching',
         records: 'Records',
         addRecord: '+ Add Record',
         save: 'Save Level',
@@ -573,22 +614,19 @@ const T = {
         recordVal: 'Record (e.g. 100%, 0:45)',
         isComplete: 'Completed?',
         deleteConfirm: 'Are you sure you want to delete this level?',
-        fillRequired: 'Provide a photo or YouTube link',
-        noRecords: 'No records yet'
+        fillRequired: 'YouTube link is required',
+        noRecords: 'No records yet',
+        noYtNeeded: '(No YouTube link needed)'
     }
 };
 
-// Inicializar
 document.addEventListener('DOMContentLoaded', () => {
     applyLang();
     renderLevels();
     setupMenu();
-    
-    // ✅ CORREGIDO: Conectar el botón de añadir nivel
     document.getElementById('addLevelBtn').addEventListener('click', openAddLevel);
 });
 
-// Menú
 function setupMenu() {
     const btn = document.getElementById('menuBtn');
     btn.addEventListener('click', e => {
@@ -599,7 +637,7 @@ function setupMenu() {
         document.getElementById('menuDropdown').classList.remove('show');
     });
     
-    document.getElementById('adminBtn').onclick = () => { openModal('passwordModal'); };
+    document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
     document.getElementById('discordBtn').onclick = openDiscord;
     document.getElementById('editDiscordBtn').onclick = () => {
         const link = localStorage.getItem('discordLink') || '';
@@ -607,14 +645,26 @@ function setupMenu() {
         openModal('discordModal');
     };
     document.getElementById('langBtn').onclick = toggleLang;
+    
+    // ✅ Cambiar categoría
+    document.getElementById('switchAbsolute').onclick = () => switchCategory('absolute');
+    document.getElementById('switchProgress').onclick = () => switchCategory('progress');
 }
 
-// Idioma
+// ✅ Cambiar entre categorías
+function switchCategory(cat) {
+    currentCategory = cat;
+    document.getElementById('menuDropdown').classList.remove('show');
+    renderLevels();
+    updateAdminUI();
+}
+
 function applyLang() {
     const t = T[lang];
     document.getElementById('main-title').textContent = t.title;
     document.getElementById('main-subtitle').textContent = t.subtitle;
-    document.getElementById('cat-title').textContent = t.catTitle;
+    document.getElementById('switchAbsolute').textContent = t.catAbsolute;
+    document.getElementById('switchProgress').textContent = t.catProgress;
     document.getElementById('adminBtn').textContent = t.admin;
     document.getElementById('discordBtn').textContent = t.discord;
     document.getElementById('editDiscordBtn').textContent = t.editDiscord;
@@ -630,7 +680,6 @@ function applyLang() {
     document.getElementById('lbl-verifier').textContent = t.verifier;
     document.getElementById('lbl-photo').textContent = t.photo;
     document.getElementById('lbl-yt').textContent = t.ytLink;
-    document.getElementById('lbl-records').textContent = t.records;
     document.getElementById('btn-add-record').textContent = t.addRecord;
     document.getElementById('btn-save-level').textContent = t.save;
     document.getElementById('lbl-records-list').textContent = t.recordsTitle;
@@ -639,8 +688,12 @@ function applyLang() {
     document.getElementById('discord-title').textContent = t.discordTitle;
     document.getElementById('lbl-discord-link').textContent = t.discordLabel;
     document.getElementById('btn-save-discord').textContent = t.saveDiscord;
-    document.getElementById('addLevelBtn').textContent = t.addLevel;
+    updateCatTitle();
     updateAdminUI();
+}
+
+function updateCatTitle() {
+    document.getElementById('cat-title').textContent = T[lang][currentCategory === 'absolute' ? 'catAbsolute' : 'catProgress'];
 }
 
 function toggleLang() {
@@ -650,7 +703,6 @@ function toggleLang() {
     renderLevels();
 }
 
-// Admin
 function checkPassword() {
     const pass = document.getElementById('adminPass').value;
     if (pass === '6767XDXD') {
@@ -675,17 +727,27 @@ function updateAdminUI() {
             renderLevels();
         };
         document.getElementById('editDiscordBtn').classList.remove('hidden');
-        // ✅ CORREGIDO: Solo usamos la clase .hidden para mostrar/ocultar
         addBtn.classList.remove('hidden');
+        addBtn.textContent = currentCategory === 'absolute' ? t.addLevel : t.addProgress;
     } else {
         document.getElementById('adminBtn').textContent = t.admin;
         document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
         document.getElementById('editDiscordBtn').classList.add('hidden');
         addBtn.classList.add('hidden');
     }
+    updateCatTitle();
 }
 
-// Discord
+// ✅ Buscar en GD Browser
+function searchGD() {
+    const name = document.getElementById('levelName').value.trim();
+    if (!name) {
+        alert(T[lang].noTitle);
+        return;
+    }
+    window.open(`https://gdbrowser.com/search?query=${encodeURIComponent(name)}`, '_blank');
+}
+
 function openDiscord() {
     const link = localStorage.getItem('discordLink');
     if (link) window.open(link, '_blank');
@@ -698,7 +760,7 @@ function saveDiscord() {
     closeModal('discordModal');
 }
 
-// Niveles - CRUD
+// ===== NIVELES ABSOLUTOS =====
 function getLevels() {
     return JSON.parse(localStorage.getItem('absoluteLevels') || '[]');
 }
@@ -707,15 +769,35 @@ function saveLevels(levels) {
     localStorage.setItem('absoluteLevels', JSON.stringify(levels));
 }
 
+// ===== NIVELES EN PROGRESO =====
+function getProgressLevels() {
+    return JSON.parse(localStorage.getItem('progressLevels') || '[]');
+}
+
+function saveProgressLevels(levels) {
+    localStorage.setItem('progressLevels', JSON.stringify(levels));
+}
+
+// ===== RENDERIZAR =====
 function renderLevels() {
+    updateCatTitle();
     const container = document.getElementById('levelsContainer');
+    
+    if (currentCategory === 'absolute') {
+        renderAbsolute(container);
+    } else {
+        renderProgress(container);
+    }
+}
+
+function renderAbsolute(container) {
     const levels = getLevels();
     container.innerHTML = '';
     
     levels.forEach(level => {
         const card = document.createElement('div');
         card.className = 'level-card';
-        card.onclick = () => openDetail(level.id);
+        card.onclick = () => openDetail(level.id, 'absolute');
         
         const thumb = level.photo || getYtThumb(level.ytLink) || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
         
@@ -724,6 +806,28 @@ function renderLevels() {
             <div class="level-info">
                 <div class="level-name">${escapeHtml(level.name)}</div>
                 <div class="level-author">${escapeHtml(level.author)}${level.verified === 'yes' ? `<span class="verified-tag">✓ ${escapeHtml(level.verifier || '')}</span>` : ''}</div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderProgress(container) {
+    const levels = getProgressLevels();
+    container.innerHTML = '';
+    
+    levels.forEach(level => {
+        const card = document.createElement('div');
+        card.className = 'level-card';
+        card.onclick = () => openDetail(level.id, 'progress');
+        
+        const thumb = level.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
+        
+        card.innerHTML = `
+            <img src="${thumb}" class="level-thumbnail" alt="">
+            <div class="level-info">
+                <div class="level-name">${escapeHtml(level.name)}</div>
+                <div class="level-author">${escapeHtml(level.author)}</div>
             </div>
         `;
         container.appendChild(card);
@@ -742,8 +846,17 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
-// Formulario niveles
+// ===== ABRIR FORMULARIO SEGÚN CATEGORÍA =====
 function openAddLevel() {
+    if (currentCategory === 'absolute') {
+        openAddAbsolute();
+    } else {
+        openAddProgress();
+    }
+}
+
+// ===== ABSOLUTO =====
+function openAddAbsolute() {
     recordEntries = [];
     document.getElementById('editingId').value = '';
     document.getElementById('levelName').value = '';
@@ -754,13 +867,13 @@ function openAddLevel() {
     document.getElementById('levelYt').value = '';
     document.getElementById('level-form-title').textContent = T[lang].addLevel;
     document.getElementById('verifierRow').classList.add('hidden');
+    document.getElementById('detailRecordsSection').style.display = '';
     renderRecordsForm();
     openModal('levelModal');
 }
 
 function toggleVerifier() {
-    const row = document.getElementById('verifierRow');
-    row.classList.toggle('hidden', document.getElementById('levelVerified').value !== 'yes');
+    document.getElementById('verifierRow').classList.toggle('hidden', document.getElementById('levelVerified').value !== 'yes');
 }
 
 function addRecord() {
@@ -793,10 +906,9 @@ function renderRecordsForm() {
 
 function saveLevel() {
     const t = T[lang];
-    const photo = document.getElementById('levelPhoto').value.trim();
     const ytLink = document.getElementById('levelYt').value.trim();
     
-    if (!photo && !ytLink) {
+    if (!ytLink) {
         alert(t.fillRequired);
         return;
     }
@@ -807,7 +919,7 @@ function saveLevel() {
         author: document.getElementById('levelAuthor').value.trim(),
         verified: document.getElementById('levelVerified').value,
         verifier: document.getElementById('levelVerifier').value.trim(),
-        photo: photo,
+        photo: document.getElementById('levelPhoto').value.trim(),
         ytLink: ytLink,
         records: [...recordEntries]
     };
@@ -822,66 +934,119 @@ function saveLevel() {
     renderLevels();
 }
 
-// Detalle nivel
-function openDetail(id) {
-    const level = getLevels().find(l => l.id === id);
-    if (!level) return;
+// ===== PROGRESO =====
+function openAddProgress() {
+    document.getElementById('editingProgressId').value = '';
+    document.getElementById('progressName').value = '';
+    document.getElementById('progressAuthor').value = '';
+    document.getElementById('progressPhoto').value = '';
+    openModal('progressModal');
+}
+
+function saveProgressLevel() {
+    const levelData = {
+        id: document.getElementById('editingProgressId').value || Date.now().toString(),
+        name: document.getElementById('progressName').value.trim(),
+        author: document.getElementById('progressAuthor').value.trim(),
+        photo: document.getElementById('progressPhoto').value.trim()
+    };
     
+    let levels = getProgressLevels();
+    const idx = levels.findIndex(l => l.id === levelData.id);
+    if (idx >= 0) levels[idx] = levelData;
+    else levels.push(levelData);
+    
+    saveProgressLevels(levels);
+    closeModal('progressModal');
+    renderLevels();
+}
+
+// ===== DETALLE =====
+let detailCategory = 'absolute';
+
+function openDetail(id, cat) {
     currentDetailId = id;
+    detailCategory = cat;
     const t = T[lang];
+    let level, thumb, meta;
     
-    document.getElementById('detailImg').src = level.photo || getYtThumb(level.ytLink) || '';
-    document.getElementById('detailName').textContent = level.name;
-    
-    let meta = `${lang === 'es' ? 'Por' : 'By'} ${level.author}`;
-    if (level.verified === 'yes') meta += ` | ${lang === 'es' ? 'Verificado por' : 'Verified by'} ${level.verifier}`;
-    document.getElementById('detailMeta').textContent = meta;
-    
-    const recordsContainer = document.getElementById('detailRecords');
-    if (level.records?.length) {
-        recordsContainer.innerHTML = level.records.map(r => `
-            <div class="record-item ${r.complete ? 'record-complete' : ''}">
-                <strong>${escapeHtml(r.name)}</strong> — ${escapeHtml(r.record)}
-                ${r.complete ? ` ✅ ${t.complete}` : ''}
-            </div>
-        `).join('');
+    if (cat === 'absolute') {
+        level = getLevels().find(l => l.id === id);
+        if (!level) return;
+        thumb = level.photo || getYtThumb(level.ytLink) || '';
+        meta = `${lang === 'es' ? 'Por' : 'By'} ${level.author}`;
+        if (level.verified === 'yes') meta += ` | ${lang === 'es' ? 'Verificado por' : 'Verified by'} ${level.verifier}`;
+        
+        document.getElementById('detailRecordsSection').style.display = 'block';
+        const recordsContainer = document.getElementById('detailRecords');
+        if (level.records?.length) {
+            recordsContainer.innerHTML = level.records.map(r => `
+                <div class="record-item ${r.complete ? 'record-complete' : ''}">
+                    <strong>${escapeHtml(r.name)}</strong> — ${escapeHtml(r.record)}
+                    ${r.complete ? ` ✅ ${t.complete}` : ''}
+                </div>
+            `).join('');
+        } else {
+            recordsContainer.innerHTML = `<p style="color:#a0a0b0">${t.noRecords}</p>`;
+        }
     } else {
-        recordsContainer.innerHTML = `<p style="color:#a0a0b0">${t.noRecords}</p>`;
+        level = getProgressLevels().find(l => l.id === id);
+        if (!level) return;
+        thumb = level.photo || '';
+        meta = `${lang === 'es' ? 'Autor:' : 'Author:'} ${level.author}`;
+        document.getElementById('detailRecordsSection').style.display = 'none';
     }
     
+    document.getElementById('detailImg').src = thumb;
+    document.getElementById('detailName').textContent = level.name;
+    document.getElementById('detailMeta').textContent = meta;
     document.getElementById('detailAdminActions').classList.toggle('hidden', !isAdmin);
     openModal('detailModal');
 }
 
 function editCurrentLevel() {
-    const level = getLevels().find(l => l.id === currentDetailId);
-    if (!level) return;
-    
     closeModal('detailModal');
     
-    document.getElementById('editingId').value = level.id;
-    document.getElementById('levelName').value = level.name;
-    document.getElementById('levelAuthor').value = level.author;
-    document.getElementById('levelVerified').value = level.verified;
-    document.getElementById('levelVerifier').value = level.verifier || '';
-    document.getElementById('levelPhoto').value = level.photo || '';
-    document.getElementById('levelYt').value = level.ytLink || '';
-    document.getElementById('level-form-title').textContent = T[lang].editLevel;
-    document.getElementById('verifierRow').classList.toggle('hidden', level.verified !== 'yes');
-    recordEntries = level.records ? [...level.records] : [];
-    renderRecordsForm();
-    openModal('levelModal');
+    if (detailCategory === 'absolute') {
+        const level = getLevels().find(l => l.id === currentDetailId);
+        if (!level) return;
+        
+        document.getElementById('editingId').value = level.id;
+        document.getElementById('levelName').value = level.name;
+        document.getElementById('levelAuthor').value = level.author;
+        document.getElementById('levelVerified').value = level.verified;
+        document.getElementById('levelVerifier').value = level.verifier || '';
+        document.getElementById('levelPhoto').value = level.photo || '';
+        document.getElementById('levelYt').value = level.ytLink || '';
+        document.getElementById('level-form-title').textContent = T[lang].editLevel;
+        document.getElementById('verifierRow').classList.toggle('hidden', level.verified !== 'yes');
+        recordEntries = level.records ? [...level.records] : [];
+        renderRecordsForm();
+        openModal('levelModal');
+    } else {
+        const level = getProgressLevels().find(l => l.id === currentDetailId);
+        if (!level) return;
+        
+        document.getElementById('editingProgressId').value = level.id;
+        document.getElementById('progressName').value = level.name;
+        document.getElementById('progressAuthor').value = level.author;
+        document.getElementById('progressPhoto').value = level.photo || '';
+        openModal('progressModal');
+    }
 }
 
 function deleteCurrentLevel() {
     if (!confirm(T[lang].deleteConfirm)) return;
-    let levels = getLevels().filter(l => l.id !== currentDetailId);
-    saveLevels(levels);
+    
+    if (detailCategory === 'absolute') {
+        saveLevels(getLevels().filter(l => l.id !== currentDetailId));
+    } else {
+        saveProgressLevels(getProgressLevels().filter(l => l.id !== currentDetailId));
+    }
     closeModal('detailModal');
     renderLevels();
 }
 
-// Modales
 function openModal(id) {
     document.getElementById(id).classList.add('show');
     document.getElementById('menuDropdown').classList.remove('show');
