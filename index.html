@@ -15,9 +15,6 @@
             --text-muted: #a0a0b0;
             --accent: #6366f1;
             --accent-glow: rgba(99, 102, 241, 0.6);
-            --gold: #f59e0b;
-            --silver: #9ca3af;
-            --bronze: #d97706;
             --success: #10b981;
             --danger: #dc2626;
             --warning: #f59e0b;
@@ -45,7 +42,7 @@
             font-size: clamp(3rem, 10vw, 5.5rem);
             font-weight: 800;
             letter-spacing: 0.3em;
-            color: #ffffff;
+            color: #fff;
             text-shadow: var(--neon);
             animation: neonPulse 2s ease-in-out infinite alternate;
             text-transform: uppercase;
@@ -96,7 +93,6 @@
             border-radius: 12px;
             min-width: 240px;
             display: none;
-            overflow: hidden;
             border: 1px solid var(--border);
             margin-top: 0.5rem;
             backdrop-filter: blur(10px);
@@ -181,7 +177,6 @@
             flex-wrap: wrap;
         }
         
-        /* === ETIQUETA DE TOP === */
         .top-badge {
             display: inline-flex;
             align-items: center;
@@ -387,9 +382,40 @@
         
         .detail-meta {
             color: var(--text-muted);
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             font-size: 1.1rem;
         }
+        
+        .copy-id-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0.8rem;
+            background: var(--bg-hover);
+            border-radius: 10px;
+        }
+        .copy-id-label {
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+        .copy-id-value {
+            flex: 1;
+            font-family: monospace;
+            color: var(--text-muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .copy-id-btn {
+            width: auto;
+            margin: 0;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+        .copy-id-btn.copied { background: var(--success); }
         
         .records-section { margin-top: 2rem; }
         
@@ -495,7 +521,6 @@
         </div>
     </div>
 
-    <!-- ✅ MODAL NIVEL ABSOLUTO → CON CAMPO TOP -->
     <div class="modal" id="levelModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('levelModal')">&times;</button>
@@ -504,7 +529,6 @@
             <label id="lbl-name">Título del Nivel:</label>
             <input type="text" id="levelName" required>
             
-            <!-- ✅ NUEVO: Campo Posición / Top -->
             <label id="lbl-top">🏆 Posición / Top:</label>
             <select id="levelTop">
                 <option value="">— Ninguna —</option>
@@ -552,7 +576,6 @@
         </div>
     </div>
 
-    <!-- ✅ MODAL NIVEL EN PROGRESO → SIN CAMPO TOP -->
     <div class="modal" id="progressModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('progressModal')">&times;</button>
@@ -581,6 +604,13 @@
             <img id="detailImg" class="detail-thumbnail" src="" alt="">
             <h2 class="detail-name" id="detailName"></h2>
             <p class="detail-meta" id="detailMeta"></p>
+            
+            <!-- ✅ FILA DE COPIAR ID -->
+            <div class="copy-id-row">
+                <span class="copy-id-label">ID:</span>
+                <span class="copy-id-value" id="detailIdValue"></span>
+                <button class="copy-id-btn secondary" id="copyIdBtn" onclick="copyCurrentId()">📋 Copiar</button>
+            </div>
             
             <div class="records-section" id="detailRecordsSection">
                 <h4 class="records-title" id="lbl-records-list">Récords</h4>
@@ -636,6 +666,7 @@ let lang = localStorage.getItem('listLang') || 'es';
 let currentDetailId = null;
 let recordEntries = [];
 let currentCategory = 'absolute';
+let detailCategory = 'absolute';
 
 const T = {
     es: {
@@ -683,8 +714,6 @@ const T = {
         deleteConfirm: '¿Seguro que quieres borrar este nivel?',
         fillRequired: 'Debes poner enlace de YouTube',
         noRecords: 'Sin récords registrados',
-        noYtNeeded: '(No requiere enlace de YouTube)',
-        expiredReported: '✅ Aviso enviado. Se ha registrado que el enlace está expirado.',
         noLinkYet: 'El enlace aún no está configurado',
         linkExpiredLog: 'Enlace de Discord reportado como expirado',
         addedLog: 'subido',
@@ -692,7 +721,7 @@ const T = {
         deletedLog: 'eliminado',
         noLogs: 'Sin registros',
         clearLogs: 'Limpiar Registro',
-        chooseFile: 'O elegir desde tu galería:'
+        copied: '✅ ¡Copiado!'
     },
     en: {
         title: 'The Absolute List',
@@ -739,8 +768,6 @@ const T = {
         deleteConfirm: 'Are you sure you want to delete this level?',
         fillRequired: 'YouTube link is required',
         noRecords: 'No records yet',
-        noYtNeeded: '(No YouTube link needed)',
-        expiredReported: '✅ Report sent. The expired link has been logged.',
         noLinkYet: 'Link not set yet',
         linkExpiredLog: 'Discord link reported as expired',
         addedLog: 'uploaded',
@@ -748,7 +775,7 @@ const T = {
         deletedLog: 'deleted',
         noLogs: 'No records',
         clearLogs: 'Clear Log',
-        chooseFile: 'Or choose from your gallery:'
+        copied: '✅ Copied!'
     }
 };
 
@@ -759,6 +786,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMenu();
     document.getElementById('addLevelBtn').addEventListener('click', openAddLevel);
 });
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
 function handleFileSelect(input, targetId) {
     const file = input.files[0];
@@ -780,25 +810,21 @@ function setupMenu() {
         document.getElementById('menuDropdown').classList.remove('show');
     });
     
-    document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
-    document.getElementById('discordBtn').onclick = () => openModal('discordMenuModal');
-    document.getElementById('editDiscordBtn').onclick = () => {
+    document.getElementById('adminBtn').addEventListener('click', () => openModal('passwordModal'));
+    document.getElementById('discordBtn').addEventListener('click', () => openModal('discordMenuModal'));
+    document.getElementById('editDiscordBtn').addEventListener('click', () => {
         const link = localStorage.getItem('discordLink') || '';
         document.getElementById('discordLink').value = link;
         openModal('discordModal');
-    };
-    document.getElementById('logBtn').onclick = () => {
+    });
+    document.getElementById('logBtn').addEventListener('click', () => {
         renderLogs();
         openModal('logModal');
-    };
-    document.getElementById('langBtn').onclick = toggleLang;
-    
-    document.getElementById('switchAbsolute').onclick = () => switchCategory('absolute');
-    document.getElementById('switchProgress').onclick = () => switchCategory('progress');
+    });
+    document.getElementById('langBtn').addEventListener('click', toggleLang);
+    document.getElementById('switchAbsolute').addEventListener('click', () => switchCategory('absolute'));
+    document.getElementById('switchProgress').addEventListener('click', () => switchCategory('progress'));
 }
-
-function openModal(id) { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
 function addLog(type, message) {
     const logs = JSON.parse(localStorage.getItem('activityLogs') || '[]');
@@ -904,7 +930,6 @@ function toggleLang() {
     lang = lang === 'es' ? 'en' : 'es';
     localStorage.setItem('listLang', lang);
     applyLang();
-    // ⚠️ No se llama renderLevels() para NO tocar los nombres de los niveles
 }
 
 function checkPassword() {
@@ -975,7 +1000,6 @@ function saveProgressLevels(levels) {
     localStorage.setItem('progressLevels', JSON.stringify(levels));
 }
 
-// ✅ Generar etiqueta de Top
 function getTopBadge(topVal) {
     if (!topVal) return '';
     if (topVal === 'more') return `<span class="top-badge top-other">Top 7+</span>`;
@@ -985,61 +1009,48 @@ function getTopBadge(topVal) {
 function renderLevels() {
     updateCatTitle();
     const container = document.getElementById('levelsContainer');
+    container.innerHTML = '';
     
     if (currentCategory === 'absolute') {
-        renderAbsolute(container);
-    } else {
-        renderProgress(container);
-    }
-}
-
-function renderAbsolute(container) {
-    const levels = getLevels();
-    container.innerHTML = '';
-    
-    levels.forEach(level => {
-        const card = document.createElement('div');
-        card.className = 'level-card';
-        card.onclick = () => openDetail(level.id, 'absolute');
-        
-        const thumb = level.photo || getYtThumb(level.ytLink) || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
-        const topBadge = getTopBadge(level.top);
-        
-        card.innerHTML = `
-            <img src="${thumb}" class="level-thumbnail" alt="">
-            <div class="level-info">
-                <div class="level-name">
-                    ${topBadge}
-                    ${escapeHtml(level.name)}
-                    ${level.verified === 'yes' ? `<span class="verified-tag">✓ ${escapeHtml(level.verifier || '')}</span>` : ''}
+        getLevels().forEach(level => {
+            const card = document.createElement('div');
+            card.className = 'level-card';
+            card.addEventListener('click', () => openDetail(level.id, 'absolute'));
+            
+            const thumb = level.photo || getYtThumb(level.ytLink) || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
+            const topBadge = getTopBadge(level.top);
+            
+            card.innerHTML = `
+                <img src="${thumb}" class="level-thumbnail" alt="">
+                <div class="level-info">
+                    <div class="level-name">
+                        ${topBadge}
+                        ${escapeHtml(level.name)}
+                        ${level.verified === 'yes' ? `<span class="verified-tag">✓ ${escapeHtml(level.verifier || '')}</span>` : ''}
+                    </div>
+                    <div class="level-author">${escapeHtml(level.author)}</div>
                 </div>
-                <div class="level-author">${escapeHtml(level.author)}</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-function renderProgress(container) {
-    const levels = getProgressLevels();
-    container.innerHTML = '';
-    
-    levels.forEach(level => {
-        const card = document.createElement('div');
-        card.className = 'level-card';
-        card.onclick = () => openDetail(level.id, 'progress');
-        
-        const thumb = level.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
-        
-        card.innerHTML = `
-            <img src="${thumb}" class="level-thumbnail" alt="">
-            <div class="level-info">
-                <div class="level-name">${escapeHtml(level.name)}</div>
-                <div class="level-author">${escapeHtml(level.author)}</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+            `;
+            container.appendChild(card);
+        });
+    } else {
+        getProgressLevels().forEach(level => {
+            const card = document.createElement('div');
+            card.className = 'level-card';
+            card.addEventListener('click', () => openDetail(level.id, 'progress'));
+            
+            const thumb = level.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
+            
+            card.innerHTML = `
+                <img src="${thumb}" class="level-thumbnail" alt="">
+                <div class="level-info">
+                    <div class="level-name">${escapeHtml(level.name)}</div>
+                    <div class="level-author">${escapeHtml(level.author)}</div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
 }
 
 function getYtThumb(url) {
@@ -1055,11 +1066,8 @@ function escapeHtml(str) {
 }
 
 function openAddLevel() {
-    if (currentCategory === 'absolute') {
-        openAddAbsolute();
-    } else {
-        openAddProgress();
-    }
+    if (currentCategory === 'absolute') openAddAbsolute();
+    else openAddProgress();
 }
 
 function openAddAbsolute() {
@@ -1186,8 +1194,6 @@ function saveProgressLevel() {
     renderLevels();
 }
 
-let detailCategory = 'absolute';
-
 function openDetail(id, cat) {
     currentDetailId = id;
     detailCategory = cat;
@@ -1205,13 +1211,4 @@ function openDetail(id, cat) {
         const recordsContainer = document.getElementById('detailRecords');
         if (level.records?.length) {
             recordsContainer.innerHTML = level.records.map(r => `
-                <div class="record-item ${r.complete ? 'record-complete' : ''}">
-                    <strong>${escapeHtml(r.name)}</strong> — ${escapeHtml(r.record)}
-                    ${r.complete ? ` ✅ ${t.complete}` : ''}
-                </div>
-            `).join('');
-        } else {
-            recordsContainer.innerHTML = `<p style="color:#a0a0b0">${t.noRecords}</p>`;
-        }
-    } else {
-       
+                <
