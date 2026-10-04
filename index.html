@@ -64,12 +64,12 @@
             margin-top: 1rem;
         }
         
-        /* === MENÚ CON MÁS VIDA === */
+        /* === MENÚ CON VIDA === */
         .menu-container {
             position: fixed;
             top: 2rem;
             right: 2rem;
-            z-index: 100;
+            z-index: 999;
         }
         
         .menu-btn {
@@ -123,34 +123,12 @@
             align-items: center;
             gap: 0.8rem;
             position: relative;
-            overflow: hidden;
         }
-        
-        .menu-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, rgba(99,102,241,0.2), transparent);
-            transition: width 0.3s ease;
-        }
-        
-        .menu-item:hover::before { width: 100%; }
         
         .menu-item:hover {
+            background: linear-gradient(90deg, rgba(99,102,241,0.2), transparent);
             padding-left: 2rem;
-            color: #fff;
         }
-        
-        .menu-item:nth-child(1):hover { background: linear-gradient(90deg, rgba(99,102,241,0.3), transparent); }
-        .menu-item:nth-child(2):hover { background: linear-gradient(90deg, rgba(88,101,242,0.3), transparent); }
-        .menu-item:nth-child(4):hover { background: linear-gradient(90deg, rgba(16,185,129,0.3), transparent); }
-        .menu-item:nth-child(6):hover { background: linear-gradient(90deg, rgba(245,158,11,0.3), transparent); }
-        .menu-item:nth-child(7):hover { background: linear-gradient(90deg, rgba(239,68,68,0.3), transparent); }
-        
-        .menu-item span { position: relative; z-index: 1; }
         
         .divider {
             height: 1px;
@@ -185,7 +163,6 @@
             overflow: hidden;
             cursor: pointer;
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
         }
         
         .level-card:hover {
@@ -214,7 +191,6 @@
             flex-wrap: wrap;
         }
         
-        /* === ETIQUETA DE TOP/POSICIÓN === */
         .top-badge {
             display: inline-flex;
             align-items: center;
@@ -272,7 +248,7 @@
             flex-wrap: wrap;
         }
         .input-row input, .input-row button { flex: 1; min-width: 140px; margin: 0; }
-        .search-btn, .file-btn {
+        .search-btn {
             width: auto;
             margin: 0;
             padding: 0.9rem 1rem;
@@ -297,13 +273,12 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 200;
+            z-index: 1000;
             padding: 1rem;
             backdrop-filter: blur(10px);
         }
         
-        .modal.show { display: flex; animation: modalFade 0.2s ease; }
-        @keyframes modalFade { from {opacity:0} to {opacity:1} }
+        .modal.show { display: flex; }
         
         .modal-box {
             background: linear-gradient(180deg, #1f1f2e, #171722);
@@ -330,9 +305,6 @@
             margin-bottom: 1.5rem;
             font-weight: 700;
             color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
         }
         
         .close-btn {
@@ -430,26 +402,19 @@
         }
         
         .records-section { margin-top: 2rem; }
-        
         .records-title {
             font-weight: 700;
             margin-bottom: 1rem;
             font-size: 1.2rem;
             color: var(--text);
         }
-        
         .record-item {
             padding: 1rem;
             border-bottom: 1px solid var(--border);
             transition: background 0.2s;
         }
-        
         .record-item:hover { background: var(--bg-hover); }
-        
-        .record-complete {
-            color: var(--success);
-            font-weight: 600;
-        }
+        .record-complete { color: var(--success); font-weight: 600; }
         
         .admin-actions {
             margin-top: 2rem;
@@ -468,14 +433,8 @@
             background: var(--bg-hover);
         }
         
-        .log-section {
-            margin-bottom: 1.5rem;
-        }
-        .log-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--accent);
-        }
+        .log-section { margin-bottom: 1.5rem; }
+        .log-title { font-weight: 600; margin-bottom: 0.5rem; color: var(--accent); }
         .log-item {
             padding: 0.7rem;
             border-bottom: 1px solid var(--border);
@@ -495,22 +454,23 @@
         <p class="subtitle" id="main-subtitle">Los Absolute Levels</p>
     </div>
 
+    <!-- BOTÓN 3 PUNTOS CORREGIDO -->
     <div class="menu-container">
         <button class="menu-btn" id="menuBtn">⋮</button>
         <div class="menu-dropdown" id="menuDropdown">
-            <div class="menu-item" id="adminBtn"><span>🔐</span> <span id="adminBtnText">Modo Admin</span></div>
-            <div class="menu-item" id="discordBtn"><span>💬</span> Discord</div>
-            <div class="menu-item hidden" id="editDiscordBtn"><span>✏️</span> Editar Discord</div>
-            <div class="menu-item hidden" id="logBtn"><span>📋</span> Registro</div>
+            <div class="menu-item" id="adminBtn">🔐 Modo Admin</div>
+            <div class="menu-item" id="discordBtn">💬 Discord</div>
+            <div class="menu-item hidden" id="editDiscordBtn">✏️ Editar Discord</div>
+            <div class="menu-item hidden" id="logBtn">📋 Registro</div>
             <div class="divider"></div>
-            <div class="menu-item" id="switchAbsolute"><span>⭐</span> Absolute Levels</div>
-            <div class="menu-item" id="switchProgress"><span>🚧</span> Niveles en Progreso</div>
+            <div class="menu-item" id="switchAbsolute">⭐ Absolute Levels</div>
+            <div class="menu-item" id="switchProgress">🚧 Niveles en Progreso</div>
             <div class="divider"></div>
-            <div class="menu-item" id="langBtn"><span>🌐</span> Cambiar Idioma</div>
+            <div class="menu-item" id="langBtn">🌐 Cambiar Idioma</div>
         </div>
     </div>
 
-    <!-- Menú de Discord -->
+    <!-- Menú Discord -->
     <div class="modal" id="discordMenuModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('discordMenuModal')">&times;</button>
@@ -520,35 +480,33 @@
         </div>
     </div>
 
-    <!-- Categoría ACTIVA -->
     <div class="category">
         <h2 class="category-title" id="cat-title">⭐ Los Absolute Levels</h2>
         <button class="add-btn hidden" id="addLevelBtn">➕ Añadir Nuevo Nivel</button>
         <div class="levels-grid" id="levelsContainer"></div>
     </div>
 
-    <!-- MODAL: Contraseña -->
+    <!-- MODAL Contraseña -->
     <div class="modal" id="passwordModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('passwordModal')">&times;</button>
-            <h3 class="modal-title" id="pass-title">🔐 Modo Admin</h3>
-            <label id="pass-label">Contraseña:</label>
+            <h3 class="modal-title">🔐 Modo Admin</h3>
+            <label>Contraseña:</label>
             <input type="password" id="adminPass" placeholder="Escribe la contraseña">
-            <button onclick="checkPassword()" id="pass-submit">Entrar</button>
+            <button onclick="checkPassword()">Entrar</button>
         </div>
     </div>
 
-    <!-- MODAL: Añadir/Editar Nivel ABSOLUTO -->
+    <!-- MODAL Añadir/Editar Nivel ABSOLUTO → CON TOP -->
     <div class="modal" id="levelModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('levelModal')">&times;</button>
             <h3 class="modal-title" id="level-form-title">➕ Añadir Nivel</h3>
             
-            <label id="lbl-name">Título del Nivel:</label>
+            <label>Título del Nivel:</label>
             <input type="text" id="levelName" required>
             
-            <!-- ✅ NUEVO: Campo Posición/Top -->
-            <label id="lbl-top">🏆 Posición / Top:</label>
+            <label>🏆 Posición / Top:</label>
             <select id="levelTop">
                 <option value="">— Ninguna —</option>
                 <option value="1">🥇 Top 1</option>
@@ -560,46 +518,46 @@
                 <option value="more">🏅 Top 7 o más</option>
             </select>
             
-            <label id="lbl-author">Autor:</label>
+            <label>Autor:</label>
             <input type="text" id="levelAuthor" required>
             
-            <label id="lbl-verif">¿Está verificado?</label>
+            <label>¿Está verificado?</label>
             <select id="levelVerified" onchange="toggleVerifier()">
-                <option value="no" id="opt-no">No</option>
-                <option value="yes" id="opt-yes">Sí</option>
+                <option value="no">No</option>
+                <option value="yes">Sí</option>
             </select>
             
             <div id="verifierRow" class="hidden">
-                <label id="lbl-verifier">Nombre del verificador:</label>
+                <label>Nombre del verificador:</label>
                 <input type="text" id="levelVerifier">
             </div>
             
-            <label id="lbl-photo">Foto (opcional):</label>
+            <label>Foto (opcional):</label>
             <input type="url" id="levelPhoto" placeholder="Enlace de imagen">
             <div class="file-input-row">
                 <input type="file" id="levelPhotoFile" accept="image/*" onchange="handleFileSelect(this, 'levelPhoto')">
             </div>
             
-            <label id="lbl-yt">Enlace de YouTube / ID:</label>
+            <label>Enlace de YouTube / ID:</label>
             <div class="input-row">
                 <input type="url" id="levelYt" placeholder="https://youtube.com/watch?v=... o ID">
                 <button type="button" class="search-btn secondary" onclick="searchGD()">🔍 Buscar ID</button>
             </div>
             
-            <h4 style="margin-top:1.8rem" id="lbl-records">Récords</h4>
+            <h4 style="margin-top:1.8rem">Récords</h4>
             <div id="recordsList"></div>
-            <button class="secondary" onclick="addRecord()" id="btn-add-record">+ Añadir Récord</button>
+            <button class="secondary" onclick="addRecord()">+ Añadir Récord</button>
             
             <input type="hidden" id="editingId">
-            <button onclick="saveLevel()" id="btn-save-level">💾 Guardar Nivel</button>
+            <button onclick="saveLevel()">💾 Guardar Nivel</button>
         </div>
     </div>
 
-    <!-- MODAL: Añadir/Editar Nivel EN PROGRESO (SIN Top) -->
+    <!-- MODAL Nivel en Progreso → SIN TOP -->
     <div class="modal" id="progressModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('progressModal')">&times;</button>
-            <h3 class="modal-title" id="progress-form-title">🚧 Nivel en Progreso</h3>
+            <h3 class="modal-title">🚧 Nivel en Progreso</h3>
             
             <label>Nombre del Nivel:</label>
             <input type="text" id="progressName" required>
@@ -618,7 +576,7 @@
         </div>
     </div>
 
-    <!-- MODAL: Detalle del Nivel -->
+    <!-- MODAL Detalle -->
     <div class="modal" id="detailModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('detailModal')">&times;</button>
@@ -627,29 +585,29 @@
             <p class="detail-meta" id="detailMeta"></p>
             
             <div class="records-section" id="detailRecordsSection">
-                <h4 class="records-title" id="lbl-records-list">Récords</h4>
+                <h4 class="records-title">Récords</h4>
                 <div id="detailRecords"></div>
             </div>
             
             <div class="admin-actions hidden" id="detailAdminActions">
-                <button class="secondary" id="btn-edit-level" onclick="editCurrentLevel()">✏️ Editar</button>
-                <button class="danger" id="btn-delete-level" onclick="deleteCurrentLevel()">🗑️ Borrar</button>
+                <button class="secondary" onclick="editCurrentLevel()">✏️ Editar</button>
+                <button class="danger" onclick="deleteCurrentLevel()">🗑️ Borrar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: Editar Discord -->
+    <!-- MODAL Editar Discord -->
     <div class="modal" id="discordModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('discordModal')">&times;</button>
             <h3 class="modal-title">✏️ Enlace de Discord</h3>
-            <label id="lbl-discord-link">Enlace del servidor de Discord:</label>
+            <label>Enlace del servidor de Discord:</label>
             <input type="url" id="discordLink" placeholder="https://discord.gg/...">
-            <button onclick="saveDiscord()" id="btn-save-discord">💾 Guardar Enlace</button>
+            <button onclick="saveDiscord()">💾 Guardar Enlace</button>
         </div>
     </div>
 
-    <!-- MODAL: Registro -->
+    <!-- MODAL Registro -->
     <div class="modal" id="logModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('logModal')">&times;</button>
@@ -685,134 +643,24 @@ let currentCategory = 'absolute';
 
 const T = {
     es: {
-        title: 'The Absolute List',
-        subtitle: 'Los Absolute Levels',
-        catAbsolute: '⭐ Los Absolute Levels',
-        catProgress: '🚧 Niveles en Progreso',
-        admin: '🔐 Modo Admin',
-        adminExit: '🚪 Salir Admin',
-        discord: '💬 Discord',
-        editDiscord: '✏️ Editar Discord',
-        logs: '📋 Registro',
-        lang: '🌐 Cambiar a Inglés',
-        passPrompt: 'Modo Admin',
-        passLabel: 'Contraseña:',
-        passSubmit: 'Entrar',
-        passWrong: 'Contraseña incorrecta',
-        addLevel: '+ Añadir Nuevo Nivel',
-        addProgress: '+ Añadir Nivel en Progreso',
-        editLevel: 'Editar Nivel',
-        name: 'Título del Nivel:',
-        top: '🏆 Posición / Top:',
-        author: 'Autor:',
-        verified: '¿Está verificado?',
-        no: 'No',
-        yes: 'Sí',
-        verifier: 'Nombre del verificador:',
-        photo: 'Foto (opcional):',
-        ytLink: 'Enlace de YouTube / ID:',
-        searchGD: '🔍 Buscar ID',
-        noTitle: '⚠️ Escribe primero el nombre del nivel para buscar',
-        records: 'Récords',
-        addRecord: '+ Añadir Récord',
-        save: 'Guardar Nivel',
-        recordsTitle: 'Récords',
-        complete: 'Completado',
-        edit: '✏️ Editar',
-        delete: '🗑️ Borrar',
-        discordTitle: 'Enlace de Discord',
-        discordLabel: 'Enlace del servidor de Discord:',
-        saveDiscord: 'Guardar Enlace',
-        openDiscord: 'Abrir Discord',
-        nameRecord: 'Nombre del jugador',
-        recordVal: 'Récord (ej: 100%, 0:45)',
-        isComplete: '¿Lo completó?',
-        deleteConfirm: '¿Seguro que quieres borrar este nivel?',
-        fillRequired: 'Debes poner enlace de YouTube',
         noRecords: 'Sin récords registrados',
-        noYtNeeded: '(No requiere enlace de YouTube)',
+        noLogs: 'Sin registros',
         expiredReported: '✅ Aviso enviado. Se ha registrado que el enlace está expirado.',
         noLinkYet: 'El enlace aún no está configurado',
-        linkExpiredLog: 'Enlace de Discord reportado como expirado',
-        addedLog: 'subido',
-        editedLog: 'editado',
-        deletedLog: 'eliminado',
-        noLogs: 'Sin registros',
-        clearLogs: 'Limpiar Registro',
-        chooseFile: 'O elegir desde tu galería:',
-        topNone: '— Ninguna —',
-        top1: '🥇 Top 1',
-        top2: '🥈 Top 2',
-        top3: '🥉 Top 3',
-        top4: '🏅 Top 4',
-        top5: '🏅 Top 5',
-        top6: '🏅 Top 6',
-        topMore: '🏅 Top 7+'
+        passWrong: 'Contraseña incorrecta',
+        deleteConfirm: '¿Seguro que quieres borrar este nivel?',
+        fillRequired: 'Debes poner enlace de YouTube',
+        noTitle: '⚠️ Escribe primero el nombre del nivel para buscar'
     },
     en: {
-        title: 'The Absolute List',
-        subtitle: 'The Absolute Levels',
-        catAbsolute: '⭐ The Absolute Levels',
-        catProgress: '🚧 Levels in Progress',
-        admin: '🔐 Admin Mode',
-        adminExit: '🚪 Exit Admin',
-        discord: '💬 Discord',
-        editDiscord: '✏️ Edit Discord',
-        logs: '📋 Activity Log',
-        lang: '🌐 Switch to Spanish',
-        passPrompt: 'Admin Mode',
-        passLabel: 'Password:',
-        passSubmit: 'Enter',
-        passWrong: 'Incorrect password',
-        addLevel: '+ Add New Level',
-        addProgress: '+ Add Level in Progress',
-        editLevel: 'Edit Level',
-        name: 'Level Title:',
-        top: '🏆 Position / Top:',
-        author: 'Author:',
-        verified: 'Verified?',
-        no: 'No',
-        yes: 'Yes',
-        verifier: 'Verifier Name:',
-        photo: 'Photo (optional):',
-        ytLink: 'YouTube Link / ID:',
-        searchGD: '🔍 Search ID',
-        noTitle: '⚠️ Write the level name first before searching',
-        records: 'Records',
-        addRecord: '+ Add Record',
-        save: 'Save Level',
-        recordsTitle: 'Records',
-        complete: 'Completed',
-        edit: '✏️ Edit',
-        delete: '🗑️ Delete',
-        discordTitle: 'Discord Link',
-        discordLabel: 'Discord Server Link:',
-        saveDiscord: 'Save Link',
-        openDiscord: 'Open Discord',
-        nameRecord: 'Player Name',
-        recordVal: 'Record (e.g. 100%, 0:45)',
-        isComplete: 'Completed?',
-        deleteConfirm: 'Are you sure you want to delete this level?',
-        fillRequired: 'YouTube link is required',
         noRecords: 'No records yet',
-        noYtNeeded: '(No YouTube link needed)',
+        noLogs: 'No records',
         expiredReported: '✅ Report sent. The expired link has been logged.',
         noLinkYet: 'Link not set yet',
-        linkExpiredLog: 'Discord link reported as expired',
-        addedLog: 'uploaded',
-        editedLog: 'edited',
-        deletedLog: 'deleted',
-        noLogs: 'No records',
-        clearLogs: 'Clear Log',
-        chooseFile: 'Or choose from your gallery:',
-        topNone: '— None —',
-        top1: '🥇 Top 1',
-        top2: '🥈 Top 2',
-        top3: '🥉 Top 3',
-        top4: '🏅 Top 4',
-        top5: '🏅 Top 5',
-        top6: '🏅 Top 6',
-        topMore: '🏅 Top 7+'
+        passWrong: 'Incorrect password',
+        deleteConfirm: 'Are you sure you want to delete this level?',
+        fillRequired: 'YouTube link is required',
+        noTitle: '⚠️ Write the level name first before searching'
     }
 };
 
@@ -824,50 +672,46 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addLevelBtn').addEventListener('click', openAddLevel);
 });
 
-function handleFileSelect(input, targetId) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-        document.getElementById(targetId).value = e.target.result;
-    };
-    reader.readAsDataURL(file);
-}
-
+// ✅ MENÚ CORREGIDO
 function setupMenu() {
-    const btn = document.getElementById('menuBtn');
-    btn.addEventListener('click', e => {
+    const menuBtn = document.getElementById('menuBtn');
+    const dropdown = document.getElementById('menuDropdown');
+    
+    menuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        document.getElementById('menuDropdown').classList.toggle('show');
-    });
-    document.addEventListener('click', () => {
-        document.getElementById('menuDropdown').classList.remove('show');
+        dropdown.classList.toggle('show');
     });
     
+    document.addEventListener('click', () => dropdown.classList.remove('show'));
+    dropdown.addEventListener('click', (e) => e.stopPropagation());
+    
+    // Botones del menú
     document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
     document.getElementById('discordBtn').onclick = () => openModal('discordMenuModal');
     document.getElementById('editDiscordBtn').onclick = () => {
-        const link = localStorage.getItem('discordLink') || '';
-        document.getElementById('discordLink').value = link;
+        document.getElementById('discordLink').value = localStorage.getItem('discordLink') || '';
         openModal('discordModal');
     };
-    document.getElementById('logBtn').onclick = () => {
-        renderLogs();
-        openModal('logModal');
-    };
+    document.getElementById('logBtn').onclick = () => { renderLogs(); openModal('logModal'); };
     document.getElementById('langBtn').onclick = toggleLang;
-    
     document.getElementById('switchAbsolute').onclick = () => switchCategory('absolute');
     document.getElementById('switchProgress').onclick = () => switchCategory('progress');
 }
 
+function handleFileSelect(input, targetId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => document.getElementById(targetId).value = e.target.result;
+    reader.readAsDataURL(file);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
 function addLog(type, message) {
     const logs = JSON.parse(localStorage.getItem('activityLogs') || '[]');
-    logs.unshift({
-        type,
-        message,
-        time: new Date().toLocaleString(lang === 'es' ? 'es-CR' : 'en-US')
-    });
+    logs.unshift({ type, message, time: new Date().toLocaleString(lang === 'es' ? 'es-CR' : 'en-US') });
     localStorage.setItem('activityLogs', JSON.stringify(logs.slice(0, 100)));
     renderLogs();
 }
@@ -875,44 +719,30 @@ function addLog(type, message) {
 function renderLogs() {
     const logs = JSON.parse(localStorage.getItem('activityLogs') || '[]');
     const t = T[lang];
-    
-    ['added', 'edited', 'deleted', 'expired'].forEach(type => {
-        const container = document.getElementById(`log-${type}`);
+    ['added','edited','deleted','expired'].forEach(type => {
+        const c = document.getElementById(`log-${type}`);
         const items = logs.filter(l => l.type === type);
-        if (items.length === 0) {
-            container.innerHTML = `<p style="color:var(--text-muted); padding:0.5rem;">${t.noLogs}</p>`;
-        } else {
-            container.innerHTML = items.map(l => `
-                <div class="log-item ${l.type === 'expired' ? 'warning' : l.type === 'deleted' ? 'danger' : 'success'}">
-                    ${escapeHtml(l.message)}
-                    <div class="timestamp">${l.time}</div>
-                </div>
-            `).join('');
-        }
+        c.innerHTML = items.length ? items.map(l => `<div class="log-item ${l.type==='expired'?'warning':l.type==='deleted'?'danger':'success'}">${escapeHtml(l.message)}<div class="timestamp">${l.time}</div></div>`).join('') : `<p style="color:var(--text-muted);padding:0.5rem;">${t.noLogs}</p>`;
     });
 }
 
 function clearLogs() {
-    if (confirm(lang === 'es' ? '¿Borrar todo el registro?' : 'Clear all logs?')) {
+    if (confirm(lang==='es'?'¿Borrar todo el registro?':'Clear all logs?')) {
         localStorage.removeItem('activityLogs');
         renderLogs();
     }
 }
 
 function reportExpiredLink() {
-    addLog('expired', T[lang].linkExpiredLog);
+    addLog('expired', lang==='es'?'Enlace de Discord reportado como expirado':'Discord link reported as expired');
     alert(T[lang].expiredReported);
     closeModal('discordMenuModal');
 }
 
 function openDiscordLink() {
     const link = localStorage.getItem('discordLink');
-    if (link) {
-        window.open(link, '_blank');
-        closeModal('discordMenuModal');
-    } else {
-        alert(T[lang].noLinkYet);
-    }
+    if (link) { window.open(link,'_blank'); closeModal('discordMenuModal'); }
+    else alert(T[lang].noLinkYet);
 }
 
 function switchCategory(cat) {
@@ -923,206 +753,234 @@ function switchCategory(cat) {
 }
 
 function applyLang() {
-    const t = T[lang];
-    document.getElementById('main-title').textContent = t.title;
-    document.getElementById('main-subtitle').textContent = t.subtitle;
-    document.getElementById('switchAbsolute').innerHTML = `<span>⭐</span> ${t.catAbsolute}`;
-    document.getElementById('switchProgress').innerHTML = `<span>🚧</span> ${t.catProgress}`;
-    document.getElementById('adminBtnText').textContent = t.admin;
-    document.getElementById('discordBtn').innerHTML = `<span>💬</span> ${t.discord}`;
-    document.getElementById('editDiscordBtn').innerHTML = `<span>✏️</span> ${t.editDiscord}`;
-    document.getElementById('logBtn').innerHTML = `<span>📋</span> ${t.logs}`;
-    document.getElementById('langBtn').innerHTML = `<span>🌐</span> ${t.lang}`;
-    document.getElementById('pass-title').textContent = t.passPrompt;
-    document.getElementById('pass-label').textContent = t.passLabel;
-    document.getElementById('pass-submit').textContent = t.passSubmit;
-    document.getElementById('lbl-name').textContent = t.name;
-    document.getElementById('lbl-top').textContent = t.top;
-    document.getElementById('lbl-author').textContent = t.author;
-    document.getElementById('lbl-verif').textContent = t.verified;
-    document.getElementById('opt-no').textContent = t.no;
-    document.getElementById('opt-yes').textContent = t.yes;
-    document.getElementById('lbl-verifier').textContent = t.verifier;
-    document.getElementById('lbl-photo').textContent = t.photo;
-    document.getElementById('lbl-yt').textContent = t.ytLink;
-    document.getElementById('btn-add-record').textContent = t.addRecord;
-    document.getElementById('btn-save-level').textContent = t.save;
-    document.getElementById('lbl-records-list').textContent = t.recordsTitle;
-    document.getElementById('btn-edit-level').textContent = t.edit;
-    document.getElementById('btn-delete-level').textContent = t.delete;
-    document.getElementById('discord-title').textContent = t.discordTitle;
-    document.getElementById('lbl-discord-link').textContent = t.discordLabel;
-    document.getElementById('btn-save-discord').textContent = t.saveDiscord;
     updateCatTitle();
     updateAdminUI();
 }
 
 function updateCatTitle() {
-    document.getElementById('cat-title').innerHTML = currentCategory === 'absolute' 
-        ? '⭐ Los Absolute Levels' 
-        : '🚧 Niveles en Progreso';
+    document.getElementById('cat-title').innerHTML = currentCategory==='absolute'?'⭐ Los Absolute Levels':'🚧 Niveles en Progreso';
 }
 
 function toggleLang() {
-    lang = lang === 'es' ? 'en' : 'es';
+    lang = lang==='es'?'en':'es';
     localStorage.setItem('listLang', lang);
     applyLang();
     renderLevels();
 }
 
 function checkPassword() {
-    const pass = document.getElementById('adminPass').value;
-    if (pass === '6767XDXD') {
+    if (document.getElementById('adminPass').value === '6767XDXD') {
         isAdmin = true;
         closeModal('passwordModal');
         updateAdminUI();
         document.getElementById('adminPass').value = '';
-    } else {
-        alert(T[lang].passWrong);
-    }
+    } else alert(T[lang].passWrong);
 }
 
 function updateAdminUI() {
-    const t = T[lang];
-    const addBtn = document.getElementById('addLevelBtn');
-    
-    if (isAdmin) {
-        document.getElementById('adminBtnText').textContent = t.adminExit;
-        document.getElementById('adminBtn').onclick = () => {
-            isAdmin = false;
-            updateAdminUI();
-            renderLevels();
-        };
-        document.getElementById('editDiscordBtn').classList.remove('hidden');
-        document.getElementById('logBtn').classList.remove('hidden');
-        addBtn.classList.remove('hidden');
-        addBtn.textContent = currentCategory === 'absolute' ? t.addLevel : t.addProgress;
-    } else {
-        document.getElementById('adminBtnText').textContent = t.admin;
-        document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
-        document.getElementById('editDiscordBtn').classList.add('hidden');
-        document.getElementById('logBtn').classList.add('hidden');
-        addBtn.classList.add('hidden');
-    }
-    updateCatTitle();
+    document.getElementById('editDiscordBtn').classList.toggle('hidden', !isAdmin);
+    document.getElementById('logBtn').classList.toggle('hidden', !isAdmin);
+    document.getElementById('addLevelBtn').classList.toggle('hidden', !isAdmin);
 }
 
 function searchGD() {
     const name = document.getElementById('levelName').value.trim();
-    if (!name) {
-        alert(T[lang].noTitle);
-        return;
-    }
-    window.open(`https://gdbrowser.com/search?query=${encodeURIComponent(name)}`, '_blank');
+    if (!name) return alert(T[lang].noTitle);
+    window.open(`https://gdbrowser.com/search?query=${encodeURIComponent(name)}`,'_blank');
 }
 
 function saveDiscord() {
-    const link = document.getElementById('discordLink').value.trim();
-    localStorage.setItem('discordLink', link);
+    localStorage.setItem('discordLink', document.getElementById('discordLink').value.trim());
     closeModal('discordModal');
 }
 
-function getLevels() {
-    return JSON.parse(localStorage.getItem('absoluteLevels') || '[]');
+function getLevels() { return JSON.parse(localStorage.getItem('absoluteLevels') || '[]'); }
+function saveLevels(d) { localStorage.setItem('absoluteLevels', JSON.stringify(d)); }
+function getProgressLevels() { return JSON.parse(localStorage.getItem('progressLevels') || '[]'); }
+function saveProgressLevels(d) { localStorage.setItem('progressLevels', JSON.stringify(d)); }
+
+function getTopBadge(t) {
+    if (!t) return '';
+    if (t==='more') return `<span class="top-badge top-other">Top 7+</span>`;
+    return `<span class="top-badge top-${t}">${t}</span>`;
 }
 
-function saveLevels(levels) {
-    localStorage.setItem('absoluteLevels', JSON.stringify(levels));
-}
-
-function getProgressLevels() {
-    return JSON.parse(localStorage.getItem('progressLevels') || '[]');
-}
-
-function saveProgressLevels(levels) {
-    localStorage.setItem('progressLevels', JSON.stringify(levels));
-}
-
-// ✅ Generar etiqueta de Top
-function getTopBadge(topVal) {
-    if (!topVal) return '';
-    if (topVal === 'more') return `<span class="top-badge top-other">Top 7+</span>`;
-    return `<span class="top-badge top-${topVal}">${topVal}</span>`;
-}
-
-function renderLevels() {
-    updateCatTitle();
-    const container = document.getElementById('levelsContainer');
-    
-    if (currentCategory === 'absolute') {
-        renderAbsolute(container);
-    } else {
-        renderProgress(container);
-    }
-}
-
-function renderAbsolute(container) {
-    const levels = getLevels();
-    container.innerHTML = '';
-    
-    levels.forEach(level => {
-        const card = document.createElement('div');
-        card.className = 'level-card';
-        card.onclick = () => openDetail(level.id, 'absolute');
-        
-        const thumb = level.photo || getYtThumb(level.ytLink) || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
-        const topBadge = getTopBadge(level.top);
-        
-        card.innerHTML = `
-            <img src="${thumb}" class="level-thumbnail" alt="">
-            <div class="level-info">
-                <div class="level-name">
-                    ${topBadge}
-                    ${escapeHtml(level.name)}
-                    ${level.verified === 'yes' ? `<span class="verified-tag">✓ ${escapeHtml(level.verifier || '')}</span>` : ''}
-                </div>
-                <div class="level-author">${escapeHtml(level.author)}</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-function renderProgress(container) {
-    const levels = getProgressLevels();
-    container.innerHTML = '';
-    
-    levels.forEach(level => {
-        const card = document.createElement('div');
-        card.className = 'level-card';
-        card.onclick = () => openDetail(level.id, 'progress');
-        
-        const thumb = level.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
-        
-        card.innerHTML = `
-            <img src="${thumb}" class="level-thumbnail" alt="">
-            <div class="level-info">
-                <div class="level-name">${escapeHtml(level.name)}</div>
-                <div class="level-author">${escapeHtml(level.author)}</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-function getYtThumb(url) {
-    if (!url) return null;
-    const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);
+function getYtThumb(u) {
+    if (!u) return null;
+    const m = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);
     return m ? `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg` : null;
 }
 
-function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str || '';
-    return div.innerHTML;
-}
+function escapeHtml(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
 
-function openAddLevel() {
-    if (currentCategory === 'absolute') {
-        openAddAbsolute();
+function renderLevels() {
+    updateCatTitle();
+    const c = document.getElementById('levelsContainer');
+    c.innerHTML = '';
+    if (currentCategory==='absolute') {
+        getLevels().forEach(l => {
+            const thumb = l.photo || getYtThumb(l.ytLink) || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
+            c.innerHTML += `<div class="level-card" onclick="openDetail('${l.id}','absolute')"><img src="${thumb}" class="level-thumbnail"><div class="level-info"><div class="level-name">${getTopBadge(l.top)}${escapeHtml(l.name)}${l.verified==='yes'?`<span class="verified-tag">✓ ${escapeHtml(l.verifier||'')}</span>`:''}</div><div class="level-author">${escapeHtml(l.author)}</div></div></div>`;
+        });
     } else {
-        openAddProgress();
+        getProgressLevels().forEach(l => {
+            const thumb = l.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
+            c.innerHTML += `<div class="level-card" onclick="openDetail('${l.id}','progress')"><img src="${thumb}" class="level-thumbnail"><div class="level-info"><div class="level-name">${escapeHtml(l.name)}</div><div class="level-author">${escapeHtml(l.author)}</div></div></div>`;
+        });
     }
 }
 
-function openAddAbsolute() {
+function openAddLevel() {
+    if (currentCategory==='absolute') {
+        recordEntries = [];
+        document.getElementById('editingId').value = '';
+        document.getElementById('levelName').value = '';
+        document.getElementById('levelTop').value = '';
+        document.getElementById('levelAuthor').value = '';
+        document.getElementById('levelVerified').value = 'no';
+        document.getElementById('levelVerifier').value = '';
+        document.getElementById('levelPhoto').value = '';
+        document.getElementById('levelPhotoFile').value = '';
+        document.getElementById('levelYt').value = '';
+        document.getElementById('verifierRow').classList.add('hidden');
+        renderRecordsForm();
+        openModal('levelModal');
+    } else {
+        document.getElementById('editingProgressId').value = '';
+        document.getElementById('progressName').value = '';
+        document.getElementById('progressAuthor').value = '';
+        document.getElementById('progressPhoto').value = '';
+        document.getElementById('progressPhotoFile').value = '';
+        openModal('progressModal');
+    }
+}
+
+function toggleVerifier() {
+    document.getElementById('verifierRow').classList.toggle('hidden', document.getElementById('levelVerified').value!=='yes');
+}
+
+function addRecord() {
+    recordEntries.push({name:'',record:'',complete:false});
+    renderRecordsForm();
+}
+
+function removeRecord(i) {
+    recordEntries.splice(i,1);
+    renderRecordsForm();
+}
+
+function renderRecordsForm() {
+    const c = document.getElementById('recordsList');
+    c.innerHTML = recordEntries.map((r,i) => `<div class="record-form-row"><button class="close-btn" style="margin-top:0" onclick="removeRecord(${i})">&times;</button><label>Nombre del jugador</label><input type="text" value="${escapeHtml(r.name)}" onchange="recordEntries[${i}].name=this.value"><label>Récord</label><input type="text" value="${escapeHtml(r.record)}" onchange="recordEntries[${i}].record=this.value"><label style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:0.5rem;"><input type="checkbox" ${r.complete?'checked':''} onchange="recordEntries[${i}].complete=this.checked"> Completado</label></div>`).join('');
+}
+
+function saveLevel() {
+    const yt = document.getElementById('levelYt').value.trim();
+    if (!yt) return alert(T[lang].fillRequired);
+    const id = document.getElementById('editingId').value || Date.now().toString();
+    const data = {
+        id,
+        name: document.getElementById('levelName').value.trim(),
+        top: document.getElementById('levelTop').value,
+        author: document.getElementById('levelAuthor').value.trim(),
+        verified: document.getElementById('levelVerified').value,
+        verifier: document.getElementById('levelVerifier').value.trim(),
+        photo: document.getElementById('levelPhoto').value.trim(),
+        ytLink: yt,
+        records: [...recordEntries]
+    };
+    let levels = getLevels();
+    const idx = levels.findIndex(l => l.id===id);
+    if (idx<0) { levels.push(data); addLog('added', `"${data.name}" subido`); }
+    else { levels[idx] = data; addLog('edited', `"${data.name}" editado`); }
+    saveLevels(levels);
+    closeModal('levelModal');
+    renderLevels();
+}
+
+function saveProgressLevel() {
+    const id = document.getElementById('editingProgressId').value || Date.now().toString();
+    const data = {
+        id,
+        name: document.getElementById('progressName').value.trim(),
+        author: document.getElementById('progressAuthor').value.trim(),
+        photo: document.getElementById('progressPhoto').value.trim()
+    };
+    let levels = getProgressLevels();
+    const idx = levels.findIndex(l => l.id===id);
+    if (idx<0) { levels.push(data); addLog('added', `"${data.name}" subido`); }
+    else { levels[idx] = data; addLog('edited', `"${data.name}" editado`); }
+    saveProgressLevels(levels);
+    closeModal('progressModal');
+    renderLevels();
+}
+
+function openDetail(id, cat) {
+    currentDetailId = id;
+    let level, thumb, meta;
+    if (cat==='absolute') {
+        level = getLevels().find(l => l.id===id);
+        thumb = level.photo || getYtThumb(level.ytLink) || '';
+        meta = `Por ${level.author}` + (level.verified==='yes'?` | Verificado por ${level.verifier}`:'');
+        document.getElementById('detailRecordsSection').style.display = 'block';
+        document.getElementById('detailRecords').innerHTML = level.records?.length ? level.records.map(r => `<div class="record-item ${r.complete?'record-complete':''}"><strong>${escapeHtml(r.name)}</strong> — ${escapeHtml(r.record)} ${r.complete?'✅ Completado':''}</div>`).join('') : `<p style="color:var(--text-muted)">${T[lang].noRecords}</p>`;
+    } else {
+        level = getProgressLevels().find(l => l.id===id);
+        thumb = level.photo || '';
+        meta = `Autor: ${level.author}`;
+        document.getElementById('detailRecordsSection').style.display = 'none';
+    }
+    document.getElementById('detailImg').src = thumb;
+    document.getElementById('detailName').innerHTML = getTopBadge(level.top) + escapeHtml(level.name);
+    document.getElementById('detailMeta').textContent = meta;
+    document.getElementById('detailAdminActions').classList.toggle('hidden', !isAdmin);
+    openModal('detailModal');
+}
+
+function editCurrentLevel() {
+    closeModal('detailModal');
+    if (currentCategory==='absolute') {
+        const l = getLevels().find(x => x.id===currentDetailId);
+        document.getElementById('editingId').value = l.id;
+        document.getElementById('levelName').value = l.name;
+        document.getElementById('levelTop').value = l.top || '';
+        document.getElementById('levelAuthor').value = l.author;
+        document.getElementById('levelVerified').value = l.verified;
+        document.getElementById('levelVerifier').value = l.verifier || '';
+        document.getElementById('levelPhoto').value = l.photo || '';
+        document.getElementById('levelPhotoFile').value = '';
+        document.getElementById('levelYt').value = l.ytLink;
+        document.getElementById('verifierRow').classList.toggle('hidden', l.verified!=='yes');
+        recordEntries = l.records ? [...l.records] : [];
+        renderRecordsForm();
+        openModal('levelModal');
+    } else {
+        const l = getProgressLevels().find(x => x.id===currentDetailId);
+        document.getElementById('editingProgressId').value = l.id;
+        document.getElementById('progressName').value = l.name;
+        document.getElementById('progressAuthor').value = l.author;
+        document.getElementById('progressPhoto').value = l.photo || '';
+        document.getElementById('progressPhotoFile').value = '';
+        openModal('progressModal');
+    }
+}
+
+function deleteCurrentLevel() {
+    if (!confirm(T[lang].deleteConfirm)) return;
+    if (currentCategory==='absolute') {
+        const l = getLevels();
+        const name = l.find(x => x.id===currentDetailId)?.name;
+        saveLevels(l.filter(x => x.id!==currentDetailId));
+        addLog('deleted', `"${name}" eliminado`);
+    } else {
+        const l = getProgressLevels();
+        const name = l.find(x => x.id===currentDetailId)?.name;
+        saveProgressLevels(l.filter(x => x.id!==currentDetailId));
+        addLog('deleted', `"${name}" eliminado`);
+    }
+    closeModal('detailModal');
+    renderLevels();
+}
+</script>
+</body>
+</html>
