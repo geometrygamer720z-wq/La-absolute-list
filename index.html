@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">The Absolute List</title>
+    <title>The Absolute List</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
         
@@ -68,84 +68,76 @@
             position: fixed;
             top: 2rem;
             right: 2rem;
-            z-index: 999;
+            z-index: 100;
         }
         
         .menu-btn {
-            background: linear-gradient(145deg, var(--bg-card), var(--bg-hover));
-            border: 2px solid transparent;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             font-size: 1.8rem;
             cursor: pointer;
-            padding: 0.6rem 1.2rem;
+            padding: 0.6rem 1rem;
             color: var(--text);
-            border-radius: 14px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
         }
         
         .menu-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-            border-color: var(--accent);
-            box-shadow: 0 0 20px var(--accent-glow), 0 8px 25px rgba(0,0,0,0.4);
-            background: linear-gradient(145deg, #1e1e2a, #2a2a3a);
+            background: var(--bg-hover);
+            box-shadow: 0 0 15px var(--accent-glow);
         }
         
         .menu-dropdown {
             position: absolute;
             right: 0;
-            top: 120%;
-            background: linear-gradient(180deg, #1f1f2e, #171722);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.2);
-            border-radius: 18px;
-            min-width: 260px;
+            top: 100%;
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
+            border-radius: 12px;
+            min-width: 240px;
             display: none;
             overflow: hidden;
             border: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            animation: dropdownBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-origin: top right;
+            margin-top: 0.5rem;
+            backdrop-filter: blur(10px);
         }
         
-        @keyframes dropdownBounce {
-            0% { opacity: 0; transform: scale(0.8) translateY(-10px); }
-            50% { transform: scale(1.05) translateY(2px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        .menu-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
         
-        .menu-dropdown.show { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
         .menu-item {
-            padding: 1rem 1.5rem;
+            padding: 0.9rem 1.4rem;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.6rem;
         }
         
         .menu-item:hover {
-            background: linear-gradient(90deg, rgba(99,102,241,0.2), transparent);
-            padding-left: 2rem;
+            background: var(--bg-hover);
+            padding-left: 1.8rem;
         }
         
         .divider {
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-            margin: 0.4rem 1rem;
+            background: var(--border);
+            margin: 0.3rem 0;
         }
         
         .category { margin-bottom: 3rem; }
         
         .category-title {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            font-weight: 600;
             margin-bottom: 1.5rem;
             padding-bottom: 0.8rem;
             border-bottom: 2px solid var(--border);
             color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
         }
         
         .levels-grid {
@@ -155,17 +147,17 @@
         }
         
         .level-card {
-            background: linear-gradient(145deg, var(--bg-card), #1f1f2b);
-            border: 2px solid var(--border);
-            border-radius: 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
         }
         
         .level-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.2);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.25);
             border-color: var(--accent);
         }
         
@@ -176,12 +168,12 @@
             background: var(--bg-hover);
         }
         
-        .level-info { padding: 1.4rem; }
+        .level-info { padding: 1.3rem; }
         
         .level-name {
             font-weight: 700;
             font-size: 1.2rem;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
             color: var(--text);
             display: flex;
             align-items: center;
@@ -189,6 +181,7 @@
             flex-wrap: wrap;
         }
         
+        /* === ETIQUETA DE TOP === */
         .top-badge {
             display: inline-flex;
             align-items: center;
@@ -199,6 +192,7 @@
             font-weight: 800;
             font-size: 0.9rem;
             box-shadow: 0 0 10px currentColor;
+            flex-shrink: 0;
         }
         .top-1 { background: linear-gradient(135deg, #ffd700, #f59e0b); color: #000; }
         .top-2 { background: linear-gradient(135deg, #e5e7eb, #9ca3af); color: #111; }
@@ -216,7 +210,7 @@
             font-size: 0.75rem;
             padding: 0.25rem 0.7rem;
             border-radius: 20px;
-            margin-left: 0.5rem;
+            margin-left: 0.6rem;
             font-weight: 600;
         }
         
@@ -225,18 +219,17 @@
             border: none;
             color: white;
             padding: 1rem 2rem;
-            border-radius: 14px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             margin-bottom: 2rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(99,102,241,0.3);
         }
         
         .add-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px var(--accent-glow);
+            transform: scale(1.03);
+            box-shadow: 0 0 25px var(--accent-glow);
         }
         
         .input-row {
@@ -246,7 +239,7 @@
             flex-wrap: wrap;
         }
         .input-row input, .input-row button { flex: 1; min-width: 140px; margin: 0; }
-        .search-btn {
+        .search-btn, .file-btn {
             width: auto;
             margin: 0;
             padding: 0.9rem 1rem;
@@ -271,35 +264,35 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 200;
             padding: 1rem;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
         }
         
         .modal.show { display: flex; }
         
         .modal-box {
-            background: linear-gradient(180deg, #1f1f2e, #171722);
-            border: 1px solid rgba(99,102,241,0.2);
-            border-radius: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
             max-width: 520px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             padding: 2.5rem;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-            animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow);
+            animation: modalIn 0.3s ease;
         }
         
         .modal-box.large { max-width: 700px; }
         
         @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.85) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
         
         .modal-title {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin-bottom: 1.5rem;
             font-weight: 700;
             color: var(--text);
@@ -312,20 +305,19 @@
             font-size: 1.3rem;
             cursor: pointer;
             color: var(--text-muted);
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.25s ease;
+            transition: all 0.2s;
             margin: -0.5rem -0.5rem 0 0;
         }
         
         .close-btn:hover {
             background: var(--accent);
             color: white;
-            transform: rotate(90deg);
         }
         
         label {
@@ -337,23 +329,23 @@
         
         input, select, button {
             width: 100%;
-            padding: 0.9rem 1.1rem;
-            border: 2px solid transparent;
-            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
             font-size: 1rem;
             background: var(--bg-hover);
             color: var(--text);
-            transition: all 0.25s ease;
+            transition: all 0.2s;
         }
         
         input:focus, select:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(99,102,241,0.2);
+            box-shadow: 0 0 0 3px var(--accent-glow);
         }
         
         button {
-            background: linear-gradient(135deg, var(--accent), #4f46e5);
+            background: var(--accent);
             color: white;
             border: none;
             cursor: pointer;
@@ -361,7 +353,7 @@
             font-weight: 600;
         }
         
-        button:hover { opacity: 0.95; transform: translateY(-2px); }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
         
         button.secondary {
             background: var(--bg-hover);
@@ -369,17 +361,17 @@
             border: 1px solid var(--border);
         }
         
-        button.danger { background: linear-gradient(135deg, #dc2626, #b91c1c); }
-        button.warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; }
+        button.danger { background: var(--danger); }
+        button.warning { background: var(--warning); color: #000; }
         
         .detail-thumbnail {
             width: 100%;
             height: 280px;
             object-fit: cover;
-            border-radius: 20px;
+            border-radius: 16px;
             margin-bottom: 1.5rem;
             background: var(--bg-hover);
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
         }
         
         .detail-name {
@@ -400,19 +392,26 @@
         }
         
         .records-section { margin-top: 2rem; }
+        
         .records-title {
             font-weight: 700;
             margin-bottom: 1rem;
             font-size: 1.2rem;
             color: var(--text);
         }
+        
         .record-item {
             padding: 1rem;
             border-bottom: 1px solid var(--border);
             transition: background 0.2s;
         }
+        
         .record-item:hover { background: var(--bg-hover); }
-        .record-complete { color: var(--success); font-weight: 600; }
+        
+        .record-complete {
+            color: var(--success);
+            font-weight: 600;
+        }
         
         .admin-actions {
             margin-top: 2rem;
@@ -425,25 +424,29 @@
         
         .record-form-row {
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.3rem;
+            border-radius: 12px;
+            padding: 1.2rem;
             margin: 1rem 0;
             background: var(--bg-hover);
         }
         
-        .log-section { margin-bottom: 1.5rem; }
-        .log-title { font-weight: 600; margin-bottom: 0.5rem; color: var(--accent); }
+        .log-section {
+            margin-bottom: 1.5rem;
+        }
+        .log-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
         .log-item {
-            padding: 0.7rem;
+            padding: 0.6rem;
             border-bottom: 1px solid var(--border);
             font-size: 0.9rem;
-            border-radius: 8px;
-            margin-bottom: 0.3rem;
         }
-        .log-item.warning { border-left: 3px solid var(--warning); background: rgba(245,158,11,0.05); }
-        .log-item.success { border-left: 3px solid var(--success); background: rgba(16,185,129,0.05); }
-        .log-item.danger { border-left: 3px solid var(--danger); background: rgba(220,38,38,0.05); }
-        .timestamp { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.2rem; }
+        .log-item.warning { border-left: 3px solid var(--warning); padding-left: 0.8rem; }
+        .log-item.success { border-left: 3px solid var(--success); padding-left: 0.8rem; }
+        .log-item.danger { border-left: 3px solid var(--danger); padding-left: 0.8rem; }
+        .timestamp { color: var(--text-muted); font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -455,15 +458,15 @@
     <div class="menu-container">
         <button class="menu-btn" id="menuBtn">⋮</button>
         <div class="menu-dropdown" id="menuDropdown">
-            <div class="menu-item" id="adminBtn">🔐 <span id="adminBtnText">Modo Admin</span></div>
+            <div class="menu-item" id="adminBtn">🔐 Modo Admin</div>
             <div class="menu-item" id="discordBtn">💬 Discord</div>
             <div class="menu-item hidden" id="editDiscordBtn">✏️ Editar Discord</div>
             <div class="menu-item hidden" id="logBtn">📋 Registro</div>
             <div class="divider"></div>
-            <div class="menu-item" id="switchAbsolute">⭐ <span id="switchAbsoluteText">Absolute Levels</span></div>
-            <div class="menu-item" id="switchProgress">🚧 <span id="switchProgressText">Niveles en Progreso</span></div>
+            <div class="menu-item" id="switchAbsolute">⭐ Absolute Levels</div>
+            <div class="menu-item" id="switchProgress">🚧 Niveles en Progreso</div>
             <div class="divider"></div>
-            <div class="menu-item" id="langBtn">🌐 <span id="langBtnText">Cambiar a Inglés</span></div>
+            <div class="menu-item" id="langBtn">🌐 Cambiar Idioma</div>
         </div>
     </div>
 
@@ -471,101 +474,104 @@
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('discordMenuModal')">&times;</button>
             <h3 class="modal-title">💬 Discord</h3>
-            <button onclick="openDiscordLink()" class="add-btn" style="width:100%; margin:0.5rem 0;">✅ <span id="enterDiscordText">Entrar al Discord</span></button>
-            <button onclick="reportExpiredLink()" class="warning" style="width:100%; margin:0.5rem 0;">⚠️ <span id="expiredLinkText">Enlace expirado</span></button>
+            <button onclick="openDiscordLink()" class="add-btn" style="width:100%; margin:0.5rem 0;">✅ Entrar al Discord</button>
+            <button onclick="reportExpiredLink()" class="warning" style="width:100%; margin:0.5rem 0;">⚠️ Enlace expirado</button>
         </div>
     </div>
 
     <div class="category">
-        <h2 class="category-title" id="cat-title">⭐ Los Absolute Levels</h2>
-        <button class="add-btn hidden" id="addLevelBtn">➕ <span id="addLevelText">Añadir Nuevo Nivel</span></button>
+        <h2 class="category-title" id="cat-title">Los Absolute Levels</h2>
+        <button class="add-btn hidden" id="addLevelBtn">➕ Añadir Nuevo Nivel</button>
         <div class="levels-grid" id="levelsContainer"></div>
     </div>
 
     <div class="modal" id="passwordModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('passwordModal')">&times;</button>
-            <h3 class="modal-title" id="passTitle">🔐 Modo Admin</h3>
-            <label id="passLabel">Contraseña:</label>
+            <h3 class="modal-title" id="pass-title">Modo Admin</h3>
+            <label id="pass-label">Contraseña:</label>
             <input type="password" id="adminPass" placeholder="Escribe la contraseña">
-            <button onclick="checkPassword()" id="passSubmit">Entrar</button>
+            <button onclick="checkPassword()" id="pass-submit">Entrar</button>
         </div>
     </div>
 
+    <!-- ✅ MODAL NIVEL ABSOLUTO → CON CAMPO TOP -->
     <div class="modal" id="levelModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('levelModal')">&times;</button>
-            <h3 class="modal-title" id="levelFormTitle">➕ Añadir Nivel</h3>
+            <h3 class="modal-title" id="level-form-title">Añadir Nivel</h3>
             
-            <label id="lblName">Título del Nivel:</label>
+            <label id="lbl-name">Título del Nivel:</label>
             <input type="text" id="levelName" required>
             
-            <label id="lblTop">🏆 Posición / Top:</label>
+            <!-- ✅ NUEVO: Campo Posición / Top -->
+            <label id="lbl-top">🏆 Posición / Top:</label>
             <select id="levelTop">
-                <option value="" id="optNone">— Ninguna —</option>
+                <option value="">— Ninguna —</option>
                 <option value="1">🥇 Top 1</option>
                 <option value="2">🥈 Top 2</option>
                 <option value="3">🥉 Top 3</option>
                 <option value="4">🏅 Top 4</option>
                 <option value="5">🏅 Top 5</option>
                 <option value="6">🏅 Top 6</option>
-                <option value="more">🏅 Top 7+</option>
+                <option value="more">🏅 Top 7 o más</option>
             </select>
             
-            <label id="lblAuthor">Autor:</label>
+            <label id="lbl-author">Autor:</label>
             <input type="text" id="levelAuthor" required>
             
-            <label id="lblVerified">¿Está verificado?</label>
+            <label id="lbl-verif">¿Está verificado?</label>
             <select id="levelVerified" onchange="toggleVerifier()">
-                <option value="no" id="optNo">No</option>
-                <option value="yes" id="optYes">Sí</option>
+                <option value="no" id="opt-no">No</option>
+                <option value="yes" id="opt-yes">Sí</option>
             </select>
             
             <div id="verifierRow" class="hidden">
-                <label id="lblVerifierName">Nombre del verificador:</label>
+                <label id="lbl-verifier">Nombre del verificador:</label>
                 <input type="text" id="levelVerifier">
             </div>
             
-            <label id="lblPhoto">Foto (opcional):</label>
+            <label id="lbl-photo">Foto (opcional):</label>
             <input type="url" id="levelPhoto" placeholder="Enlace de imagen">
             <div class="file-input-row">
                 <input type="file" id="levelPhotoFile" accept="image/*" onchange="handleFileSelect(this, 'levelPhoto')">
             </div>
             
-            <label id="lblYT">Enlace de YouTube / ID:</label>
+            <label id="lbl-yt">Enlace de YouTube / ID:</label>
             <div class="input-row">
                 <input type="url" id="levelYt" placeholder="https://youtube.com/watch?v=... o ID">
-                <button type="button" class="search-btn secondary" onclick="searchGD()" id="searchGDText">🔍 Buscar ID</button>
+                <button type="button" class="search-btn secondary" onclick="searchGD()">🔍 Buscar ID</button>
             </div>
             
-            <h4 style="margin-top:1.8rem" id="recordsTitle">Récords</h4>
+            <h4 style="margin-top:1.8rem" id="lbl-records">Récords</h4>
             <div id="recordsList"></div>
-            <button class="secondary" onclick="addRecord()" id="addRecordText">+ Añadir Récord</button>
+            <button class="secondary" onclick="addRecord()" id="btn-add-record">+ Añadir Récord</button>
             
             <input type="hidden" id="editingId">
-            <button onclick="saveLevel()" id="saveLevelText">💾 Guardar Nivel</button>
+            <button onclick="saveLevel()" id="btn-save-level">Guardar Nivel</button>
         </div>
     </div>
 
+    <!-- ✅ MODAL NIVEL EN PROGRESO → SIN CAMPO TOP -->
     <div class="modal" id="progressModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('progressModal')">&times;</button>
-            <h3 class="modal-title" id="progressFormTitle">🚧 Nivel en Progreso</h3>
+            <h3 class="modal-title" id="progress-form-title">Nivel en Progreso</h3>
             
-            <label id="lblProgressName">Nombre del Nivel:</label>
+            <label>Nombre del Nivel:</label>
             <input type="text" id="progressName" required>
             
-            <label id="lblProgressAuthor">Autor:</label>
+            <label>Autor:</label>
             <input type="text" id="progressAuthor" required>
             
-            <label id="lblProgressPhoto">Foto (opcional):</label>
+            <label>Foto (opcional):</label>
             <input type="url" id="progressPhoto" placeholder="Enlace de imagen">
             <div class="file-input-row">
                 <input type="file" id="progressPhotoFile" accept="image/*" onchange="handleFileSelect(this, 'progressPhoto')">
             </div>
             
             <input type="hidden" id="editingProgressId">
-            <button onclick="saveProgressLevel()" id="saveProgressText">💾 Guardar</button>
+            <button onclick="saveProgressLevel()">Guardar</button>
         </div>
     </div>
 
@@ -577,13 +583,13 @@
             <p class="detail-meta" id="detailMeta"></p>
             
             <div class="records-section" id="detailRecordsSection">
-                <h4 class="records-title" id="detailRecordsTitle">Récords</h4>
+                <h4 class="records-title" id="lbl-records-list">Récords</h4>
                 <div id="detailRecords"></div>
             </div>
             
             <div class="admin-actions hidden" id="detailAdminActions">
-                <button class="secondary" onclick="editCurrentLevel()" id="editBtnText">✏️ Editar</button>
-                <button class="danger" onclick="deleteCurrentLevel()" id="deleteBtnText">🗑️ Borrar</button>
+                <button class="secondary" id="btn-edit-level" onclick="editCurrentLevel()">✏️ Editar</button>
+                <button class="danger" id="btn-delete-level" onclick="deleteCurrentLevel()">🗑️ Borrar</button>
             </div>
         </div>
     </div>
@@ -591,36 +597,36 @@
     <div class="modal" id="discordModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeModal('discordModal')">&times;</button>
-            <h3 class="modal-title" id="discordFormTitle">✏️ Enlace de Discord</h3>
-            <label id="lblDiscordLink">Enlace del servidor de Discord:</label>
+            <h3 class="modal-title" id="discord-title">Enlace de Discord</h3>
+            <label id="lbl-discord-link">Enlace del servidor de Discord:</label>
             <input type="url" id="discordLink" placeholder="https://discord.gg/...">
-            <button onclick="saveDiscord()" id="saveDiscordText">💾 Guardar Enlace</button>
+            <button onclick="saveDiscord()" id="btn-save-discord">Guardar Enlace</button>
         </div>
     </div>
 
     <div class="modal" id="logModal">
         <div class="modal-box large">
             <button class="close-btn" onclick="closeModal('logModal')">&times;</button>
-            <h3 class="modal-title" id="logTitle">📋 Registro de Actividad</h3>
+            <h3 class="modal-title">📋 Registro de Actividad</h3>
             
             <div class="log-section">
-                <h4 class="log-title" id="logAddedTitle">✅ Niveles Subidos</h4>
+                <h4 class="log-title">✅ Niveles Subidos</h4>
                 <div id="log-added"></div>
             </div>
             <div class="log-section">
-                <h4 class="log-title" id="logEditedTitle">✏️ Niveles Editados</h4>
+                <h4 class="log-title">✏️ Niveles Editados</h4>
                 <div id="log-edited"></div>
             </div>
             <div class="log-section">
-                <h4 class="log-title" id="logDeletedTitle">🗑️ Niveles Eliminados</h4>
+                <h4 class="log-title">🗑️ Niveles Eliminados</h4>
                 <div id="log-deleted"></div>
             </div>
             <div class="log-section">
-                <h4 class="log-title" id="logExpiredTitle">⚠️ Avisos de Enlace Expirado</h4>
+                <h4 class="log-title">⚠️ Avisos de Enlace Expirado</h4>
                 <div id="log-expired"></div>
             </div>
             
-            <button class="secondary" onclick="clearLogs()" id="clearLogsText">🗑️ Limpiar Registro</button>
+            <button class="secondary" onclick="clearLogs()">🗑️ Limpiar Registro</button>
         </div>
     </div>
 
@@ -633,22 +639,21 @@ let currentCategory = 'absolute';
 
 const T = {
     es: {
-        pageTitle: 'The Absolute List',
+        title: 'The Absolute List',
         subtitle: 'Los Absolute Levels',
         catAbsolute: '⭐ Los Absolute Levels',
         catProgress: '🚧 Niveles en Progreso',
         admin: '🔐 Modo Admin',
-        adminExit: '🚪 Salir Admin',
         discord: '💬 Discord',
         editDiscord: '✏️ Editar Discord',
         logs: '📋 Registro',
-        langSwitch: '🌐 Cambiar a Inglés',
-        passTitle: '🔐 Modo Admin',
+        lang: '🌐 Cambiar a Inglés',
+        passPrompt: 'Modo Admin',
         passLabel: 'Contraseña:',
         passSubmit: 'Entrar',
         passWrong: 'Contraseña incorrecta',
-        addLevel: '➕ Añadir Nuevo Nivel',
-        addProgress: '➕ Añadir Nivel en Progreso',
+        addLevel: '+ Añadir Nuevo Nivel',
+        addProgress: '+ Añadir Nivel en Progreso',
         editLevel: 'Editar Nivel',
         name: 'Título del Nivel:',
         top: '🏆 Posición / Top:',
@@ -663,52 +668,43 @@ const T = {
         noTitle: '⚠️ Escribe primero el nombre del nivel para buscar',
         records: 'Récords',
         addRecord: '+ Añadir Récord',
-        save: '💾 Guardar Nivel',
-        saveProgress: '💾 Guardar',
+        save: 'Guardar Nivel',
         recordsTitle: 'Récords',
         complete: 'Completado',
         edit: '✏️ Editar',
         delete: '🗑️ Borrar',
-        discordTitle: '✏️ Enlace de Discord',
+        discordTitle: 'Enlace de Discord',
         discordLabel: 'Enlace del servidor de Discord:',
-        saveDiscord: '💾 Guardar Enlace',
-        enterDiscord: '✅ Entrar al Discord',
-        expiredLink: '⚠️ Enlace expirado',
+        saveDiscord: 'Guardar Enlace',
+        openDiscord: 'Abrir Discord',
         nameRecord: 'Nombre del jugador',
         recordVal: 'Récord (ej: 100%, 0:45)',
-        isComplete: '¿Completado?',
+        isComplete: '¿Lo completó?',
         deleteConfirm: '¿Seguro que quieres borrar este nivel?',
         fillRequired: 'Debes poner enlace de YouTube',
         noRecords: 'Sin récords registrados',
-        noLinkYet: 'El enlace aún no está configurado',
+        noYtNeeded: '(No requiere enlace de YouTube)',
         expiredReported: '✅ Aviso enviado. Se ha registrado que el enlace está expirado.',
+        noLinkYet: 'El enlace aún no está configurado',
         linkExpiredLog: 'Enlace de Discord reportado como expirado',
         addedLog: 'subido',
         editedLog: 'editado',
         deletedLog: 'eliminado',
         noLogs: 'Sin registros',
-        clearLogs: '🗑️ Limpiar Registro',
-        logTitle: '📋 Registro de Actividad',
-        logAddedTitle: '✅ Niveles Subidos',
-        logEditedTitle: '✏️ Niveles Editados',
-        logDeletedTitle: '🗑️ Niveles Eliminados',
-        logExpiredTitle: '⚠️ Avisos de Enlace Expirado',
-        by: 'Por',
-        verifiedBy: 'Verificado por',
-        authorLabel: 'Autor:'
+        clearLogs: 'Limpiar Registro',
+        chooseFile: 'O elegir desde tu galería:'
     },
     en: {
-        pageTitle: 'The Absolute List',
+        title: 'The Absolute List',
         subtitle: 'The Absolute Levels',
         catAbsolute: '⭐ The Absolute Levels',
         catProgress: '🚧 Levels in Progress',
         admin: '🔐 Admin Mode',
-        adminExit: '🚪 Exit Admin',
         discord: '💬 Discord',
         editDiscord: '✏️ Edit Discord',
         logs: '📋 Activity Log',
-        langSwitch: '🌐 Switch to Spanish',
-        passTitle: '🔐 Admin Mode',
+        lang: '🌐 Switch to Spanish',
+        passPrompt: 'Admin Mode',
         passLabel: 'Password:',
         passSubmit: 'Enter',
         passWrong: 'Incorrect password',
@@ -728,39 +724,31 @@ const T = {
         noTitle: '⚠️ Write the level name first before searching',
         records: 'Records',
         addRecord: '+ Add Record',
-        save: '💾 Save Level',
-        saveProgress: '💾 Save',
+        save: 'Save Level',
         recordsTitle: 'Records',
         complete: 'Completed',
         edit: '✏️ Edit',
         delete: '🗑️ Delete',
-        discordTitle: '✏️ Discord Link',
+        discordTitle: 'Discord Link',
         discordLabel: 'Discord Server Link:',
-        saveDiscord: '💾 Save Link',
-        enterDiscord: '✅ Enter Discord',
-        expiredLink: '⚠️ Link Expired',
+        saveDiscord: 'Save Link',
+        openDiscord: 'Open Discord',
         nameRecord: 'Player Name',
         recordVal: 'Record (e.g. 100%, 0:45)',
         isComplete: 'Completed?',
         deleteConfirm: 'Are you sure you want to delete this level?',
         fillRequired: 'YouTube link is required',
         noRecords: 'No records yet',
-        noLinkYet: 'Link not set yet',
+        noYtNeeded: '(No YouTube link needed)',
         expiredReported: '✅ Report sent. The expired link has been logged.',
+        noLinkYet: 'Link not set yet',
         linkExpiredLog: 'Discord link reported as expired',
         addedLog: 'uploaded',
         editedLog: 'edited',
         deletedLog: 'deleted',
         noLogs: 'No records',
-        clearLogs: '🗑️ Clear Log',
-        logTitle: '📋 Activity Log',
-        logAddedTitle: '✅ Levels Uploaded',
-        logEditedTitle: '✏️ Levels Edited',
-        logDeletedTitle: '🗑️ Levels Deleted',
-        logExpiredTitle: '⚠️ Expired Link Reports',
-        by: 'By',
-        verifiedBy: 'Verified by',
-        authorLabel: 'Author:'
+        clearLogs: 'Clear Log',
+        chooseFile: 'Or choose from your gallery:'
     }
 };
 
@@ -776,30 +764,35 @@ function handleFileSelect(input, targetId) {
     const file = input.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = e => document.getElementById(targetId).value = e.target.result;
+    reader.onload = e => {
+        document.getElementById(targetId).value = e.target.result;
+    };
     reader.readAsDataURL(file);
 }
 
 function setupMenu() {
-    const menuBtn = document.getElementById('menuBtn');
-    const dropdown = document.getElementById('menuDropdown');
-    
-    menuBtn.addEventListener('click', (e) => {
+    const btn = document.getElementById('menuBtn');
+    btn.addEventListener('click', e => {
         e.stopPropagation();
-        dropdown.classList.toggle('show');
+        document.getElementById('menuDropdown').classList.toggle('show');
     });
-    
-    document.addEventListener('click', () => dropdown.classList.remove('show'));
-    dropdown.addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('click', () => {
+        document.getElementById('menuDropdown').classList.remove('show');
+    });
     
     document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
     document.getElementById('discordBtn').onclick = () => openModal('discordMenuModal');
     document.getElementById('editDiscordBtn').onclick = () => {
-        document.getElementById('discordLink').value = localStorage.getItem('discordLink') || '';
+        const link = localStorage.getItem('discordLink') || '';
+        document.getElementById('discordLink').value = link;
         openModal('discordModal');
     };
-    document.getElementById('logBtn').onclick = () => { renderLogs(); openModal('logModal'); };
+    document.getElementById('logBtn').onclick = () => {
+        renderLogs();
+        openModal('logModal');
+    };
     document.getElementById('langBtn').onclick = toggleLang;
+    
     document.getElementById('switchAbsolute').onclick = () => switchCategory('absolute');
     document.getElementById('switchProgress').onclick = () => switchCategory('progress');
 }
@@ -809,7 +802,11 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
 
 function addLog(type, message) {
     const logs = JSON.parse(localStorage.getItem('activityLogs') || '[]');
-    logs.unshift({ type, message, time: new Date().toLocaleString(lang === 'es' ? 'es-CR' : 'en-US') });
+    logs.unshift({
+        type,
+        message,
+        time: new Date().toLocaleString(lang === 'es' ? 'es-CR' : 'en-US')
+    });
     localStorage.setItem('activityLogs', JSON.stringify(logs.slice(0, 100)));
     renderLogs();
 }
@@ -817,35 +814,44 @@ function addLog(type, message) {
 function renderLogs() {
     const logs = JSON.parse(localStorage.getItem('activityLogs') || '[]');
     const t = T[lang];
-    ['added','edited','deleted','expired'].forEach(type => {
-        const c = document.getElementById(`log-${type}`);
+    
+    ['added', 'edited', 'deleted', 'expired'].forEach(type => {
+        const container = document.getElementById(`log-${type}`);
         const items = logs.filter(l => l.type === type);
-        c.innerHTML = items.length 
-            ? items.map(l => `<div class="log-item ${l.type==='expired'?'warning':l.type==='deleted'?'danger':'success'}">${escapeHtml(l.message)}<div class="timestamp">${l.time}</div></div>`).join('') 
-            : `<p style="color:var(--text-muted);padding:0.5rem;">${t.noLogs}</p>`;
+        if (items.length === 0) {
+            container.innerHTML = `<p style="color:var(--text-muted)">${t.noLogs}</p>`;
+        } else {
+            container.innerHTML = items.map(l => `
+                <div class="log-item ${l.type === 'expired' ? 'warning' : l.type === 'deleted' ? 'danger' : 'success'}">
+                    ${escapeHtml(l.message)}
+                    <div class="timestamp">${l.time}</div>
+                </div>
+            `).join('');
+        }
     });
 }
 
 function clearLogs() {
-    const t = T[lang];
-    if (confirm(lang==='es'?'¿Borrar todo el registro?':'Clear all logs?')) {
+    if (confirm(lang === 'es' ? '¿Borrar todo el registro?' : 'Clear all logs?')) {
         localStorage.removeItem('activityLogs');
         renderLogs();
     }
 }
 
 function reportExpiredLink() {
-    const t = T[lang];
-    addLog('expired', t.linkExpiredLog);
-    alert(t.expiredReported);
+    addLog('expired', T[lang].linkExpiredLog);
+    alert(T[lang].expiredReported);
     closeModal('discordMenuModal');
 }
 
 function openDiscordLink() {
-    const t = T[lang];
     const link = localStorage.getItem('discordLink');
-    if (link) { window.open(link,'_blank'); closeModal('discordMenuModal'); }
-    else alert(t.noLinkYet);
+    if (link) {
+        window.open(link, '_blank');
+        closeModal('discordMenuModal');
+    } else {
+        alert(T[lang].noLinkYet);
+    }
 }
 
 function switchCategory(cat) {
@@ -855,202 +861,357 @@ function switchCategory(cat) {
     updateAdminUI();
 }
 
-// ✅ FUNCIÓN DE TRADUCCIÓN CORREGIDA
 function applyLang() {
     const t = T[lang];
-    
-    // Títulos generales
-    document.getElementById('page-title').textContent = t.pageTitle;
-    document.getElementById('main-title').textContent = t.pageTitle;
+    document.getElementById('main-title').textContent = t.title;
     document.getElementById('main-subtitle').textContent = t.subtitle;
-    
-    // Menú
-    document.getElementById('adminBtnText').textContent = isAdmin ? t.adminExit : t.admin;
-    document.getElementById('switchAbsoluteText').textContent = t.catAbsolute.replace('⭐ ', '');
-    document.getElementById('switchProgressText').textContent = t.catProgress.replace('🚧 ', '');
-    document.getElementById('langBtnText').textContent = t.langSwitch;
-    
-    // Categoría
+    document.getElementById('switchAbsolute').textContent = t.catAbsolute;
+    document.getElementById('switchProgress').textContent = t.catProgress;
+    document.getElementById('adminBtn').textContent = t.admin;
+    document.getElementById('discordBtn').textContent = t.discord;
+    document.getElementById('editDiscordBtn').textContent = t.editDiscord;
+    document.getElementById('logBtn').textContent = t.logs;
+    document.getElementById('langBtn').textContent = t.lang;
+    document.getElementById('pass-title').textContent = t.passPrompt;
+    document.getElementById('pass-label').textContent = t.passLabel;
+    document.getElementById('pass-submit').textContent = t.passSubmit;
+    document.getElementById('lbl-name').textContent = t.name;
+    document.getElementById('lbl-top').textContent = t.top;
+    document.getElementById('lbl-author').textContent = t.author;
+    document.getElementById('lbl-verif').textContent = t.verified;
+    document.getElementById('opt-no').textContent = t.no;
+    document.getElementById('opt-yes').textContent = t.yes;
+    document.getElementById('lbl-verifier').textContent = t.verifier;
+    document.getElementById('lbl-photo').textContent = t.photo;
+    document.getElementById('lbl-yt').textContent = t.ytLink;
+    document.getElementById('btn-add-record').textContent = t.addRecord;
+    document.getElementById('btn-save-level').textContent = t.save;
+    document.getElementById('lbl-records-list').textContent = t.recordsTitle;
+    document.getElementById('btn-edit-level').textContent = t.edit;
+    document.getElementById('btn-delete-level').textContent = t.delete;
+    document.getElementById('discord-title').textContent = t.discordTitle;
+    document.getElementById('lbl-discord-link').textContent = t.discordLabel;
+    document.getElementById('btn-save-discord').textContent = t.saveDiscord;
     updateCatTitle();
-    
-    // Botones
-    document.getElementById('addLevelText').textContent = currentCategory==='absolute' ? t.addLevel : t.addProgress;
-    
-    // Modales - Discord
-    document.getElementById('enterDiscordText').textContent = t.enterDiscord;
-    document.getElementById('expiredLinkText').textContent = t.expiredLink;
-    
-    // Modales - Contraseña
-    document.getElementById('passTitle').textContent = t.passTitle;
-    document.getElementById('passLabel').textContent = t.passLabel;
-    document.getElementById('passSubmit').textContent = t.passSubmit;
-    
-    // Modales - Nivel Absoluto
-    document.getElementById('levelFormTitle').textContent = t.addLevel;
-    document.getElementById('lblName').textContent = t.name;
-    document.getElementById('lblTop').textContent = t.top;
-    document.getElementById('lblAuthor').textContent = t.author;
-    document.getElementById('lblVerified').textContent = t.verified;
-    document.getElementById('optNo').textContent = t.no;
-    document.getElementById('optYes').textContent = t.yes;
-    document.getElementById('lblVerifierName').textContent = t.verifier;
-    document.getElementById('lblPhoto').textContent = t.photo;
-    document.getElementById('lblYT').textContent = t.ytLink;
-    document.getElementById('searchGDText').textContent = t.searchGD;
-    document.getElementById('recordsTitle').textContent = t.records;
-    document.getElementById('addRecordText').textContent = t.addRecord;
-    document.getElementById('saveLevelText').textContent = t.save;
-    
-    // Modales - Progreso
-    document.getElementById('progressFormTitle').textContent = t.catProgress.replace('🚧 ', '');
-    document.getElementById('lblProgressName').textContent = t.name;
-    document.getElementById('lblProgressAuthor').textContent = t.author;
-    document.getElementById('lblProgressPhoto').textContent = t.photo;
-    document.getElementById('saveProgressText').textContent = t.saveProgress;
-    
-    // Modales - Detalle
-    document.getElementById('detailRecordsTitle').textContent = t.recordsTitle;
-    document.getElementById('editBtnText').textContent = t.edit;
-    document.getElementById('deleteBtnText').textContent = t.delete;
-    
-    // Modales - Editar Discord
-    document.getElementById('discordFormTitle').textContent = t.discordTitle;
-    document.getElementById('lblDiscordLink').textContent = t.discordLabel;
-    document.getElementById('saveDiscordText').textContent = t.saveDiscord;
-    document.getElementById('editDiscordBtn').innerHTML = `✏️ ${t.editDiscord}`;
-    
-    // Modales - Registro
-    document.getElementById('logBtn').innerHTML = `📋 ${t.logs}`;
-    document.getElementById('logTitle').textContent = t.logTitle;
-    document.getElementById('logAddedTitle').textContent = t.logAddedTitle;
-    document.getElementById('logEditedTitle').textContent = t.logEditedTitle;
-    document.getElementById('logDeletedTitle').textContent = t.logDeletedTitle;
-    document.getElementById('logExpiredTitle').textContent = t.logExpiredTitle;
-    document.getElementById('clearLogsText').textContent = t.clearLogs;
+    updateAdminUI();
 }
 
 function updateCatTitle() {
-    const t = T[lang];
-    document.getElementById('cat-title').textContent = currentCategory==='absolute' ? t.catAbsolute : t.catProgress;
+    document.getElementById('cat-title').textContent = T[lang][currentCategory === 'absolute' ? 'catAbsolute' : 'catProgress'];
 }
 
 function toggleLang() {
     lang = lang === 'es' ? 'en' : 'es';
     localStorage.setItem('listLang', lang);
     applyLang();
-    // ⚠️ NO llamar renderLevels() aquí para no tocar los nombres de los niveles
+    // ⚠️ No se llama renderLevels() para NO tocar los nombres de los niveles
 }
 
 function checkPassword() {
-    const t = T[lang];
-    if (document.getElementById('adminPass').value === '6767XDXD') {
+    const pass = document.getElementById('adminPass').value;
+    if (pass === '6767XDXD') {
         isAdmin = true;
         closeModal('passwordModal');
         updateAdminUI();
         document.getElementById('adminPass').value = '';
-    } else alert(t.passWrong);
+    } else {
+        alert(T[lang].passWrong);
+    }
 }
 
 function updateAdminUI() {
-    document.getElementById('editDiscordBtn').classList.toggle('hidden', !isAdmin);
-    document.getElementById('logBtn').classList.toggle('hidden', !isAdmin);
-    document.getElementById('addLevelBtn').classList.toggle('hidden', !isAdmin);
-    // Actualizar texto del botón de admin
-    document.getElementById('adminBtnText').textContent = isAdmin ? T[lang].adminExit : T[lang].admin;
-    document.getElementById('addLevelText').textContent = currentCategory==='absolute' ? T[lang].addLevel : T[lang].addProgress;
+    const t = T[lang];
+    const addBtn = document.getElementById('addLevelBtn');
+    
+    if (isAdmin) {
+        document.getElementById('adminBtn').textContent = '🚪 Salir Admin';
+        document.getElementById('adminBtn').onclick = () => {
+            isAdmin = false;
+            updateAdminUI();
+            renderLevels();
+        };
+        document.getElementById('editDiscordBtn').classList.remove('hidden');
+        document.getElementById('logBtn').classList.remove('hidden');
+        addBtn.classList.remove('hidden');
+        addBtn.textContent = currentCategory === 'absolute' ? t.addLevel : t.addProgress;
+    } else {
+        document.getElementById('adminBtn').textContent = t.admin;
+        document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
+        document.getElementById('editDiscordBtn').classList.add('hidden');
+        document.getElementById('logBtn').classList.add('hidden');
+        addBtn.classList.add('hidden');
+    }
+    updateCatTitle();
 }
 
 function searchGD() {
-    const t = T[lang];
     const name = document.getElementById('levelName').value.trim();
-    if (!name) return alert(t.noTitle);
-    window.open(`https://gdbrowser.com/search?query=${encodeURIComponent(name)}`,'_blank');
+    if (!name) {
+        alert(T[lang].noTitle);
+        return;
+    }
+    window.open(`https://gdbrowser.com/search?query=${encodeURIComponent(name)}`, '_blank');
 }
 
 function saveDiscord() {
-    localStorage.setItem('discordLink', document.getElementById('discordLink').value.trim());
+    const link = document.getElementById('discordLink').value.trim();
+    localStorage.setItem('discordLink', link);
     closeModal('discordModal');
 }
 
-function getLevels() { return JSON.parse(localStorage.getItem('absoluteLevels') || '[]'); }
-function saveLevels(d) { localStorage.setItem('absoluteLevels', JSON.stringify(d)); }
-function getProgressLevels() { return JSON.parse(localStorage.getItem('progressLevels') || '[]'); }
-function saveProgressLevels(d) { localStorage.setItem('progressLevels', JSON.stringify(d)); }
-
-function getTopBadge(t) {
-    if (!t) return '';
-    if (t==='more') return `<span class="top-badge top-other">Top 7+</span>`;
-    return `<span class="top-badge top-${t}">${t}</span>`;
+function getLevels() {
+    return JSON.parse(localStorage.getItem('absoluteLevels') || '[]');
 }
 
-function getYtThumb(u) {
-    if (!u) return null;
-    const m = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);
-    return m ? `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg` : null;
+function saveLevels(levels) {
+    localStorage.setItem('absoluteLevels', JSON.stringify(levels));
 }
 
-function escapeHtml(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function getProgressLevels() {
+    return JSON.parse(localStorage.getItem('progressLevels') || '[]');
+}
+
+function saveProgressLevels(levels) {
+    localStorage.setItem('progressLevels', JSON.stringify(levels));
+}
+
+// ✅ Generar etiqueta de Top
+function getTopBadge(topVal) {
+    if (!topVal) return '';
+    if (topVal === 'more') return `<span class="top-badge top-other">Top 7+</span>`;
+    return `<span class="top-badge top-${topVal}">${topVal}</span>`;
+}
 
 function renderLevels() {
     updateCatTitle();
-    const c = document.getElementById('levelsContainer');
-    c.innerHTML = '';
-    const t = T[lang];
+    const container = document.getElementById('levelsContainer');
     
-    if (currentCategory==='absolute') {
-        getLevels().forEach(l => {
-            const thumb = l.photo || getYtThumb(l.ytLink) || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
-            c.innerHTML += `<div class="level-card" onclick="openDetail('${l.id}','absolute')"><img src="${thumb}" class="level-thumbnail"><div class="level-info"><div class="level-name">${getTopBadge(l.top)}${escapeHtml(l.name)}${l.verified==='yes'?`<span class="verified-tag">✓ ${escapeHtml(l.verifier||'')}</span>`:''}</div><div class="level-author">${escapeHtml(l.author)}</div></div></div>`;
-        });
+    if (currentCategory === 'absolute') {
+        renderAbsolute(container);
     } else {
-        getProgressLevels().forEach(l => {
-            const thumb = l.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
-            c.innerHTML += `<div class="level-card" onclick="openDetail('${l.id}','progress')"><img src="${thumb}" class="level-thumbnail"><div class="level-info"><div class="level-name">${escapeHtml(l.name)}</div><div class="level-author">${escapeHtml(l.author)}</div></div></div>`;
-        });
+        renderProgress(container);
     }
+}
+
+function renderAbsolute(container) {
+    const levels = getLevels();
+    container.innerHTML = '';
+    
+    levels.forEach(level => {
+        const card = document.createElement('div');
+        card.className = 'level-card';
+        card.onclick = () => openDetail(level.id, 'absolute');
+        
+        const thumb = level.photo || getYtThumb(level.ytLink) || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
+        const topBadge = getTopBadge(level.top);
+        
+        card.innerHTML = `
+            <img src="${thumb}" class="level-thumbnail" alt="">
+            <div class="level-info">
+                <div class="level-name">
+                    ${topBadge}
+                    ${escapeHtml(level.name)}
+                    ${level.verified === 'yes' ? `<span class="verified-tag">✓ ${escapeHtml(level.verifier || '')}</span>` : ''}
+                </div>
+                <div class="level-author">${escapeHtml(level.author)}</div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderProgress(container) {
+    const levels = getProgressLevels();
+    container.innerHTML = '';
+    
+    levels.forEach(level => {
+        const card = document.createElement('div');
+        card.className = 'level-card';
+        card.onclick = () => openDetail(level.id, 'progress');
+        
+        const thumb = level.photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225"><rect fill="%23242430" width="400" height="225"/></svg>';
+        
+        card.innerHTML = `
+            <img src="${thumb}" class="level-thumbnail" alt="">
+            <div class="level-info">
+                <div class="level-name">${escapeHtml(level.name)}</div>
+                <div class="level-author">${escapeHtml(level.author)}</div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function getYtThumb(url) {
+    if (!url) return null;
+    const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);
+    return m ? `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg` : null;
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
 }
 
 function openAddLevel() {
-    if (currentCategory==='absolute') {
-        recordEntries = [];
-        document.getElementById('editingId').value = '';
-        document.getElementById('levelName').value = '';
-        document.getElementById('levelTop').value = '';
-        document.getElementById('levelAuthor').value = '';
-        document.getElementById('levelVerified').value = 'no';
-        document.getElementById('levelVerifier').value = '';
-        document.getElementById('levelPhoto').value = '';
-        document.getElementById('levelPhotoFile').value = '';
-        document.getElementById('levelYt').value = '';
-        document.getElementById('verifierRow').classList.add('hidden');
-        document.getElementById('levelFormTitle').textContent = T[lang].addLevel;
-        renderRecordsForm();
-        openModal('levelModal');
+    if (currentCategory === 'absolute') {
+        openAddAbsolute();
     } else {
-        document.getElementById('editingProgressId').value = '';
-        document.getElementById('progressName').value = '';
-        document.getElementById('progressAuthor').value = '';
-        document.getElementById('progressPhoto').value = '';
-        document.getElementById('progressPhotoFile').value = '';
-        openModal('progressModal');
+        openAddProgress();
     }
 }
 
+function openAddAbsolute() {
+    recordEntries = [];
+    document.getElementById('editingId').value = '';
+    document.getElementById('levelName').value = '';
+    document.getElementById('levelTop').value = '';
+    document.getElementById('levelAuthor').value = '';
+    document.getElementById('levelVerified').value = 'no';
+    document.getElementById('levelVerifier').value = '';
+    document.getElementById('levelPhoto').value = '';
+    document.getElementById('levelPhotoFile').value = '';
+    document.getElementById('levelYt').value = '';
+    document.getElementById('level-form-title').textContent = T[lang].addLevel;
+    document.getElementById('verifierRow').classList.add('hidden');
+    renderRecordsForm();
+    openModal('levelModal');
+}
+
 function toggleVerifier() {
-    document.getElementById('verifierRow').classList.toggle('hidden', document.getElementById('levelVerified').value!=='yes');
+    document.getElementById('verifierRow').classList.toggle('hidden', document.getElementById('levelVerified').value !== 'yes');
 }
 
 function addRecord() {
-    recordEntries.push({name:'',record:'',complete:false});
+    recordEntries.push({ name: '', record: '', complete: false });
     renderRecordsForm();
 }
 
-function removeRecord(i) {
-    recordEntries.splice(i,1);
+function removeRecord(index) {
+    recordEntries.splice(index, 1);
     renderRecordsForm();
 }
 
 function renderRecordsForm() {
+    const container = document.getElementById('recordsList');
     const t = T[lang];
-    const c = document.getElementById('recordsList');
-    c.innerHTML = recordEntries.map((r,i) => `<div class="record-form-row"><button class="close-btn" style="margin-top:0" onclick="removeRecord(${i})">&times;</button><label>${t.name
+    container.innerHTML = recordEntries.map((r, i) => `
+        <div class="record-form-row">
+            <button class="close-btn" style="margin-top:0" onclick="removeRecord(${i})">&times;</button>
+            <label>${t.nameRecord}</label>
+            <input type="text" value="${escapeHtml(r.name)}" onchange="recordEntries[${i}].name = this.value">
+            <label>${t.recordVal}</label>
+            <input type="text" value="${escapeHtml(r.record)}" onchange="recordEntries[${i}].record = this.value">
+            <label style="display:inline-flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+                <input type="checkbox" ${r.complete ? 'checked' : ''} onchange="recordEntries[${i}].complete = this.checked">
+                ${t.isComplete}
+            </label>
+        </div>
+    `).join('');
+}
+
+function saveLevel() {
+    const t = T[lang];
+    const ytLink = document.getElementById('levelYt').value.trim();
+    
+    if (!ytLink) {
+        alert(t.fillRequired);
+        return;
+    }
+    
+    const editingId = document.getElementById('editingId').value;
+    const levelData = {
+        id: editingId || Date.now().toString(),
+        name: document.getElementById('levelName').value.trim(),
+        top: document.getElementById('levelTop').value,
+        author: document.getElementById('levelAuthor').value.trim(),
+        verified: document.getElementById('levelVerified').value,
+        verifier: document.getElementById('levelVerifier').value.trim(),
+        photo: document.getElementById('levelPhoto').value.trim(),
+        ytLink: ytLink,
+        records: [...recordEntries]
+    };
+    
+    let levels = getLevels();
+    const idx = levels.findIndex(l => l.id === levelData.id);
+    const isNew = idx < 0;
+    
+    if (isNew) {
+        levels.push(levelData);
+        addLog('added', `"${levelData.name}" ${t.addedLog}`);
+    } else {
+        levels[idx] = levelData;
+        addLog('edited', `"${levelData.name}" ${t.editedLog}`);
+    }
+    
+    saveLevels(levels);
+    closeModal('levelModal');
+    renderLevels();
+}
+
+function openAddProgress() {
+    document.getElementById('editingProgressId').value = '';
+    document.getElementById('progressName').value = '';
+    document.getElementById('progressAuthor').value = '';
+    document.getElementById('progressPhoto').value = '';
+    document.getElementById('progressPhotoFile').value = '';
+    openModal('progressModal');
+}
+
+function saveProgressLevel() {
+    const t = T[lang];
+    const editingId = document.getElementById('editingProgressId').value;
+    const levelData = {
+        id: editingId || Date.now().toString(),
+        name: document.getElementById('progressName').value.trim(),
+        author: document.getElementById('progressAuthor').value.trim(),
+        photo: document.getElementById('progressPhoto').value.trim()
+    };
+    
+    let levels = getProgressLevels();
+    const idx = levels.findIndex(l => l.id === levelData.id);
+    const isNew = idx < 0;
+    
+    if (isNew) {
+        levels.push(levelData);
+        addLog('added', `"${levelData.name}" ${t.addedLog}`);
+    } else {
+        levels[idx] = levelData;
+        addLog('edited', `"${levelData.name}" ${t.editedLog}`);
+    }
+    
+    saveProgressLevels(levels);
+    closeModal('progressModal');
+    renderLevels();
+}
+
+let detailCategory = 'absolute';
+
+function openDetail(id, cat) {
+    currentDetailId = id;
+    detailCategory = cat;
+    const t = T[lang];
+    let level, thumb, meta;
+    
+    if (cat === 'absolute') {
+        level = getLevels().find(l => l.id === id);
+        if (!level) return;
+        thumb = level.photo || getYtThumb(level.ytLink) || '';
+        meta = `${lang === 'es' ? 'Por' : 'By'} ${level.author}`;
+        if (level.verified === 'yes') meta += ` | ${lang === 'es' ? 'Verificado por' : 'Verified by'} ${level.verifier}`;
+        
+        document.getElementById('detailRecordsSection').style.display = 'block';
+        const recordsContainer = document.getElementById('detailRecords');
+        if (level.records?.length) {
+            recordsContainer.innerHTML = level.records.map(r => `
+                <div class="record-item ${r.complete ? 'record-complete' : ''}">
+                    <strong>${escapeHtml(r.name)}</strong> — ${escapeHtml(r.record)}
+                    ${r.complete ? ` ✅ ${t.complete}` : ''}
+                </div>
+            `).join('');
+        } else {
+            recordsContainer.innerHTML = `<p style="color:#a0a0b0">${t.noRecords}</p>`;
+        }
+    } else {
+       
