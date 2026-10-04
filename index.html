@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Absolute List</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/GDColon/gdbrowser/master/assets/demon-extreme.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
         
@@ -605,7 +607,7 @@
             <h2 class="detail-name" id="detailName"></h2>
             <p class="detail-meta" id="detailMeta"></p>
             
-            <!-- ✅ FILA DE COPIAR ID -->
+            <!-- FILA DE COPIAR ID -->
             <div class="copy-id-row">
                 <span class="copy-id-label">ID:</span>
                 <span class="copy-id-value" id="detailIdValue"></span>
@@ -866,7 +868,7 @@ function clearLogs() {
 
 function reportExpiredLink() {
     addLog('expired', T[lang].linkExpiredLog);
-    alert(T[lang].expiredReported);
+    alert(T[lang].expiredReported || 'Reporte enviado');
     closeModal('discordMenuModal');
 }
 
@@ -1207,8 +1209,5 @@ function openDetail(id, cat) {
         meta = `${lang === 'es' ? 'Por' : 'By'} ${level.author}`;
         if (level.verified === 'yes') meta += ` | ${lang === 'es' ? 'Verificado por' : 'Verified by'} ${level.verifier}`;
         
-        document.getElementById('detailRecordsSection').style.display = 'block';
-        const recordsContainer = document.getElementById('detailRecords');
-        if (level.records?.length) {
-            recordsContainer.innerHTML = level.records.map(r => `
-                <
+        // Extraer ID de
+
