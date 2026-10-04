@@ -402,7 +402,8 @@
     <!-- Categoría -->
     <div class="category">
         <h2 class="category-title" id="cat-title">Los Absolute Levels</h2>
-        <button class="add-btn hidden" id="addLevelBtn" style="display:none">➕ Añadir Nuevo Nivel</button>
+        <!-- ✅ CORREGIDO: Quité el estilo en línea que chocaba con la clase .hidden -->
+        <button class="add-btn hidden" id="addLevelBtn">➕ Añadir Nuevo Nivel</button>
         <div class="levels-grid" id="levelsContainer"></div>
     </div>
 
@@ -582,6 +583,9 @@ document.addEventListener('DOMContentLoaded', () => {
     applyLang();
     renderLevels();
     setupMenu();
+    
+    // ✅ CORREGIDO: Conectar el botón de añadir nivel
+    document.getElementById('addLevelBtn').addEventListener('click', openAddLevel);
 });
 
 // Menú
@@ -661,6 +665,8 @@ function checkPassword() {
 
 function updateAdminUI() {
     const t = T[lang];
+    const addBtn = document.getElementById('addLevelBtn');
+    
     if (isAdmin) {
         document.getElementById('adminBtn').textContent = '🚪 Salir Admin';
         document.getElementById('adminBtn').onclick = () => {
@@ -669,15 +675,13 @@ function updateAdminUI() {
             renderLevels();
         };
         document.getElementById('editDiscordBtn').classList.remove('hidden');
-        const addBtn = document.getElementById('addLevelBtn');
+        // ✅ CORREGIDO: Solo usamos la clase .hidden para mostrar/ocultar
         addBtn.classList.remove('hidden');
-        addBtn.style.display = 'block';
     } else {
         document.getElementById('adminBtn').textContent = t.admin;
         document.getElementById('adminBtn').onclick = () => openModal('passwordModal');
         document.getElementById('editDiscordBtn').classList.add('hidden');
-        document.getElementById('addLevelBtn').classList.add('hidden');
-        document.getElementById('addLevelBtn').style.display = 'none';
+        addBtn.classList.add('hidden');
     }
 }
 
